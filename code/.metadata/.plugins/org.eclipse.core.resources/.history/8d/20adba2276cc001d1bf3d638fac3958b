@@ -1,0 +1,25 @@
+Feature: Admin register an employee as
+project manager
+    Description: Admin register an employee as project manager
+    Actor: Admin
+    
+# Main scenario
+Scenario: Register employee as project
+manager
+    Given that the admin is logged in
+    And there is an employee with ID "mkr"
+    Given there is a project
+    And ID "mkr" is employee of project
+    And project has no project manager
+    When admin promotes "mkr" as project manager
+    Then "mkr" is the project manager
+    
+# Alternative scenario
+Scenario: Project manager already exists
+    Given that the admin is logged in
+    And there is an employee with ID "mkr"
+    Given there is a project
+    And ID "mkr" is employee of project
+    And project has project manager
+    When admin promotes "mkr" as project manager
+    Then the error "Project Manager already assigned" is given

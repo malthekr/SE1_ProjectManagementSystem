@@ -1,0 +1,21 @@
+package softwarehuset.management.app;
+
+public class ManagementSystem {
+	private boolean adminLoggedIn = false;
+	
+	public boolean adminLoggedIn() {
+		return adminLoggedIn;
+	}
+	
+	public boolean adminLogin(String id) {
+		adminLoggedIn = id.equals("admi");
+		return adminLoggedIn;
+	}
+    
+	public boolean adminLogout() {
+		adminLoggedIn = false;
+		return adminLoggedIn;
+	}
+
+}
+

@@ -1,0 +1,13 @@
+package softwarehuset.management.app;
+
+public class Project {
+	private Boolean hasProjectManager = false;
+	private Boolean projectIsActive = false;
+	
+	
+	
+	public Project(String projectName, double expectedHours) {
+		super(projectName, expectedHours);
+	}
+	
+}

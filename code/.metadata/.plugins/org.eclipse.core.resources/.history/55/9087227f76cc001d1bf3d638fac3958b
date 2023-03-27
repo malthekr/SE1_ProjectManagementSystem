@@ -1,0 +1,23 @@
+Feature:: Add employee to activity
+    Description: The project manager
+    adds an employee to an activity
+    Actor: Project Manager
+# Main scenario
+Scenario:
+    Given there is a project
+    And employee with ID "mkr" is logged
+    in
+    And "mkr" is the project manager
+    Given there is another employee
+    And has "20" or less ongoing activities
+    When add employee to project activity
+    Then employee is added to the project activity
+# Alternative scenario
+Scenario:
+    Given there is a project
+    And employee with ID "mkr" is logged in
+    And "mkr" is the project manager
+    Given there is another employee
+    And has more than "20" ongoing activities
+    When add employee to project activity
+    Then the error message "Employee too busy" is given

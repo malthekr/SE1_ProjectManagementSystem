@@ -1,0 +1,9 @@
+Feature: Admin login
+	Description: The administrator logs in and out of the projectmanagement system.
+	Actor: Admin
+
+Scenario: Administrator login
+	Given that the administrator is not logged in
+	And the admin username is "mkr"
+	Then the administrator login succeeds
+	And the adminstrator is logged in

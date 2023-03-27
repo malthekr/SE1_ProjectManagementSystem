@@ -1,0 +1,27 @@
+Feature:: Add hours
+    Description: Add hours worked on an
+    activity in a project
+    Actor: Employee
+# Main scenario
+Scenario: Add hours worked for an
+activity in a project that the employee
+is part of
+    Given there is a project
+    And employee with ID "mkr" is logged in
+    And "mkr" is not the project manager
+    And employee is part of project
+    And project has the activity "Add
+    feature"
+    When add "5" hours to "Add feature"
+    activity in project
+    Then "5" hours have been added to
+    activity "Add feature" in the project
+# Alternative scenario
+Scenario: Add hours worked helping an
+colleague with an activity.
+    Given there is a project
+    And employee with ID "mkr" is logged in
+    And "mkr" is not the project manager
+    And employee is not part of project
+    When add "5" hours to "Add feature" activity in project
+    Then "5" hours have been added to activity "Add feature" in the project

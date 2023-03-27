@@ -1,0 +1,9 @@
+Feature:: Edit activity
+    Description: Edit activity for project
+    Actor: Employee
+# Main scenario
+Scenario: Create activity as employee with no project manager
+    Given there is a project
+    And project has no project manager
+    When edit activity for project
+    Then activity for project edited

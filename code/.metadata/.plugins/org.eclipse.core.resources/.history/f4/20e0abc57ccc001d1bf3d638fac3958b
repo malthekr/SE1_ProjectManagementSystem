@@ -1,0 +1,12 @@
+Feature:: Create activity
+    Description: Create activity for project
+    Actor: Employee
+# Main scenario
+Scenario: Create activity as employee with no project manager
+    Given there is a project
+    And employee with ID "mkr" is logged in
+    And "mkr" is not the project manager
+    And employee is part of the project
+    And project has no project manager
+    When create activity for project
+    Then activity for project created

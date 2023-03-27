@@ -1,0 +1,19 @@
+Feature:: Add expected hours for project
+    Description: Add information about expected hours regarding a project.
+    Actor: Project Manager
+    
+# Main scenario
+Scenario: Add expected hours for a project as project manager
+    Given there is a project with ID "p1"
+    And employee with ID "mkr" is logged in
+    And employee is project manager
+    When set expected project hours to "100"
+    Then expected project hours is set to "100"
+    
+# Alternative scenario
+Scenario: Add expected hours for a project as regular employee
+    Given there is a project with ID "p1"
+    And employee with ID "mkr" is logged in
+    And employee is not project manager
+    When set expected project hours to "100"
+    Then error message "Only Project Managers are allowed to set expected hours" is displayed

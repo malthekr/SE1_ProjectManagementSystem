@@ -1,0 +1,9 @@
+package softwarehuset.management.acceptance_tests;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import softwarehuset.management.app.Managementystem;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
