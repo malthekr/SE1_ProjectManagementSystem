@@ -1,7 +1,0 @@
-package softwarehuset.management.app;
-
-public class Project {
-	private Boolean hasProjectManager = false;
-	private Boolean projectIsActive = false;
-	
-}
