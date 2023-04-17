@@ -22,7 +22,7 @@ public class LoginLogoutSteps {
 		assertFalse(managementSystem.adminLoggedIn());
 	}
 	
-	@Given("the id is {string}")
+	@Given("the admin id is {string}")
 	public void theIdIs(String id) throws Exception {
 		this.id = id;
 	}
@@ -50,10 +50,5 @@ public class LoginLogoutSteps {
 	@Then("the administrator login fails")
 	public void adminLoginFail() throws Exception {
 		assertFalse(managementSystem.adminLogin(id));
-	}
-
-	@When("the administrator logs out")
-	public void theAdministratorLogsOut() throws Exception {
-		managementSystem.adminLogout();
 	}
 }

@@ -2,7 +2,6 @@ Feature: Admin login
 	Description: The administrator logs in and out of the projectmanagement system.
 	Actor: Admin
 
- # Main Scenario
 Scenario: Administrator login and logout
 	Given that the administrator is not logged in
 	And the admin id is "admi"
@@ -11,7 +10,6 @@ Scenario: Administrator login and logout
 	When the administrator logs out
 	Then the administrator is not logged in
 	
- # Alternative Scenario
 Scenario: Administrator login with wrong id
 	Given that the administrator is not logged in
 	And the admin id is "fail"
