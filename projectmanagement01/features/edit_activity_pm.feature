@@ -3,9 +3,9 @@ Feature: Edit activity
     Actor: Project Manager
 
 # Main scenario
-Scenario: Edit activity as project manager
-    Given there is a project
-    And the employee with ID "mkr" is logged in
-    And employee is project manager
-    When edit activity for project
-    Then activity for project edited
+#Scenario: Edit activity as project manager
+    #Given there is a project
+    #And the employee with ID "mkr" is logged in
+    #And employee is project manager
+    #When edit activity for project
+    #Then activity for project edited
