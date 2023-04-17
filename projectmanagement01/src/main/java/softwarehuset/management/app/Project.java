@@ -89,6 +89,6 @@ public class Project {
 			throw new Exception("Employee is not part of the project");
 		}
 		
-		this.projectManager = ManagementSystem.FindEmployeeById(id);
+		//this.projectManager = ManagementSystem.FindEmployeeById(id);
 	}
 }

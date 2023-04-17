@@ -3,7 +3,7 @@ package softwarehuset.management.app;
 public class Employee {
 	private String id;
     private String name;
-    private Int numOfActivities;
+    private int numOfActivities;
     //private EMail Email;
 
     public Employee(String name, String id){
@@ -19,7 +19,7 @@ public class Employee {
         return id;
     }
 
-    public int getNumOfActivities {
+    public int getNumOfActivities(){
         return numOfActivities;
     }
 }

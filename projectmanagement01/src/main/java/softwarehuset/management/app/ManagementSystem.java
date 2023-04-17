@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public class ManagementSystem {
 	private boolean adminLoggedIn = false;
 	private List<Project> projectRepository = new ArrayList<>();
-	private List<Employee> Employees = new ArrayList<Employee>;
+	private List<Employee> Employees = new ArrayList<Employee>();
 	//public ManagementSystem (){}
 
 	public boolean adminLoggedIn() {
