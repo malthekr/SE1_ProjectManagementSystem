@@ -54,6 +54,6 @@ public class LoginLogoutSteps {
 	
 	@Given("that the admin is logged in")
 	public void thatTheAdminIsLoggedIn() throws Exception {
-		assertTrue(managementSystem.adminLoggedIn());
+		assertTrue(managementSystem.adminLogin("admi"));
 	}
 }

@@ -8,11 +8,13 @@ import io.cucumber.junit.CucumberOptions.SnippetType;
 
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "features", 
+@CucumberOptions(
+	features = "features", 
 	plugin = { "summary", "html:target/cucumber/wikipedia.html"}, 
 	monochrome=true, 
 	snippets = SnippetType.CAMELCASE, 
-	glue = { "softwarehuset.management.acceptance_tests" })
+	glue = {"softwarehuset.management.acceptance_tests"}
+)
 public class AcceptanceTest {
 
 }
