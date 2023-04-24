@@ -5,7 +5,11 @@ public class Employee {
     private String name;
     private int numOfActivities;
     //private EMail Email;
-
+	
+	public Employee(String id){
+        this.id = id;
+    }
+	
     public Employee(String name, String id){
         this.name = name;
         this.id = id;

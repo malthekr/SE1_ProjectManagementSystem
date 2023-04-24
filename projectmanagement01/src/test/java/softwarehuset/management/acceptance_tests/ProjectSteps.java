@@ -13,8 +13,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-class ProjectSteps {
-	
+public class ProjectSteps {
 	private ManagementSystemApp managementSystem;
 	private ErrorMessageHolder errorMessageHolder;
 	private DateServer dateServer;
@@ -27,20 +26,23 @@ class ProjectSteps {
 		this.managementSystem = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
 		this.dateServer = dateServer;
+	}
+	
+	@Given("there is a project with name {string}")
+	public void createProjectWithName(String projectName) throws OperationNotAllowedException {
 		startDate = dateServer.getDate();
 		endDate = dateServer.getDate();
-	}
-
-	@When("create project with name {string}")
-	public void createProjectWithName(String projectName) throws OperationNotAllowedException {	
 		project = new Project(projectName, 0.0, startDate, endDate);
+	}
+	
+	@When("add project to system")
+	public void addProjectToSystem() throws OperationNotAllowedException {
 		managementSystem.createProject(project);
 	}
 	
 	@Then("the project is added to the system with unique project number")
 	public void theProjectIsAddedToTheSystemWithUniqueProjectNumber() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new io.cucumber.java.PendingException();
+	    
 	}
 
 }

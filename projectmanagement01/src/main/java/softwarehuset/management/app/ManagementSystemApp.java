@@ -32,6 +32,11 @@ public class ManagementSystemApp {
 	
 	public void addEmployee(Employee Employee) throws OperationNotAllowedException {
 		checkAdminLoggedIn();
+		
+		if(containsEmployeeWithId(Employee.getId())){
+			throw new OperationNotAllowedException("Employee ID already taken");
+		}
+		
 		Employees.add(Employee);
 	}
 	
