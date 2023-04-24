@@ -57,6 +57,21 @@ public class RegisterEmployeeSteps {
 		assertThat(errorMessageHolder.getErrorMessage(), is(equalTo(errorMessage)));
 	}
 	
+	@When("unregister the employee with ID {string}")
+	public void unregisterTheEmployeeWithID(String id) {
+		try {
+			employee = managementSystemApp.FindEmployeeById(id);
+		    managementSystemApp.removeEmployee(employee);
+	    } catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}
+	}
+
+	@Then("the employee is unregistered from the system")
+	public void theEmployeeIsUnregisteredFromTheSystem() {
+	    assertFalse(managementSystemApp.containsEmployeeWithId(employee.getId()));	
+	}
+	
 	private void addEmployee(Employee employee) throws Exception{
 		try {
 			managementSystemApp.addEmployee(employee);

@@ -42,14 +42,23 @@ public class ManagementSystemApp {
 		Employees.add(employee);
 	}
 	
+	public void removeEmployee(Employee employee) {
+		Employees.remove(employee);
+	}
+	
 	public void checkAdminLoggedIn() throws OperationNotAllowedException {
 		if (!adminLoggedIn) {
 			throw new OperationNotAllowedException("Administrator login required");
 		}
 	}
 
-	public Employee FindEmployeeById(String id){
-		return Employees.stream().filter(u -> u.getId().equals(id)).findAny().orElse(null);
+	public Employee FindEmployeeById(String id) throws OperationNotAllowedException{
+		Employee employee = Employees.stream().filter(u -> u.getId().equals(id)).findAny().orElse(null);
+		
+		if(employee == null){
+			throw new OperationNotAllowedException("Employee ID does not exist");
+		}
+		return employee;
 	}
 	
 	public boolean containsEmployeeWithId(String id){
