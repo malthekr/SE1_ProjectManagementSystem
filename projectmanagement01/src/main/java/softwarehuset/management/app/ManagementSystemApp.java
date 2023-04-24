@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ManagementSystem {
+public class ManagementSystemApp {
 	private boolean adminLoggedIn = false;
 	private List<Project> projectRepository = new ArrayList<>();
 	private List<Employee> Employees = new ArrayList<Employee>();
+	private DateServer dateServer = new DateServer(); 
 	//public ManagementSystem (){}
 
 	public boolean adminLoggedIn() {
@@ -38,5 +39,16 @@ public class ManagementSystem {
 	public Employee FindEmployeeById(String id){
 		return Employees.stream().filter(u -> u.getId().equals(id)).findAny().orElse(null);
 	}
+
+	public void setDateServer(DateServer dateServer) {
+		this.dateServer = dateServer;		
+	}
+	
+	public void createProject(Project project) {
+		projectRepository.add(project);
+	}
+	
+
+	
 }
 

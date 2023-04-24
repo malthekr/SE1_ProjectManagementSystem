@@ -3,17 +3,17 @@ package softwarehuset.management.acceptance_tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import softwarehuset.management.app.ManagementSystem;
+import softwarehuset.management.app.ManagementSystemApp;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class LoginLogoutSteps {
 
-	private ManagementSystem managementSystem;
+	private ManagementSystemApp managementSystem;
 	private String id;
 	
-	public LoginLogoutSteps(ManagementSystem managementSystem) {
+	public LoginLogoutSteps(ManagementSystemApp managementSystem) {
 		this.managementSystem = managementSystem;
 	}
 	
@@ -50,5 +50,10 @@ public class LoginLogoutSteps {
 	@Then("the administrator login fails")
 	public void adminLoginFail() throws Exception {
 		assertFalse(managementSystem.adminLogin(id));
+	}
+	
+	@Given("that the admin is logged in")
+	public void thatTheAdminIsLoggedIn() throws Exception {
+		assertTrue(managementSystem.adminLoggedIn());
 	}
 }
