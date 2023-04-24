@@ -30,14 +30,16 @@ public class ManagementSystemApp {
 		projectRepository.add(project);
 	}
 	
-	public void addEmployee(Employee Employee) throws OperationNotAllowedException {
-		checkAdminLoggedIn();
+	public void addEmployee(Employee employee) throws Exception {
+		if (!adminLoggedIn) {
+			throw new OperationNotAllowedException("Administrator login required");
+		}
 		
-		if(containsEmployeeWithId(Employee.getId())){
+		if(containsEmployeeWithId(employee.getId())){
 			throw new OperationNotAllowedException("Employee ID already taken");
 		}
 		
-		Employees.add(Employee);
+		Employees.add(employee);
 	}
 	
 	public void checkAdminLoggedIn() throws OperationNotAllowedException {

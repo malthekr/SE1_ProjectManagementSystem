@@ -10,9 +10,9 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import softwarehuset.management.app.ManagementSystemApp;
+import softwarehuset.management.app.OperationNotAllowedException;
 import softwarehuset.management.app.DateServer;
 import softwarehuset.management.app.Employee;
-import softwarehuset.management.app.OperationNotAllowedException;
 
 
 public class RegisterEmployeeSteps {
@@ -22,7 +22,7 @@ public class RegisterEmployeeSteps {
 	
 	private Employee employee;
 	
-	public RegisterEmployeeSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, Employee employee , EmployeeHelper employeeHelper) {
+	public RegisterEmployeeSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, EmployeeHelper employeeHelper) {
 		this.managementSystemApp = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
 		this.employeeHelper = employeeHelper;
@@ -31,7 +31,7 @@ public class RegisterEmployeeSteps {
 	
 	@Given("there is no employee with ID {string}")
 	public void thereIsNoEmployeeWithID(String id) throws Exception {
-		assertTrue(managementSystemApp.containsEmployeeWithId(id));	
+		assertFalse(managementSystemApp.containsEmployeeWithId(id));	
 	}
 	
 	@Given("there is an employee with ID {string}")
@@ -42,8 +42,8 @@ public class RegisterEmployeeSteps {
 	}
 	
 	@When("register an employee with Name {string} and employee ID {string}")
-	public void registerAnEmployeeWithNameAndEmployeeID(String Name, String id) throws Exception{
-		employee = new Employee(Name, id);
+	public void registerAnEmployeeWithNameAndEmployeeID(String name, String id) throws Exception{
+		employee = new Employee(name, id);
 		addEmployee(employee);
 	}
 	
@@ -52,12 +52,16 @@ public class RegisterEmployeeSteps {
 		assertTrue(managementSystemApp.containsEmployeeWithId(id));	
 	}
 	
-	@Then("the error message {string} is")
+	@Then("the error message {string} is given")
 	public void theErrorMessageIs(String errorMessage){
 		assertThat(errorMessageHolder.getErrorMessage(), is(equalTo(errorMessage)));
 	}
 	
-	private void addEmployee(Employee employee) throws OperationNotAllowedException{
-		managementSystemApp.addEmployee(employee);
+	private void addEmployee(Employee employee) throws Exception{
+		try {
+			managementSystemApp.addEmployee(employee);
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}
 	}
 }
