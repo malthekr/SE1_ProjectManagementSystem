@@ -22,7 +22,9 @@ public class ProjectHelper {
 	private Project exampleProject() {
 		// Example project creates a project with start date today and end date next week.
 		// Work hours = 20
-		startDate = new GregorianCalendar();
+		Calendar calendar = new GregorianCalendar();
+		startDate = new GregorianCalendar(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+		
 		endDate.setTime(startDate.getTime());
 		endDate.add(Calendar.DAY_OF_YEAR, 7);		
 		workHours = 20.0;
