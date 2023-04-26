@@ -1,7 +1,7 @@
 #Feature:: Edit registered hours on an activity
 #			Description: An employee wants toedit his registered hours
 #			Actor: Employee
-# Main scenario
+#
 #Scenario:
 #		Given there is a project
 #		And employee with ID "mkr" is logged in

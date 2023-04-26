@@ -238,14 +238,18 @@ public class ManagementSystemApp {
 	public void createActivity(int projectId, String description) throws OperationNotAllowedException {
 		Project project = FindProjectById(projectId);
 		
+		
 		if(employeeLoggedIn && project.hasProjectManager()) {
 			if(!employeeLoggedInId.equals(project.getProjectManager())) {
-				throw new OperationNotAllowedException("Employee has to be Project Manager to change project end date");
+				throw new OperationNotAllowedException("Only Project Manager can add activities");
 			}
 			project.createActivity(description);
 			return;
+		} 
+		if (employeeLoggedIn && !project.hasProjectManager()){
+			project.createActivity(description);
+			return;
 		}
-		
 		if(adminLoggedIn()) {
 			project.createActivity(description);
 			return;

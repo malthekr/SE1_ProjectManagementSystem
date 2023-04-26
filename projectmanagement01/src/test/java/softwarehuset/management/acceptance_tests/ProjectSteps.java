@@ -23,12 +23,14 @@ public class ProjectSteps {
 	private DateServer dateServer;
 	private Project project;
 	private ProjectHelper projectHelper;
+	private EmployeeHelper employeeHelper;
 	
-	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, DateServer dateServer, ProjectHelper projectHelper) {
+	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, DateServer dateServer, ProjectHelper projectHelper, EmployeeHelper employeeHelper) {
 		this.managementSystem = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
 		this.dateServer = dateServer;
 		this.projectHelper = projectHelper;
+		this.employeeHelper = employeeHelper;
 	}
 	
 	@Given("there is a project with name {string}")
@@ -226,18 +228,31 @@ public class ProjectSteps {
 	   assertFalse(project.getOngoingProject());
 	}
 	
-//	private void exampleProject() {
-//		startDate = dateServer.getDate();
-//		endDate = dateServer.getDate();
-//		//int year = Calendar.getInstance().get(Calendar.YEAR) % 100;
-////		int Id = managementSystem.generateID(startDate);
-//		project = new Project(0.0, startDate, endDate);
-//	}
 	
 	private void createEmployee(String id) throws OperationNotAllowedException {
 		Employee employee = new Employee(id);
 		managementSystem.adminLogin("admi");
 		managementSystem.addEmployee(employee);
 		managementSystem.adminLogout();
+	}
+	
+	@Given("employee {string} is part of project")
+	public void employeeIsPartOfProject(String id) throws OperationNotAllowedException {
+		Employee employee = managementSystem.FindEmployeeById(id);
+		project.addEmployee(employee);
+	}
+	
+	@When("create activity with name {string} for project")
+	public void createActivityWithNameForProject(String activityName) throws OperationNotAllowedException {
+		try {
+			managementSystem.createActivity(project.getProjectID(), activityName);
+	    } catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}
+	}
+	
+	@Given("there is an activity {string} in project")
+	public void thereIsAnActivityInProject(String activityName) throws OperationNotAllowedException {
+		createActivityWithNameForProject(activityName);
 	}
 }

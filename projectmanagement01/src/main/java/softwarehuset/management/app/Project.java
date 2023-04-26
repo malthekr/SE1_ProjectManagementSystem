@@ -53,6 +53,13 @@ public class Project {
 	}
 	
 	public void createActivity(String description) throws OperationNotAllowedException {
+		if(description == "") {
+			throw new OperationNotAllowedException("Activities must have a name");
+		}
+		if(activities.contains(findActivityByDescrption(description))) {
+			throw new OperationNotAllowedException("Activities must have a unique name");
+		}
+		
 		Activity activity = new Activity(projectID, description, startDate, endDate);
 		activities.add(activity);
 	}
