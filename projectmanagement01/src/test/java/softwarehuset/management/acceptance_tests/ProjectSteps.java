@@ -24,9 +24,6 @@ public class ProjectSteps {
 	private Project project;
 	private ProjectHelper projectHelper;
 	
-	private Calendar startDate;
-	private Calendar endDate;
-	
 	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, DateServer dateServer, ProjectHelper projectHelper) {
 		this.managementSystem = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
@@ -36,15 +33,9 @@ public class ProjectSteps {
 	
 	@Given("there is a project with name {string}")
 	public void createProjectWithName(String projectName) throws OperationNotAllowedException {
-//		project = projectHelper.getProject();
-//		project.editProjectName(projectName);
-		
-		startDate = dateServer.getDate();
-		endDate = dateServer.getDate();
-		 
-		int year = Calendar.getInstance().get(Calendar.YEAR) % 100;
-		int Id = managementSystem.generateID(year);
-		project = new Project(projectName, 0.0, startDate, endDate, Id);
+//		System.out.println("There is a project with name");
+		project = projectHelper.getProject();
+		project.editProjectName(projectName);
 	}
 	
 	@When("add project to system")
@@ -52,17 +43,21 @@ public class ProjectSteps {
 		try {
 			managementSystem.createProject(project);
 	    } catch (OperationNotAllowedException e) {
+//	    	System.out.println(e);
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		} 
 	}
 	
 	@Given("create project")
-	public void createProject() {
-		startDate = dateServer.getDate();
-		endDate = dateServer.getDate();
-		int year = Calendar.getInstance().get(Calendar.YEAR) % 100;
-		int Id = managementSystem.generateID(year);
-		project = new Project(0.0, startDate, endDate, Id);
+	public void createProject() throws OperationNotAllowedException {
+//		startDate = dateServer.getDate();
+//		endDate = dateServer.getDate();
+		//int year = Calendar.getInstance().get(Calendar.YEAR) % 100;
+//		int Id = managementSystem.generateID(startDate);
+//		project = new Project(0.0, startDate, endDate);
+//		System.out.println("Create project");
+
+		project = projectHelper.getProject();
 	}
 	
 	@Then("the project is added to the system with unique project number")
@@ -72,15 +67,20 @@ public class ProjectSteps {
 	
 	@Given("there is a project")
 	public void thereIsAProject() throws OperationNotAllowedException {
+//		managementSystem.adminLogin("admi");
+//	    exampleProject();
+//	    addProjectToSystem();
+//	    managementSystem.adminLogout();
+	    
 		managementSystem.adminLogin("admi");
-	    exampleProject();
-	    addProjectToSystem();
+		project = projectHelper.getProject();
+		addProjectToSystem();
 	    managementSystem.adminLogout();
 	}
 	
 	@Given("there is a new project")
 	public void thereIsANewProject() throws OperationNotAllowedException {
-		exampleProject();
+		project = projectHelper.getProject();
 	    addProjectToSystem();
 	}
 	
@@ -182,12 +182,12 @@ public class ProjectSteps {
 	
 	@Then("project starts {int} days later")
 	public void projectStartsDaysLater(int days) throws OperationNotAllowedException {
-		assertTrue(managementSystem.CheckifStartDateMoved(project.getProjectID(), days, startDate));
+		assertTrue(managementSystem.CheckifStartDateMoved(project.getProjectID(), days, project.getStartDate()));
 	}
 	
 	@Then("project ends {int} days later")
 	public void projectEndsDaysLater(int days) throws OperationNotAllowedException {
-		assertTrue(managementSystem.CheckifEndDateMoved(project.getProjectID(), days, endDate));
+		assertTrue(managementSystem.CheckifEndDateMoved(project.getProjectID(), days, project.getEndDate()));
 	}
 	
 	@When("{string} creates activity {string} for project")
@@ -226,13 +226,13 @@ public class ProjectSteps {
 	   assertFalse(project.getOngoingProject());
 	}
 	
-	private void exampleProject() {
-		startDate = dateServer.getDate();
-		endDate = dateServer.getDate();
-		int year = Calendar.getInstance().get(Calendar.YEAR) % 100;
-		int Id = managementSystem.generateID(year);
-		project = new Project(0.0, startDate, endDate, Id);
-	}
+//	private void exampleProject() {
+//		startDate = dateServer.getDate();
+//		endDate = dateServer.getDate();
+//		//int year = Calendar.getInstance().get(Calendar.YEAR) % 100;
+////		int Id = managementSystem.generateID(startDate);
+//		project = new Project(0.0, startDate, endDate);
+//	}
 	
 	private void createEmployee(String id) throws OperationNotAllowedException {
 		Employee employee = new Employee(id);

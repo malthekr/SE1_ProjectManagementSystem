@@ -15,8 +15,9 @@ public class ManagementSystemApp {
 	private List<Project> projectRepository = new ArrayList<>();
 	private List<Employee> Employees = new ArrayList<Employee>();
 	private DateServer dateServer = new DateServer(); 
+//	private IDServer idServer = new IDServer();
 	//public ManagementSystem (){}
-	private final ConcurrentHashMap<Integer, AtomicInteger> counters = new ConcurrentHashMap<>();
+	//private final ConcurrentHashMap<Integer, AtomicInteger> counters = new ConcurrentHashMap<>();
 
 	public boolean adminLoggedIn() {
 		return adminLoggedIn;
@@ -158,10 +159,12 @@ public class ManagementSystemApp {
 	public boolean checkIfUniqueProjectId(int Id) {
 		int num = 0;
 		for(Project i : projectRepository) {
+//			System.out.println(i.getProjectID());
 			if(i.getProjectID() == Id) { 
 				num++;
 			}
 		}
+//		System.out.println(num);
 		return (num == 1);
 	}
 	
@@ -181,7 +184,7 @@ public class ManagementSystemApp {
 	}
 	
 	public void editProjectName(int projectId, String employeeId, String projectName) throws OperationNotAllowedException {
-		Employee employee = FindEmployeeById(employeeId);
+		//Employee employee = FindEmployeeById(employeeId);
 		Project project = FindProjectById(projectId);
 		
 		if(employeeLoggedIn) {
@@ -197,7 +200,7 @@ public class ManagementSystemApp {
 	}
 	
 	public void editStartDate(int projectId, String employeeId, int days) throws OperationNotAllowedException {
-		Employee employee = FindEmployeeById(employeeId);
+		//Employee employee = FindEmployeeById(employeeId);
 		Project project = FindProjectById(projectId);
 		
 		if(employeeLoggedIn) {
@@ -214,7 +217,7 @@ public class ManagementSystemApp {
 	}
 	
 	public void editEndDate(int projectId, String employeeId, int days) throws OperationNotAllowedException {
-		Employee employee = FindEmployeeById(employeeId);
+		//Employee employee = FindEmployeeById(employeeId);
 		Project project = FindProjectById(projectId);
 		
 		if(employeeLoggedIn) {
@@ -268,19 +271,5 @@ public class ManagementSystemApp {
 		Project project = FindProjectById(projectId);
 		return project.findActivityByDescrption(description);
 	}
-	
-	public int generateID(int year) {
-		AtomicInteger counter = counters.computeIfAbsent(year, y -> new AtomicInteger(0));
-        int number = counter.incrementAndGet();
-        int id = year * 1000 + number;
-		return id;
-	}
-	
-	// Incase we delete a project and want to reuse serial
-	public void ReuseSerialNumber(Project project) {
-        int year = project.getProjectID() / 1000;
-        int number = project.getProjectID() % 1000;
-        counters.get(year).decrementAndGet();
-    }
 }
 
