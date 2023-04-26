@@ -52,13 +52,9 @@ public class Project {
 		}
 	}
 	
-	public void createActivity(String description, Employee employee) throws OperationNotAllowedException {
-		if(!employeesAssignedToProject.contains(employee)) {
-			throw new OperationNotAllowedException("Employee is not part of the project");
-		}
-		Activity activity = new Activity(projectID, employee, description, startDate, endDate);
+	public void createActivity(String description) throws OperationNotAllowedException {
+		Activity activity = new Activity(projectID, description, startDate, endDate);
 		activities.add(activity);
-		employee.addActivity(activity);
 	}
 	
 	// Add activity - Throws Exception if activity is already part of project

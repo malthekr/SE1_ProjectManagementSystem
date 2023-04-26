@@ -1,4 +1,4 @@
-Feature: Create activity
+Feature: Create activity as employee
     Description: Create activity for project
     Actor: Employee
     

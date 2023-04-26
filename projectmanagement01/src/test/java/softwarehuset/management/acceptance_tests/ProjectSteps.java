@@ -153,28 +153,28 @@ public class ProjectSteps {
 		}
 	}
 
-	@When("{string} edits project name to {string}")
-	public void editsProjectNameTo(String employeeId, String projectName) throws OperationNotAllowedException {
+	@When("edits project name to {string}")
+	public void editsProjectNameTo(String projectName) throws OperationNotAllowedException {
 		try {
-			managementSystem.editProjectName(project.getProjectID(), employeeId, projectName);
+			managementSystem.editProjectName(project.getProjectID(), projectName);
 	    } catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		}
 	}
 	
-	@When("{string} edits start date by {int} days")
-	public void editsStartDateByDays(String employeeId, int days) {
+	@When("edits start date by {int} days")
+	public void editsStartDateByDays(int days) {
 		try {
-			managementSystem.editStartDate(project.getProjectID(), employeeId, days);
+			managementSystem.editStartDate(project.getProjectID(), days);
 	    } catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		}
 	}
 	
-	@When("{string} edits end date by {int} days")
-	public void editsEndDateByDays(String employeeId, int days) {
+	@When("edits end date by {int} days")
+	public void editsEndDateByDays(int days) {
 		try {
-			managementSystem.editEndDate(project.getProjectID(), employeeId, days);
+			managementSystem.editEndDate(project.getProjectID(), days);
 	    } catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		}
@@ -190,10 +190,10 @@ public class ProjectSteps {
 		assertTrue(managementSystem.CheckifEndDateMoved(project.getProjectID(), days, project.getEndDate()));
 	}
 	
-	@When("{string} creates activity {string} for project")
-	public void createsActivityForProject(String employeeId, String description) {
+	@When("creates activity {string} for project")
+	public void createsActivityForProject(String description) {
 		try {
-			managementSystem.createActivity(project.getProjectID(), employeeId, description);
+			managementSystem.createActivity(project.getProjectID(), description);
 	    } catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		}
