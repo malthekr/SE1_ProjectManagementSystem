@@ -20,9 +20,6 @@ public class ProjectSteps {
 	private Project project;
 	private ProjectHelper projectHelper;
 	
-	private Calendar startDate;
-	private Calendar endDate;
-	
 	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, DateServer dateServer, ProjectHelper projectHelper) {
 		this.managementSystem = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
