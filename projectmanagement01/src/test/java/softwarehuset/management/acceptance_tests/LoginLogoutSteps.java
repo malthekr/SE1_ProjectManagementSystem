@@ -17,42 +17,37 @@ public class LoginLogoutSteps {
 		this.managementSystem = managementSystem;
 	}
 	
-	@Given("that the administrator is not logged in")
+	@Given("admin is not logged in")
 	public void thatTheAdministratorIsNotLoggedIn() throws Exception {
 		assertFalse(managementSystem.adminLoggedIn());
 	}
 	
-	@Given("the admin id is {string}")
+	@Given("admin id is {string}")
 	public void theIdIs(String id) throws Exception {
 		this.id = id;
 	}
 	
-	@Then("the administrator login succeeds")
+	@Then("admin login succeeds")
 	public void admingLogin() throws Exception {
 		assertTrue(managementSystem.adminLogin(id));
 	}
 	
-	@Given("the adminstrator is logged in")
+	@Given("admin is logged in")
 	public void adminLoggedIn() throws Exception {
 		assertTrue(managementSystem.adminLoggedIn());
 	}
 	
-	@When("the administrator logs out")
+	@When("admin logs out")
 	public void adminLogout() throws Exception {
 		managementSystem.adminLogout();
 	}
 	
-	@Then("the administrator is not logged in")
-	public void adminNotLoggedIn() throws Exception {
-		assertFalse(managementSystem.adminLoggedIn());
-	}
-	
-	@Then("the administrator login fails")
+	@Then("admin login fails")
 	public void adminLoginFail() throws Exception {
 		assertFalse(managementSystem.adminLogin(id));
 	}
 	
-	@Given("that the admin is logged in")
+	@Given("admin is already logged in")
 	public void thatTheAdminIsLoggedIn() throws Exception {
 		assertTrue(managementSystem.adminLogin("admi"));
 	}

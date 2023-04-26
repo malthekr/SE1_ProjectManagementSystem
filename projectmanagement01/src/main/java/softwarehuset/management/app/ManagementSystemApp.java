@@ -30,14 +30,20 @@ public class ManagementSystemApp {
 		projectRepository.add(project);
 	}
 	
-	public void addEmployee(Employee Employee) throws OperationNotAllowedException {
-		checkAdminLoggedIn();
+	public void addEmployee(Employee employee) throws Exception {
+		if (!adminLoggedIn) {
+			throw new OperationNotAllowedException("Administrator login required");
+		}
 		
-		if(containsEmployeeWithId(Employee.getId())){
+		if(containsEmployeeWithId(employee.getId())){
 			throw new OperationNotAllowedException("Employee ID already taken");
 		}
 		
-		Employees.add(Employee);
+		Employees.add(employee);
+	}
+	
+	public void removeEmployee(Employee employee) {
+		Employees.remove(employee);
 	}
 	
 	public void checkAdminLoggedIn() throws OperationNotAllowedException {
@@ -46,8 +52,13 @@ public class ManagementSystemApp {
 		}
 	}
 
-	public Employee FindEmployeeById(String id){
-		return Employees.stream().filter(u -> u.getId().equals(id)).findAny().orElse(null);
+	public Employee FindEmployeeById(String id) throws OperationNotAllowedException{
+		Employee employee = Employees.stream().filter(u -> u.getId().equals(id)).findAny().orElse(null);
+		
+		if(employee == null){
+			throw new OperationNotAllowedException("Employee ID does not exist");
+		}
+		return employee;
 	}
 	
 	public boolean containsEmployeeWithId(String id){

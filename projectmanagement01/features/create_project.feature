@@ -3,7 +3,7 @@ Feature: Create Project
     Actor: Admin
     
 Scenario: Create project
-    Given that the admin is logged in
+    Given admin is already logged in
     And there is a project with name "Management System"
     When add project to system
     Then the project is added to the system with unique project number
