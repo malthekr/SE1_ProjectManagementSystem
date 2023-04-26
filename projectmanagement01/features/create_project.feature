@@ -26,8 +26,6 @@ Scenario: Create two projects
     And there is a project with name "Management System"
     When add project to system
     Then the project is added to the system with unique project number
-    And there is a project with name "Operating System"
+    Given there is a project with name "Operating System"
     When add project to system
     Then the project is added to the system with unique project number
-    
-    

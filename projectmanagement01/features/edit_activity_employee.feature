@@ -2,7 +2,6 @@ Feature: Edit activity
     Description: Edit activity for project
     Actor: Employee
     
-# Main scenario
 #Scenario: Employee edits activity for project with no project manager
     #Given there is a project
     #And project has no project manager
@@ -11,7 +10,7 @@ Feature: Edit activity
     #And employee is part of project
     #When set start date to "10-05-2023" for activity
     #Then start date for activity is set to "10-05-2023"
-    #
+    
 # Main scenario
 #Scenario: Employee attempts to edit activity for project with project manager
     #Given there is a project

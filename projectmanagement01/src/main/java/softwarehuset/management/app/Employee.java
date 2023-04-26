@@ -7,7 +7,6 @@ public class Employee {
 	private String id;
     private String name;
     private List<Activity> activities = new ArrayList<>();;
-    //private EMail Email;
 	
 	public Employee(String id){
         this.id = id;
