@@ -25,7 +25,7 @@ public class ProjectHelper {
 		startDate = new GregorianCalendar();
 		endDate.setTime(startDate.getTime());
 		endDate.add(Calendar.DAY_OF_YEAR, 7);		
-		workHours = 20;
+		workHours = 20.0;
 		
 		Project project= new Project("Example project", workHours, startDate, endDate);
 		return project;
