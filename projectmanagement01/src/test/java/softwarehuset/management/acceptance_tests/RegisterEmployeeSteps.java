@@ -4,19 +4,26 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class RegisterEmployeeSteps {
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import softwarehuset.management.app.Employee;
+import softwarehuset.management.app.ManagementSystemApp;
+import softwarehuset.management.app.OperationNotAllowedException;
+import org.junit.Assert.*;
+
 
 public class RegisterEmployeeSteps {
 	private ManagementSystemApp managementSystemApp;
-	private EmployeeHelper employeeHelper;
+	//private EmployeeHelper employeeHelper;
 	private ErrorMessageHolder errorMessageHolder;
 	
 	private Employee employee;
 	 
-	public RegisterEmployeeSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, EmployeeHelper employeeHelper) {
+	public RegisterEmployeeSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder) {
 		this.managementSystemApp = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
-		this.employeeHelper = employeeHelper;
+		//this.employeeHelper = employeeHelper;
 //		this.employee = employee;
 	}
 	
@@ -45,7 +52,7 @@ public class RegisterEmployeeSteps {
 	
 	@Then("the error message {string} is given")
 	public void theErrorMessageIs(String errorMessage){
-		assertThat(errorMessageHolder.getErrorMessage(), is(equalTo(errorMessage)));
+		assertEquals(errorMessageHolder.getErrorMessage(), errorMessage);
 	}
 	
 	@When("unregister the employee with ID {string}")

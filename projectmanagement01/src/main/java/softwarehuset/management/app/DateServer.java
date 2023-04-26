@@ -1,5 +1,8 @@
 package softwarehuset.management.app;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class DateServer {
 	public Calendar getDate() {
 		Calendar calendar = new GregorianCalendar();
@@ -18,7 +21,6 @@ public class DateServer {
 		nextDate.setTime(date.getTime());
 		nextDate.add(Calendar.DAY_OF_YEAR, days);
 		//when(dateServer.getDate()).thenReturn(nextDate);
-		
 		return nextDate;
 	}
 }

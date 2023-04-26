@@ -3,12 +3,12 @@ Feature: Admin login
 	Actor: Admin
 
 Scenario: Administrator login and logout
-	Given that the administrator is not logged in
-	And the admin id is "admi"
-	Then the administrator login succeeds
-	And the adminstrator is logged in
-	When the administrator logs out
-	Then the administrator is not logged in
+	Given admin is not logged in
+	And admin id is "admi"
+	Then admin login succeeds
+	And admin is logged in
+	When admin logs out
+	Then admin is not logged in
 	
 Scenario: Admin login with wrong id
 	Given admin is not logged in

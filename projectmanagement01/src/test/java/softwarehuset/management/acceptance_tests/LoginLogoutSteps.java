@@ -12,7 +12,7 @@ import io.cucumber.java.en.When;
 
 public class LoginLogoutSteps {
 
-	private ManagementSystem managementSystem;
+	private ManagementSystemApp managementSystem;
 	private String id;
 	private ErrorMessageHolder errorMessageHolder;
 	
