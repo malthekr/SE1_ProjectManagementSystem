@@ -3,7 +3,9 @@ package softwarehuset.management.acceptance_tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import softwarehuset.management.app.ManagementSystem;
+import softwarehuset.management.app.Employee;
+import softwarehuset.management.app.ManagementSystemApp;
+import softwarehuset.management.app.OperationNotAllowedException;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -12,43 +14,82 @@ public class LoginLogoutSteps {
 
 	private ManagementSystem managementSystem;
 	private String id;
+	private ErrorMessageHolder errorMessageHolder;
 	
-	public LoginLogoutSteps(ManagementSystem managementSystem) {
+	public LoginLogoutSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder) {
 		this.managementSystem = managementSystem;
+		this.errorMessageHolder = errorMessageHolder;
 	}
 	
-	@Given("that the administrator is not logged in")
-	public void thatTheAdministratorIsNotLoggedIn() throws Exception {
+	@Given("admin is not logged in")
+	public void thatTheAdministratorIsNotLoggedIn() {
 		assertFalse(managementSystem.adminLoggedIn());
 	}
 	
-	@Given("the admin id is {string}")
-	public void theIdIs(String id) throws Exception {
+	@Given("admin id is {string}")
+	public void theIdIs(String id) {
 		this.id = id;
 	}
 	
-	@Then("the administrator login succeeds")
-	public void admingLogin() throws Exception {
+	@Then("admin login succeeds")
+	public void admingLogin() {
 		assertTrue(managementSystem.adminLogin(id));
 	}
 	
-	@Given("the adminstrator is logged in")
-	public void adminLoggedIn() throws Exception {
+	@Given("admin is logged in")
+	public void adminLoggedIn() {
 		assertTrue(managementSystem.adminLoggedIn());
 	}
 	
-	@When("the administrator logs out")
-	public void adminLogout() throws Exception {
+	@When("admin logs out")
+	public void adminLogout() {
 		managementSystem.adminLogout();
 	}
 	
-	@Then("the administrator is not logged in")
-	public void adminNotLoggedIn() throws Exception {
-		assertFalse(managementSystem.adminLoggedIn());
+	@Then("admin login fails")
+	public void adminLoginFail() {
+		assertFalse(managementSystem.adminLogin(id));
 	}
 	
-	@Then("the administrator login fails")
-	public void adminLoginFail() throws Exception {
-		assertFalse(managementSystem.adminLogin(id));
+	@Given("admin is already logged in")
+	public void thatTheAdminIsLoggedIn() {
+		assertTrue(managementSystem.adminLogin("admi"));
+	}
+	
+	@Given("employee with ID {string} is logged in")
+	public void employeeWithIDIsLoggedIn(String Id) throws OperationNotAllowedException{
+	    createEmployee(Id);
+	    assertTrue(managementSystem.employeeLogin(Id));
+	}
+	
+	@Given("admin is logged out")
+	public void adminIsLoggedOut() {
+		assertFalse(managementSystem.adminLogout());
+	}
+	
+	@Given("employee {string} is logged out")
+	public void employeeIsLoggedOut(String Id) {
+	    assertFalse(managementSystem.employeeLogout(Id));
+	}
+	
+	@When("{string} logs in")
+	public void logsIn(String employeeId) {
+		try {
+			managementSystem.employeeLogin(employeeId);
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}		
+	}
+	
+	@Then("employee is logged in")
+	public void isLoggedIn() {
+		assertTrue(managementSystem.employeeLogged());
+	}
+	
+	private void createEmployee(String Id) throws OperationNotAllowedException {
+		managementSystem.adminLogin("admi");
+		Employee employee = new Employee(Id);
+		managementSystem.addEmployee(employee);
+		managementSystem.adminLogout();
 	}
 }
