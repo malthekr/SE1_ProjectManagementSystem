@@ -22,18 +22,23 @@ public class ProjectSteps {
 	private ErrorMessageHolder errorMessageHolder;
 	private DateServer dateServer;
 	private Project project;
+	private ProjectHelper projectHelper;
 	
 	private Calendar startDate;
 	private Calendar endDate;
 	
-	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, DateServer dateServer) {
+	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, DateServer dateServer, ProjectHelper projectHelper) {
 		this.managementSystem = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
 		this.dateServer = dateServer;
+		this.projectHelper = projectHelper;
 	}
 	
 	@Given("there is a project with name {string}")
 	public void createProjectWithName(String projectName) throws OperationNotAllowedException {
+//		project = projectHelper.getProject();
+//		project.editProjectName(projectName);
+		
 		startDate = dateServer.getDate();
 		endDate = dateServer.getDate();
 		 

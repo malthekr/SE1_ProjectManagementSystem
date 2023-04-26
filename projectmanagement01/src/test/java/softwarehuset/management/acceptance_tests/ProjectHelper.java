@@ -2,6 +2,8 @@ package softwarehuset.management.acceptance_tests;
 
 import softwarehuset.management.app.Project;
 import softwarehuset.management.app.DateServer;
+import softwarehuset.management.app.ManagementSystemApp;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -11,6 +13,7 @@ public class ProjectHelper {
 	private Calendar startDate;
 	private Calendar endDate;
 	private Double workHours;
+	private ManagementSystemApp managementSystem;
 	
 	public Project getProject() {
 		if (project == null) {
@@ -31,8 +34,10 @@ public class ProjectHelper {
 		
 //		System.out.println(startDate);
 //		System.out.println(endDate);
-
-		Project project= new Project("Example project", workHours, startDate, endDate);
+		
+		int year = startDate.get(Calendar.YEAR) % 100;
+		int id = managementSystem.generateID(year);
+		Project project= new Project("Example project", workHours, startDate, endDate, id);
 		return project;
 	}
 
