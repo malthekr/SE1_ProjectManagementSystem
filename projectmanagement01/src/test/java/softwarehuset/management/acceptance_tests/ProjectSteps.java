@@ -251,5 +251,14 @@ public class ProjectSteps {
 	public void expectedHoursForProjectIs(Double expectedHours) {
 		assertTrue(project.getExpectedHours().equals(expectedHours));
 	}
+	
+	@Given("there are {int} projects added to the system")
+	public void thereAreProjectsAddedToTheSystem(Integer numberOfProjects) throws OperationNotAllowedException {
+	    for(int i=0; i<numberOfProjects; i++) {
+	    	project = projectHelper.getProject(Integer.toString(i));
+			managementSystem.createProject(project);
+//			System.out.println(project.getProjectID());
+	    }
+	}
 
 }
