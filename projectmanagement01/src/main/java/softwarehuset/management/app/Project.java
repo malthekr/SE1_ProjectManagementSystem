@@ -170,4 +170,8 @@ public class Project {
 		}
 		return null;
 	}
+
+	public Object getExpectedHours() {
+		return expectedHours;
+	}
 }

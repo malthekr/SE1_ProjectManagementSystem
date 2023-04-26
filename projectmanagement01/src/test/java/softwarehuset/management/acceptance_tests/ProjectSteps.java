@@ -255,4 +255,15 @@ public class ProjectSteps {
 	public void thereIsAnActivityInProject(String activityName) throws OperationNotAllowedException {
 		createActivityWithNameForProject(activityName);
 	}
+	
+	@When("edit expected hours for project to {double}")
+	public void editExpectedHoursForProjectTo(Double newExpectedHours) {
+	    project.editExpectedHours(newExpectedHours);
+	}
+	
+	@Then("expected hours for project is {double}")
+	public void expectedHoursForProjectIs(Double expectedHours) {
+		assertTrue(project.getExpectedHours().equals(expectedHours));
+	}
+
 }
