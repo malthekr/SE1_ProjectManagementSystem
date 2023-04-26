@@ -18,21 +18,27 @@ public class ProjectSteps {
 	private ErrorMessageHolder errorMessageHolder;
 	private DateServer dateServer;
 	private Project project;
+	private ProjectHelper projectHelper;
 	
 	private Calendar startDate;
 	private Calendar endDate;
 	
-	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, DateServer dateServer) {
+	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, DateServer dateServer, ProjectHelper projectHelper) {
 		this.managementSystem = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
 		this.dateServer = dateServer;
+		this.projectHelper = projectHelper;
+	}
+	
+	@Given("there is a project")
+	public void thereIsAProject() {
+	    project = projectHelper.getProject();
 	}
 	
 	@Given("there is a project with name {string}")
 	public void createProjectWithName(String projectName) throws OperationNotAllowedException {
-		startDate = dateServer.getDate();
-		endDate = dateServer.getDate();
-		project = new Project(projectName, 0.0, startDate, endDate);
+		project = projectHelper.getProject();
+		project.editProjectName(projectName);
 	}
 	
 	@When("add project to system")
