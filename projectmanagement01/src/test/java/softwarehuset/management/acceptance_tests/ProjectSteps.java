@@ -35,7 +35,6 @@ public class ProjectSteps {
 	
 	@Given("there is a project with name {string}")
 	public void createProjectWithName(String projectName) throws OperationNotAllowedException {
-//		System.out.println("There is a project with name");
 		project = projectHelper.getProject();
 		project.editProjectName(projectName);
 	}
@@ -45,20 +44,12 @@ public class ProjectSteps {
 		try {
 			managementSystem.createProject(project);
 	    } catch (OperationNotAllowedException e) {
-//	    	System.out.println(e);
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		} 
 	}
 	
 	@Given("create project")
 	public void createProject() throws OperationNotAllowedException {
-//		startDate = dateServer.getDate();
-//		endDate = dateServer.getDate();
-		//int year = Calendar.getInstance().get(Calendar.YEAR) % 100;
-//		int Id = managementSystem.generateID(startDate);
-//		project = new Project(0.0, startDate, endDate);
-//		System.out.println("Create project");
-
 		project = projectHelper.getProject();
 	}
 	
@@ -68,12 +59,7 @@ public class ProjectSteps {
 	}
 	
 	@Given("there is a project")
-	public void thereIsAProject() throws OperationNotAllowedException {
-//		managementSystem.adminLogin("admi");
-//	    exampleProject();
-//	    addProjectToSystem();
-//	    managementSystem.adminLogout();
-	    
+	public void thereIsAProject() throws OperationNotAllowedException {	    
 		managementSystem.adminLogin("admi");
 		project = projectHelper.getProject();
 		addProjectToSystem();
