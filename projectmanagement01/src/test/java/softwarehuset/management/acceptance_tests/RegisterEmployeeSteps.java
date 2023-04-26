@@ -1,48 +1,46 @@
 package softwarehuset.management.acceptance_tests;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.equalTo;
+
+import org.junit.jupiter.api.Test;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import softwarehuset.management.app.Employee;
 import softwarehuset.management.app.ManagementSystemApp;
 import softwarehuset.management.app.OperationNotAllowedException;
-import softwarehuset.management.app.DateServer;
-import softwarehuset.management.app.Employee;
+import org.junit.Assert.*;
 
 
 public class RegisterEmployeeSteps {
 	private ManagementSystemApp managementSystemApp;
-	private EmployeeHelper employeeHelper;
+	//private EmployeeHelper employeeHelper;
 	private ErrorMessageHolder errorMessageHolder;
 	
 	private Employee employee;
-	
-	public RegisterEmployeeSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, EmployeeHelper employeeHelper) {
+	 
+	public RegisterEmployeeSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder) {
 		this.managementSystemApp = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
-		this.employeeHelper = employeeHelper;
+		//this.employeeHelper = employeeHelper;
 //		this.employee = employee;
 	}
 	
 	@Given("there is no employee with ID {string}")
-	public void thereIsNoEmployeeWithID(String id) throws Exception {
+	public void thereIsNoEmployeeWithID(String id) throws OperationNotAllowedException {
 		assertFalse(managementSystemApp.containsEmployeeWithId(id));	
 	}
 	
 	@Given("there is an employee with ID {string}")
-	public void thereIsAnEmployeeWithID(String id) throws Exception {
+	public void thereIsAnEmployeeWithID(String id) throws OperationNotAllowedException {
 		employee = new Employee(id);
 		addEmployee(employee);
 		assertTrue(managementSystemApp.containsEmployeeWithId(id));	
 	}
 	
 	@When("register an employee with Name {string} and employee ID {string}")
-	public void registerAnEmployeeWithNameAndEmployeeID(String name, String id) throws Exception{
+	public void registerAnEmployeeWithNameAndEmployeeID(String name, String id) throws OperationNotAllowedException{
 		employee = new Employee(name, id);
 		addEmployee(employee);
 	}
@@ -54,7 +52,7 @@ public class RegisterEmployeeSteps {
 	
 	@Then("the error message {string} is given")
 	public void theErrorMessageIs(String errorMessage){
-		assertThat(errorMessageHolder.getErrorMessage(), is(equalTo(errorMessage)));
+		assertEquals(errorMessageHolder.getErrorMessage(), errorMessage);
 	}
 	
 	@When("unregister the employee with ID {string}")
@@ -72,7 +70,16 @@ public class RegisterEmployeeSteps {
 	    assertFalse(managementSystemApp.containsEmployeeWithId(employee.getId()));	
 	}
 	
-	private void addEmployee(Employee employee) throws Exception{
+	@Given("there is also an employee with ID {string}")
+	public void thereIsAlsoAnEmployeeWithID(String id) {
+		employee = new Employee(id);
+		managementSystemApp.adminLogin("admi");
+		addEmployee(employee);
+		managementSystemApp.adminLogout();
+		assertTrue(managementSystemApp.containsEmployeeWithId(id));	
+	}
+	
+	private void addEmployee(Employee employee){
 		try {
 			managementSystemApp.addEmployee(employee);
 		} catch (OperationNotAllowedException e) {
