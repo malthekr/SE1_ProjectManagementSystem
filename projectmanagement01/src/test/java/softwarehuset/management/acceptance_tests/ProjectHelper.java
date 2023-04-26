@@ -7,6 +7,11 @@ import java.util.GregorianCalendar;
 
 public class ProjectHelper {
 	private Project project;
+	private MockDateHolder dateHolder;
+	private Calendar startDate;
+	private Calendar endDate;
+	private Double workHours;
+	private ManagementSystemApp managementSystem;
 	
 	public Project getProject() {
 //		if (project == null) {

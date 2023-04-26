@@ -45,7 +45,7 @@ public class RegisterEmployeeSteps {
 		addEmployee(employee);
 	}
 	
-	@Then("the person is an registered employee of the system with ID {string}")
+	@Then("the person is a registered employee of the system with ID {string}")
 	public void thePersonIsAnRegisteredEmployeeOfTheSystemWithId(String id){
 		assertTrue(managementSystemApp.containsEmployeeWithId(id));	
 	}
