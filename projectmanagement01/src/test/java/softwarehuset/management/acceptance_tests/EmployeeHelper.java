@@ -20,19 +20,19 @@ public class EmployeeHelper {
 	private Project project;
 	private String emp = "mkr";
 	
-	public Employee getUser() {
+	public Employee getEmployee() {
 		if (employee == null) {
-			employee = exampleUser();
+			employee = exampleEmployee();
 		}
 		return employee;
 	}
 	
-	private Employee exampleUser() {
-		Employee employee = new Employee( "Malthe Reuber", "mkr");
+	private Employee exampleEmployee() {
+		Employee employee = new Employee( "Niklas Reuber", "mok");
 		return employee;
 	}
 
-	public void setUser(Employee employeeInfo) {
+	public void setEmploeye(Employee employeeInfo) {
 		employee = employeeInfo;
 	}	
 	

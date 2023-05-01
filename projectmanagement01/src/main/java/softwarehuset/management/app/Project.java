@@ -10,29 +10,32 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Project {
-	
 	private String projectName;
 	private Double expectedHours;
 	private Calendar startDate, endDate;
+	
 	private Boolean ongoingProject = false;
+	
 	private List<Employee> employeesAssignedToProject = new ArrayList<>();
 	private List<Activity> activities = new ArrayList<>();
+	private IDServer idServer = new IDServer();
 	private Employee projectManager;
-	private int projectId;
 	
-	public Project(String projectName, Double expectedHours, Calendar startDate, Calendar endDate, int projectId) {
+	private int projectID;
+	
+	public Project(String projectName, Double expectedHours, Calendar startDate, Calendar endDate) {
 		this.projectName = projectName;
 		this.expectedHours = expectedHours;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.projectId = projectId;
+		this.projectID = idServer.generateID(startDate);
 	}
 	
-	public Project(Double expectedHours, Calendar startDate, Calendar endDate, int projectId) {
+	public Project(Double expectedHours, Calendar startDate, Calendar endDate) {
 		this.expectedHours = expectedHours;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.projectId = projectId;
+		this.projectID = idServer.generateID(startDate);
 	}
 	
 	// Override and assign the project manager for this project, even if already assigned
@@ -43,19 +46,26 @@ public class Project {
 	// Add employee - Throws Exception if employee is already part of project
 	public void addEmployee(Employee employee) throws OperationNotAllowedException { 
 		if(!employeesAssignedToProject.contains(employee)){
-			employeesAssignedToProject.add(employee);
+			if(employee.getNumOfActivities() < 20){
+				employeesAssignedToProject.add(employee);
+				} else {
+					throw new OperationNotAllowedException("Employee too busy");
+				}
 		} else {
 			throw new OperationNotAllowedException("Employee already part of project");
 		}
 	}
 	
-	public void createActivity(String description, Employee employee) throws OperationNotAllowedException {
-		if(!employeesAssignedToProject.contains(employee)) {
-			throw new OperationNotAllowedException("Employee is not part of the project");
+	public void createActivity(String description) throws OperationNotAllowedException {
+		if(description == "") {
+			throw new OperationNotAllowedException("Activities must have a name");
 		}
-		Activity activity = new Activity(projectId, employee, description, startDate, endDate);
+		if(activities.contains(findActivityByDescrption(description))) {
+			throw new OperationNotAllowedException("Activities must have a unique name");
+		}
+		
+		Activity activity = new Activity(projectID, description, startDate, endDate);
 		activities.add(activity);
-		employee.addActivity(activity);
 	}
 	
 	// Add activity - Throws Exception if activity is already part of project
@@ -104,7 +114,7 @@ public class Project {
 	}
 	
 	public int getProjectID() {
-		return projectId;
+		return projectID;
 	}
 	
 	public Calendar getStartDate() {
@@ -164,4 +174,10 @@ public class Project {
 		}
 		return null;
 	}
+
+	public Object getExpectedHours() {
+		return expectedHours;
+	}
+	
+
 }
