@@ -287,12 +287,6 @@ public class ManagementSystemApp {
 		employee.addActivity(project, project.findActivityByDescrption(description));
 	}
 	
-//	public void addEmployeeToActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{
-//		project.addEmployee(employee);
-//		employee.addActivity(project, description);
-//		
-//	}
-	
 	private boolean checkAuth(Project project) throws OperationNotAllowedException {
 		if(employeeLoggedIn && project.hasProjectManager()) {
 			if(!employeeLoggedInId.equals(project.getProjectManager())) { 

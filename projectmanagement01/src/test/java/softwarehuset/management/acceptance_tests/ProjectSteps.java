@@ -266,20 +266,21 @@ public class ProjectSteps {
 	    for(int i = 0; i <= ongoingActvities; i++) {
 	    	String description = "activity"+i;
 	    	createActivityWithNameForProject(description);
+	    	managementSystem.addEmployeeToActivity(employee, project, description);
 	    	Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
 	    	activity.setExpectedHours(i);
-	    	employee.addActivity(project, activity);
+	    	//employee.addActivity(project, activity);
 	    }
 	}
 
 	@When("add employee with ID {string} to activity in project")
 	public void addEmployeeWithIDToActivityInProject(String id) {
 		try {
-			Employee employee = managementSystem.FindEmployeeById(id);
+			//Employee employee = managementSystem.FindEmployeeById(id);
 			String description = "NewActivity20";
 	    	createActivityWithNameForProject(description);
-	    	Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
-	    	employee.addActivity(project, activity);
+	    	managementSystem.addEmployeeToActivity(managementSystem.FindEmployeeById(id), project, description);
+	    	//Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
 			
 	    } catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
@@ -287,18 +288,13 @@ public class ProjectSteps {
 	}
 	
 	@Then("employee with ID {string} is added to the project activity")
-	public void employeeWithIDIsAddedToTheProjectActivity(String id) {
-		try {
+	public void employeeWithIDIsAddedToTheProjectActivity(String id) throws OperationNotAllowedException  {
 			String description = "NewActivity20";
 			Employee employee = managementSystem.FindEmployeeById(id);
 			Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
-			employee.addActivity(project, activity);
-			
-			assertTrue(employee.isPartOfActivity(project, activity));
-		} catch (OperationNotAllowedException e) {
-			errorMessageHolder.setErrorMessage(e.getMessage());
-		}
-		
+			//employee.addActivity(project, activity);
+			//employee.isPartOfActivity(project, activity);
+			assertTrue(activity.getEmployees().contains(employee));
 	}
 	
 	@When("set expected project hours to {double}")
