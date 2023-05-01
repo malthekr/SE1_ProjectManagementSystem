@@ -33,36 +33,4 @@ public class ProjectManagerSteps {
 		this.employee = employee;
 		this.activity = activity;
 	}
-
-	@Given("employee with ID {string} is the project manager")
-	public void employeeIsTheProjectManager(String id) throws OperationNotAllowedException {
-		Employee employee = managementSystemApp.FindEmployeeById(id);
-		project.addEmployee(employee);
-		managementSystemApp.promoteToPm(project.getProjectID(), id);
-		assertEquals(project.getProjectManager(), employee);
-	}
-
-	@Given("employee with ID {string} has {int} ongoing activities")
-	public void employeeWithIDHasOngoingActivities(String id, int number) throws OperationNotAllowedException {
-		Employee employee1 = managementSystemApp.FindEmployeeById(id);
-		Project project = managementSystemApp.createProject("pro1");
-		for (int i = 1; i <= number; i++) {
-			String name = "act" + i;
-			managementSystemApp.createActivity(number, name);
-			managementSystemApp.joinActivity(number, name);
-			Activity act = managementSystemApp.findActivityByDescription(number, name);
-			employee1.addActivity(act);
-		}
-		assertEquals(employee1.getNumOfActivities(),number);
-	}
-
-	@When("add employee with ID {string} to activity in project")
-	public void addEmployeeWithIDToActivityInProject(String string) throws OperationNotAllowedException {
-		
-	}
-
-	@Then("employee with ID {string} is added to the project activity")
-	public void employeeWithIDIsAddedToTheProjectActivity(String string) throws OperationNotAllowedException {
-		
-	}
 }
