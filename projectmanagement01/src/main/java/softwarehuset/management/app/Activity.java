@@ -45,6 +45,14 @@ public class Activity {
         return employees;
     }
     
+    public Calendar getStartDate(){
+        return startDate;
+    }
+    
+     public Calendar getEndDate(){
+        return endDate;
+    }
+    
     public void setDescrption(String description) {
     	this.description = description;
     }

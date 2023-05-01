@@ -238,22 +238,25 @@ public class ManagementSystemApp {
 	public void createActivity(int projectId, String description) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
 		
+		if(checkAuth(project)) {
+			project.createActivity(description);
+		}
 		
-		if(employeeLoggedIn && project.hasProjectManager()) {
-			if(!employeeLoggedInId.equals(project.getProjectManager())) {
-				throw new OperationNotAllowedException("Only Project Manager can add activities");
-			}
-			project.createActivity(description);
-			return;
-		} 
-		if (employeeLoggedIn && !project.hasProjectManager()){
-			project.createActivity(description);
-			return;
-		}
-		if(adminLoggedIn()) {
-			project.createActivity(description);
-			return;
-		}
+//		if(employeeLoggedIn && project.hasProjectManager()) {
+//			if(!employeeLoggedInId.equals(project.getProjectManager())) {
+//				throw new OperationNotAllowedException("Only Project Manager can add activities");
+//			}
+//			project.createActivity(description);
+//			return;
+//		} 
+//		if (employeeLoggedIn && !project.hasProjectManager()){
+//			project.createActivity(description);
+//			return;
+//		}
+//		if(adminLoggedIn()) {
+//			project.createActivity(description);
+//			return;
+//		}
 		
 		throw new OperationNotAllowedException("Admin or Project Manager log in required");
 	}
@@ -275,6 +278,58 @@ public class ManagementSystemApp {
 		} 
 
 		throw new OperationNotAllowedException("Only Project Managers are allowed to set expected hours");
+	}
+	
+	public void UpdateStartDate(int dd, int mm, int yyyy, int projectId, String description) throws OperationNotAllowedException{
+		Activity activity = findActivityByDescription(projectId, description);
+		Project project = findProjectById(projectId);
+		Calendar startDate = activity.getStartDate();
+		startDate = setDate(startDate, dd, mm, yyyy);
+		if(employeeLoggedIn){
+			if(!employeeLoggedInId.equals(project.getProjectManager())) {
+				throw new OperationNotAllowedException("Only Project Manager is allowed to edit activities");
+				}
+			activity.setStartDate(startDate);
+			return;
+			}
+		throw new OperationNotAllowedException("Only Project Manager is allowed to edit activities");
+		}
+	
+	public void UpdateEndDate(int dd, int mm, int yyyy, int projectId, String description) throws OperationNotAllowedException{
+		Activity activity = findActivityByDescription(projectId, description);
+		Calendar endDate = activity.getEndDate();
+		endDate = setDate(endDate, dd, mm, yyyy);
+		activity.setStartDate(endDate);
+	}
+	
+	public Calendar setDate(Calendar date, int dd, int mm, int yyyy) {
+		date.set(Calendar.YEAR, yyyy);
+		date.set(Calendar.MONTH, mm);
+		date.set(Calendar.DAY_OF_MONTH, dd);
+		return date;
+	}
+
+	public void setActivityDescrption(Project project, String description1, String description2) throws OperationNotAllowedException {
+		if(checkAuth(project)) {
+			project.findActivityByDescrption(description1).setDescrption(description2);
+		}
+	}
+	
+	public boolean checkAuth(Project project) throws OperationNotAllowedException {
+		if(employeeLoggedIn && project.hasProjectManager()) {
+			if(!employeeLoggedInId.equals(project.getProjectManager())) { 
+				// throws error if employee logged in is not PM
+				throw new OperationNotAllowedException("Project Manager login required");
+			}
+			return true; // returns true PM is logged in
+		} 
+		if (project.findEmployee(employeeLoggedInId) && !project.hasProjectManager()){
+			return true; // returns true if project has no PM and employee (who is part of project) is logged in
+		}
+		if(adminLoggedIn()) {
+			return true;
+		}
+		return false;
 	}
 
 //	public List<Activity> requestEmployeeActivity(int projectID, Employee otherEmployee) throws OperationNotAllowedException {

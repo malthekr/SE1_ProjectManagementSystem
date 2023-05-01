@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.junit.jupiter.api.Test;
 
@@ -318,4 +319,43 @@ public class ProjectSteps {
 		assertEquals(project.getExpectedHours(), hours);
 	}
 	
+	@When("set start date to {int}-{int}-{int} for activity {string}")
+	public void setStartDateToForActivity(int dd, int mm, int yyyy, String description) {
+	    try {
+			managementSystem.UpdateStartDate(dd, mm, yyyy, project.getProjectID(), description);
+			
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}
+	}
+
+	@Then("start date for activity {string} is set to {int}-{int}-{int}")
+	public void startDateForActivityIsSetTo(String description, int dd, int mm, int yyyy) {
+		try {
+			Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+			Calendar calendar = new GregorianCalendar();
+			Calendar newDate = new GregorianCalendar(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+			newDate = managementSystem.setDate(newDate, dd, mm, yyyy);
+			
+		    assertEquals(activity.getStartDate(), newDate);
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}
+	}
+	
+	@When("{string} edits description of activity {string} to {string}")
+	public void editsDescriptionOfActivityTo(String id, String description1, String description2) {
+	   try {
+		   managementSystem.setActivityDescrption(project, description1, description2);
+	   } catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+	   }
+	}
+	
+	@Then("activity description is {string}")
+	public void activityDescriptionIs(String description) throws OperationNotAllowedException  {
+		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+		assertEquals(activity.getDescription(), description);
+		
+	}
 }
