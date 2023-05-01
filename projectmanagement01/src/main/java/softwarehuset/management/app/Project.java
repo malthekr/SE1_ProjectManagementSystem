@@ -141,7 +141,6 @@ public class Project {
 	}
 	
 	public void promoteEmployee(String id) throws OperationNotAllowedException{
-		Boolean assigned = false;
 		
 		if(projectManager != null) {
 			throw new OperationNotAllowedException("Project already has Project Manager");
@@ -149,14 +148,12 @@ public class Project {
 		
 		for(Employee e : employeesAssignedToProject){
 			if(e.getId().equals(id) == true){
-				assigned = true;
 				setProjectManager(e);
+				return;
 			}
 		}
 		
-		if(!assigned){
-			throw new OperationNotAllowedException("Employee is not part of the project");
-		}
+		throw new OperationNotAllowedException("Employee is not part of the project");
 	}
 	
 	public boolean findEmployee(Employee employee) throws OperationNotAllowedException {

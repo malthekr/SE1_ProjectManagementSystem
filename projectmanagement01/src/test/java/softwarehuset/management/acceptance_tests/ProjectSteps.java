@@ -358,13 +358,7 @@ public class ProjectSteps {
 	public void requestStatusReportForProject() throws OperationNotAllowedException {
 		managementSystem.generateStatusReport(project.getProjectID());
 	}
-	/*
-	@When("set registered hours to {int} hours")
-	public void setRegisteredHoursToHours(int hours) {
-		
-		
-	}
-	*/
+
 	@When("add {double} hours to activity {string} in project")
 	public void addHoursToActivityInProject(double hours, String description) {
 		try{
@@ -393,4 +387,20 @@ public class ProjectSteps {
 		return employee.getActivities();
 	}
 	
+	@When("add registered hours to {double} hours to activity")
+	public void addRegisteredHoursToHoursToActivity(double hours) {
+		try {
+			String description = "NewActivity20";
+			project.findActivityByDescription(description).addWorkedHours(hours);	
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}	
+	}
+	
+	@Then("the system edits the registered hours to {double}")
+	public void theSystemEditsTheRegisteredHoursTo(double hours) throws OperationNotAllowedException {
+		String description = "NewActivity20";
+		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+		assertEquals(activity.getWorkedHours(), hours, 0);
+	}
 }
