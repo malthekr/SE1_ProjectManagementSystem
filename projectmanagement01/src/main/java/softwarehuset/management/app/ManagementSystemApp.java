@@ -552,15 +552,19 @@ public class ManagementSystemApp extends Observable {
 		
 		adminLogout();
 	}
+	
+	public void UpdateExpectedHours(int projectId, double hours) throws OperationNotAllowedException {
+		Project project = findProjectById(projectId);
+		
+		if(employeeLoggedIn) {
+			if(!employeeLoggedInId.equals(project.getProjectManager())) {
+				throw new OperationNotAllowedException("Only Project Managers are allowed to set expected hours");
+			}
+			project.editExpectedHours(hours);
+			return;
+		} 
 
-//	public List<Activity> requestEmployeeActivity(int projectID, Employee otherEmployee) throws OperationNotAllowedException {
-//		Project project = findProjectById(projectID);		
-//		if(employeeLoggedIn) {
-//			if(employeeLoggedInId.equals(project.getProjectManager())) {
-//				return otherEmployee.getActivities();
-//			}
-//		}
-//		throw new OperationNotAllowedException("Project Manager required");
-//	}	
+		throw new OperationNotAllowedException("Only Project Managers are allowed to set expected hours");
+	}
 }
 
