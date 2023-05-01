@@ -6,8 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import org.junit.jupiter.api.Test;
-
 import softwarehuset.management.app.ManagementSystemApp;
 import softwarehuset.management.app.Activity;
 import softwarehuset.management.app.DateServer;
@@ -353,6 +351,17 @@ public class ProjectSteps {
 	@When("request status report for project")
 	public void requestStatusReportForProject() throws OperationNotAllowedException {
 		managementSystem.generateStatusReport(project.getProjectID());
+	}
+	
+	@When("set registered hours to {int} hours")
+	public void setRegisteredHoursToHours(int hours) {
+		
+		
+	}
+	
+	@Then("the system edits the registered hours to {int}")
+	public void theSystemEditsTheRegisteredHoursTo(int hours) {
+		//assertTrue();
 	}
 	
 }
