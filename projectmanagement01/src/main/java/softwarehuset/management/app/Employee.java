@@ -2,11 +2,15 @@ package softwarehuset.management.app;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
 
 public class Employee {
 	private String id;
     private String name;
-    private List<Activity> activities = new ArrayList<>();;
+    // private List<Activity> activities = new ArrayList<>();;
+    private static ConcurrentHashMap<Project, List<Activity>> map = new ConcurrentHashMap<>();
+    private static List<Activity> activities;
 	
 	public Employee(String id){
         this.id = id;
@@ -16,7 +20,6 @@ public class Employee {
         this.name = name;
         this.id = id;
     }
-    
 
     public String getName(){
         return name;
@@ -26,7 +29,13 @@ public class Employee {
         return id;
     }
     
-    public void addActivity(Activity activity) throws OperationNotAllowedException {
+    public void addActivity(Project project, Activity activity) throws OperationNotAllowedException {
+//    	if(!activities.contains(activity)) {
+//    		activities.add(activity);
+//    		return;
+//    	}
+    	activities = map.computeIfAbsent(project, y -> new ArrayList<>());
+    	
     	if(!activities.contains(activity)) {
     		activities.add(activity);
     		return;
@@ -36,7 +45,10 @@ public class Employee {
     }
 
     public int getNumOfActivities(){
-        return activities.size();
+    	int numbOfActivites = map.values().stream().flatMapToInt(list -> IntStream.of(list.size())).sum();
+    	
+        return numbOfActivites;
+    	//return activities.size();
     }
     
     public List<Activity> getActivities(){

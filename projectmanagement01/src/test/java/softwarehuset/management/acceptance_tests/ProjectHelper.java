@@ -14,10 +14,16 @@ public class ProjectHelper {
 	private ManagementSystemApp managementSystem;
 	
 	public Project getProject() {
-//		if (project == null) {
-//			project = exampleProject();
-//		} 
+		if (project == null) {
+			project = exampleProject();
+		} 
+//		project = exampleProject();
+		return project;
+	}
+	
+	public Project getProject(String name) {
 		project = exampleProject();
+		project.editProjectName(name);
 		return project;
 	}
 	

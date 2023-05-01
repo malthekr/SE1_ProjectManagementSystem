@@ -14,7 +14,6 @@ public class IDServer {
 		
         int number = counter.incrementAndGet();
         int id = year * 1000 + number;
-//        System.out.println(id);
 		
 		return id;
 	}

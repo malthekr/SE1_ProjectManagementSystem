@@ -26,6 +26,7 @@ public class Activity {
     	this.description = description;
     	this.startDate = startDate;
     	this.endDate = endDate;
+    	this.expectedHours = 0.0;
     }
     
     public void addEmployee(Employee employee) throws OperationNotAllowedException {

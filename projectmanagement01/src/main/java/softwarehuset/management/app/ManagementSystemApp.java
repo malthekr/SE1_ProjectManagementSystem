@@ -91,7 +91,7 @@ public class ManagementSystemApp {
 		return employee;
 	}
 	
-	public Project FindProjectById(int id) throws OperationNotAllowedException{
+	public Project findProjectById(int id) throws OperationNotAllowedException{
 		Project project = projectRepository.stream().filter(u -> u.getProjectID() == (id)).findAny().orElse(null);
 		
 		return project;
@@ -99,7 +99,7 @@ public class ManagementSystemApp {
 	
 	public void addEmployeeToProject(int ProjectId, String EmployeeId) throws OperationNotAllowedException {
 		Employee employee = FindEmployeeById(EmployeeId);
-		Project project = FindProjectById(ProjectId);
+		Project project = findProjectById(ProjectId);
 		
 		if(adminLoggedIn) {
 			project.addEmployee(employee);
@@ -127,20 +127,20 @@ public class ManagementSystemApp {
 	
 	public boolean checkIfEmployeeIsPartOfProject(int ProjectId, String EmployeeId) throws OperationNotAllowedException {
 		Employee employee = FindEmployeeById(EmployeeId);
-		Project project = FindProjectById(ProjectId);
+		Project project = findProjectById(ProjectId);
 		
 		return project.findEmployee(employee);
 		
 	}
 	
 	public boolean checkIfProjectHasPM(int ProjectId) throws OperationNotAllowedException {
-		Project project = FindProjectById(ProjectId);
+		Project project = findProjectById(ProjectId);
 		return project.getProjectManager() != null ? true : false;
 	}
 	
 	public void removeEmployeeWithIdFromProject(int ProjectId, String EmployeeId) throws OperationNotAllowedException {
 		Employee employee = FindEmployeeById(EmployeeId);
-		Project project = FindProjectById(ProjectId);
+		Project project = findProjectById(ProjectId);
 		
 		project.removeEmployee(employee);
 	}
@@ -165,7 +165,7 @@ public class ManagementSystemApp {
 	}
 	
 	public void promoteToPm(int projectId, String Id) throws OperationNotAllowedException {
-		Project project = FindProjectById(projectId);
+		Project project = findProjectById(projectId);
 		
 		//if(!adminLoggedIn) {
 		//	throw new OperationNotAllowedException("Administrator login required");
@@ -175,7 +175,7 @@ public class ManagementSystemApp {
 	}
 	
 	public void editProjectName(int projectId, String projectName) throws OperationNotAllowedException {
-		Project project = FindProjectById(projectId);
+		Project project = findProjectById(projectId);
 		
 		if(employeeLoggedIn) {
 			if(!employeeLoggedInId.equals(project.getProjectManager())) {
@@ -190,7 +190,7 @@ public class ManagementSystemApp {
 	}
 	
 	public void editStartDate(int projectId, int days) throws OperationNotAllowedException {
-		Project project = FindProjectById(projectId);
+		Project project = findProjectById(projectId);
 		
 		if(employeeLoggedIn) {
 			if(!employeeLoggedInId.equals(project.getProjectManager())) {
@@ -206,7 +206,7 @@ public class ManagementSystemApp {
 	}
 	
 	public void editEndDate(int projectId, int days) throws OperationNotAllowedException {
-		Project project = FindProjectById(projectId);
+		Project project = findProjectById(projectId);
 		
 		if(employeeLoggedIn) {
 			if(!employeeLoggedInId.equals(project.getProjectManager())) {
@@ -222,21 +222,21 @@ public class ManagementSystemApp {
 	}
 	
 	public boolean CheckifStartDateMoved(int projectId, int days, Calendar date) throws OperationNotAllowedException {
-		Project project = FindProjectById(projectId);
+		Project project = findProjectById(projectId);
 		Calendar Datee = date;
 		Datee.add(Calendar.DAY_OF_YEAR, days);
 		return project.getStartDate() == Datee ? true : false;
 	}
 	
 	public boolean CheckifEndDateMoved(int projectId, int days, Calendar date) throws OperationNotAllowedException {
-		Project project = FindProjectById(projectId);
+		Project project = findProjectById(projectId);
 		Calendar Datee = date;
 		Datee.add(Calendar.DAY_OF_YEAR, days);
 		return project.getEndDate() == Datee ? true : false;
 	}
 	
 	public void createActivity(int projectId, String description) throws OperationNotAllowedException {
-		Project project = FindProjectById(projectId);
+		Project project = findProjectById(projectId);
 		
 		
 		if(employeeLoggedIn && project.hasProjectManager()) {
@@ -259,8 +259,18 @@ public class ManagementSystemApp {
 	}
 	
 	public Activity findActivityByDescription(int projectId, String description) throws OperationNotAllowedException {
-		Project project = FindProjectById(projectId);
+		Project project = findProjectById(projectId);
 		return project.findActivityByDescrption(description);
 	}
+
+//	public List<Activity> requestEmployeeActivity(int projectID, Employee otherEmployee) throws OperationNotAllowedException {
+//		Project project = findProjectById(projectID);		
+//		if(employeeLoggedIn) {
+//			if(employeeLoggedInId.equals(project.getProjectManager())) {
+//				return otherEmployee.getActivities();
+//			}
+//		}
+//		throw new OperationNotAllowedException("Project Manager required");
+//	}	
 }
 
