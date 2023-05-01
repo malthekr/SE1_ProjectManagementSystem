@@ -11,7 +11,6 @@ public class ProjectHelper {
 	private Calendar startDate;
 	private Calendar endDate;
 	private Double workHours;
-	private ManagementSystemApp managementSystem;
 	
 	public Project getProject() {
 		if (project == null) {
