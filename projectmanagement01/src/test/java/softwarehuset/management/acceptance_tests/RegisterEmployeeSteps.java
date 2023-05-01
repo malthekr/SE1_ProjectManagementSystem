@@ -59,7 +59,6 @@ public class RegisterEmployeeSteps {
 	
 	@Then("the error message {string} is given")
 	public void theErrorMessageIs(String errorMessage){
-	//	errorMessageHolder.setErrorMessage(errorMessage);
 		assertEquals(errorMessage, errorMessageHolder.getErrorMessage());
 	}
 	

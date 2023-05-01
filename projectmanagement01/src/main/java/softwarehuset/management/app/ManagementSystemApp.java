@@ -58,6 +58,10 @@ public class ManagementSystemApp {
 			throw new OperationNotAllowedException("Employee ID already taken");
 		}
 		
+		if(employee.getId().length() > 4){
+			throw new OperationNotAllowedException("Employee ID is too long");
+		}
+		
 		Employees.add(employee);
 	}
 	

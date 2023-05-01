@@ -204,7 +204,6 @@ public class Project {
 		timeTable.editHours(workHours);
 	}
 	
-
 	public void generateStatusReport() {
 		double sumExpectedHours = 0;
 		double sumWorkedHours = 0; // Total worked hours on the project

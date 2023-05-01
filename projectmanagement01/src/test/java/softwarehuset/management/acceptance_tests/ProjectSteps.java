@@ -366,11 +366,6 @@ public class ProjectSteps {
 		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
 		assertEquals(activity.getDescription(), description);
 	}
-	
-	@When("request status report for project")
-	public void requestStatusReportForProject() throws OperationNotAllowedException {
-		managementSystem.generateStatusReport(project.getProjectID());
-	}
 
 	@When("add {double} hours to activity {string} in project")
 	public void addHoursToActivityInProject(double hours, String description) throws OperationNotAllowedException {
@@ -387,7 +382,7 @@ public class ProjectSteps {
 
 	@Then("{double} hours is added to activity {string} in project")
 	public void hoursIsAddedToActivityInProject(double hours, String description) throws OperationNotAllowedException {
-		assertEquals(managementSystem.findActivityByDescription(project.getProjectID(), description).getWorkedHours(), hours, 0);
+		assertEquals(hours, managementSystem.findActivityByDescription(project.getProjectID(), description).getWorkedHours(), 0);
 	}
 	
 	@When("request employee activity of {string}")
@@ -426,11 +421,15 @@ public class ProjectSteps {
 		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
 		assertEquals(activity.getWorkedHours(), hours, 0);
 	}
-	/*
-	@Then("the error message {string} is given")
-	public void theErrorMessageIs(String errorMessage){
-		//errorMessageHolder.setErrorMessage(errorMessage);
-		assertEquals(errorMessage, errorMessageHolder.getErrorMessage());
+	
+	@When("request status report for project")
+	public void requestStatusReportForProject() throws OperationNotAllowedException {
+		managementSystem.generateStatusReport(project.getProjectID());
 	}
-	*/
+	
+	@Then("system provides status report for project")
+	public void systemProvidesStatusReportForProject() {
+		
+	}
+
 }
