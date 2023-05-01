@@ -10,7 +10,6 @@ public class ManagementSystemApp {
 	private Employee employeeLoggedInId;
 	private List<Project> projectRepository = new ArrayList<>();
 	private List<Employee> Employees = new ArrayList<>();
-	//private DateServer dateServer = new DateServer(); 
 
 	public boolean adminLoggedIn() {
 		return adminLoggedIn;
@@ -229,7 +228,7 @@ public class ManagementSystemApp {
 	
 	public Activity findActivityByDescription(int projectId, String description) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
-		return project.findActivityByDescrption(description);
+		return project.findActivityByDescription(description);
 	}
 	
 	public void UpdateExpectedHours(int projectId, double hours) throws OperationNotAllowedException {
@@ -271,7 +270,7 @@ public class ManagementSystemApp {
 
 	public void setActivityDescrption(Project project, String description1, String description2) throws OperationNotAllowedException {
 		if(checkAuth(project)) {
-			project.findActivityByDescrption(description1).setDescrption(description2);
+			project.findActivityByDescription(description1).setDescrption(description2);
 		}
 	}
 	
@@ -285,7 +284,7 @@ public class ManagementSystemApp {
 	
 	public void addEmployeeToActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{
 		project.addEmployeeToActivity(employee, description);
-		employee.addActivity(project, project.findActivityByDescrption(description));
+		employee.addActivity(project, project.findActivityByDescription(description));
 	}
 	
 	private boolean checkAuth(Project project) throws OperationNotAllowedException {

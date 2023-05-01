@@ -45,8 +45,11 @@ public class Activity {
         return projectId;
     }
     
-    public void addWorkedHours(double hoursWorked) {
+    public void addWorkedHours(double hoursWorked) throws OperationNotAllowedException {
+        hoursWorked = hoursWorked - (hoursWorked % 0.5);
     	this.workedHours += hoursWorked;
+    	return;
+    	//throw new OperationNotAllowedException("Worked hours is measured in half hours worked");
     }
     
     public double getWorkedHours() {

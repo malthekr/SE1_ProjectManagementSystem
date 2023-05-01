@@ -53,8 +53,10 @@ public class Project {
 		if(description == "") {
 			throw new OperationNotAllowedException("Activities must have a name");
 		}
-		if(activities.contains(findActivityByDescrption(description))) {
-			throw new OperationNotAllowedException("Activities must have a unique name");
+		for(Activity a : activities){
+			if(a.getDescription() == description) {
+				throw new OperationNotAllowedException("Activities must have a unique name");
+			}
 		}
 		
 		Activity activity = new Activity(projectID, description, startDate, endDate);
@@ -166,17 +168,17 @@ public class Project {
 		return false;
 	}
 	
-	public Activity findActivityByDescrption(String description) {
+	public Activity findActivityByDescription(String description) throws OperationNotAllowedException {
 		for(Activity activity : activities) {
 			if(activity.getDescription().equals(description)) {
 				return activity;
 			}
 		}
-		return null;
+		throw new OperationNotAllowedException("Activity does not exist");
 	}
 	
 	public void addEmployeeToActivity(Employee employee, String description) throws OperationNotAllowedException{
-		Activity a = findActivityByDescrption(description);
+		Activity a = findActivityByDescription(description);
 		if(findEmployee(employee)){
 			a.addEmployee(employee);
 		}

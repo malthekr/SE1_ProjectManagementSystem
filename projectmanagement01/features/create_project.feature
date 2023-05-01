@@ -20,15 +20,6 @@ Scenario: Creates project but admin is logged out
     And admin is logged out
     When add project to system
     Then the error message "Administrator login required" is given
-   
-#Scenario: Create two projects
-    #Given admin is already logged in
-    #And there is a project with name "Management System"
-    #When add project to system
-    #Then the project is added to the system with unique project number
-    #Given there is a project with name "Operating System"
-    #When add project to system
-    #Then the project is added to the system with unique project number
     
 Scenario: Create multiple projects
     Given admin is already logged in

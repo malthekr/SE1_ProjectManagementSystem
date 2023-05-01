@@ -266,12 +266,12 @@ public class ProjectSteps {
 	@Given("employee with ID {string} has {int} ongoing activities")
 	public void employeeWithIDHasOngoingActivities(String id, int ongoingActvities) throws OperationNotAllowedException {
 	    Employee employee = managementSystem.FindEmployeeById(id);
-	    
+	    	    
 	    for(int i = 0; i <= ongoingActvities; i++) {
 	    	String description = "activity"+i;
 	    	createActivityWithNameForProject(description);
-	    	managementSystem.addEmployeeToActivity(employee, project, description);
 	    	Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+	    	managementSystem.addEmployeeToActivity(employee, project, description);
 	    	activity.setExpectedHours(i);
 	    	//employee.addActivity(project, activity);
 	    }
@@ -358,11 +358,25 @@ public class ProjectSteps {
 	public void requestStatusReportForProject() throws OperationNotAllowedException {
 		managementSystem.generateStatusReport(project.getProjectID());
 	}
-	
+	/*
 	@When("set registered hours to {int} hours")
 	public void setRegisteredHoursToHours(int hours) {
 		
 		
+	}
+	*/
+	@When("add {double} hours to activity {string} in project")
+	public void addHoursToActivityInProject(double hours, String description) {
+		try{
+			managementSystem.findActivityByDescription(project.getProjectID(), description).addWorkedHours(hours);
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+	   }
+	}
+
+	@Then("{double} hours is added to activity {string} in project")
+	public void hoursIsAddedToActivityInProject(double hours, String description) throws OperationNotAllowedException {
+		assertEquals(managementSystem.findActivityByDescription(project.getProjectID(), description).getWorkedHours(), hours, 0);
 	}
 	
 	@When("request employee activity of {string}")

@@ -13,7 +13,6 @@ Scenario: Edit activity as project manager
 Scenario: PM edits activity for project
     Given there is a project
     And employee with ID "mkr" is logged in
-    #And employee "mkr" is part of project
     And "mkr" is the project manager
     And there is an activity "act1" in project
     When set start date to 10-05-2023 for activity "act1"
