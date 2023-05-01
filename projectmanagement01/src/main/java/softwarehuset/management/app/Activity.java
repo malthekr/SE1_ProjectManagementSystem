@@ -53,7 +53,7 @@ public class Activity {
         	this.workedHours = 0;
         }
     	
-    	return;
+    	// return;
     	//throw new OperationNotAllowedException("Worked hours is measured in half hours worked");
     }
     
