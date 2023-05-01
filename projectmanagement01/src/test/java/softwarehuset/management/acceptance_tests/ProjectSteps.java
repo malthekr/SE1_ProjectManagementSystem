@@ -1,11 +1,13 @@
 package softwarehuset.management.acceptance_tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import softwarehuset.management.app.ManagementSystemApp;
 import softwarehuset.management.app.Activity;
@@ -74,6 +76,12 @@ public class ProjectSteps {
 		project.addEmployee(managementSystem.FindEmployeeById(EmployeeId));
 		managementSystem.promoteToPm(project.getProjectID(), EmployeeId);
 		assertEquals(project.getProjectManager(), managementSystem.FindEmployeeById(EmployeeId));
+	}
+	
+	@Given("employee is not the project manager")
+	public void isNotTheProjectManager() throws OperationNotAllowedException {
+		Employee projectManager = managementSystem.currentEmployee();
+		assertFalse(project.getProjectManager() == projectManager);
 	}
 	
 	@Then("{string} is project manager of project")
@@ -270,7 +278,7 @@ public class ProjectSteps {
 	}
 
 	@When("add employee with ID {string} to activity in project")
-	public void addEmployeeWithIDToActivityInProject(String id) {
+	public void addEmployeeWithIDToActivityInProject(String id) throws OperationNotAllowedException {
 		try {
 			//Employee employee = managementSystem.FindEmployeeById(id);
 			String description = "NewActivity20";
@@ -357,9 +365,18 @@ public class ProjectSteps {
 		
 	}
 	
-	@Then("the system edits the registered hours to {int}")
-	public void theSystemEditsTheRegisteredHoursTo(int hours) {
-		//assertTrue();
+	@When("request employee activity of {string}")
+	public List<Activity> requestEmployeeActivityOfAnotherEmployee(String Id) throws OperationNotAllowedException {
+		Employee employee = managementSystem.currentEmployee();
+		Employee anotherEmployee = managementSystem.FindEmployeeById(Id);
+		assertNotEquals(employee, anotherEmployee);
+		return anotherEmployee.getActivities();
+	}
+
+	@Then("a timetable of activity from {string} is given")
+	public List<Activity> aTimetableOfActivity(String Id) throws OperationNotAllowedException {
+		Employee employee = managementSystem.FindEmployeeById(Id);
+		return employee.getActivities();
 	}
 	
 }

@@ -13,6 +13,7 @@ public class Project {
 	
 	private List<Employee> employeesAssignedToProject = new ArrayList<>();
 	private List<Activity> activities = new ArrayList<>();
+	private List<TimeTable> timeTables = new ArrayList<>();
 	private IDServer idServer = new IDServer();
 	private Employee projectManager;
 	
@@ -183,6 +184,20 @@ public class Project {
 			a.addEmployee(employee);
 		}
 	}
+	
+	public Object getExpectedHours() {
+		return expectedHours;
+	}
+	
+	public TimeTable getTimeTablesForEmployee(Employee employee) {
+		List<TimeTable> timeTable = timeTables.stream().filter(u -> u.getEmployee().equals(employee)).findAny().orElse(null);
+	}
+	
+	public void editTimeTable(Activity activity, Employee employee, Calendar date, int workHours) {
+		TimeTable timeTable = new TimeTable(activity, employee, date, workHours);
+		timeTable.editActivity(activity);
+	}
+	
 
 	public void generateStatusReport() {
 		double sumExpectedHours = 0;
