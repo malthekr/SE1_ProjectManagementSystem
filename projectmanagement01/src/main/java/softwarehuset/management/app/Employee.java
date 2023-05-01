@@ -8,12 +8,8 @@ import java.util.stream.IntStream;
 public class Employee {
 	private String id;
     private String name;
-    // private List<Activity> activities = new ArrayList<>();;
     private ConcurrentHashMap<Project, List<Activity>> map = new ConcurrentHashMap<>();
     private List<Activity> activities;
-    //private static ConcurrentHashMap<Project, List<Activity>> map = new ConcurrentHashMap<>();
-    //private static List<Activity> activities;
-	//Slettede static fra activities og map pga at vi gemmer individuel list for hver employee iforhold til at genere ID.
 	
 	public Employee(String id){
         this.id = id;
@@ -27,7 +23,7 @@ public class Employee {
     public String getName(){
         return name;
     }
-
+    
     public String getId(){
         return id;
     }

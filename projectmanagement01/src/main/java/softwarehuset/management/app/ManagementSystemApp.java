@@ -34,6 +34,10 @@ public class ManagementSystemApp {
 		return employeeLoggedIn;
 	}
 	
+	public Employee currentEmployee() {
+		return employeeLoggedInId;
+	}
+	
 	public boolean employeeLogin(String id) throws OperationNotAllowedException {
 		if(!containsEmployeeWithId(id)) {
 			throw new OperationNotAllowedException("Employee ID does not exist");
