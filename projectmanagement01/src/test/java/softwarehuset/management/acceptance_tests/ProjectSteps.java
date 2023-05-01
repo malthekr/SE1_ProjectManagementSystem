@@ -366,16 +366,16 @@ public class ProjectSteps {
 	}
 	
 	@When("request employee activity of {string}")
-	public List<Activity> requestEmployeeActivityOfAnotherEmployee(String Id) throws OperationNotAllowedException {
+	public List<Activity> requestEmployeeActivityOfAnotherEmployee(String id) throws OperationNotAllowedException {
 		Employee employee = managementSystem.currentEmployee();
-		Employee anotherEmployee = managementSystem.FindEmployeeById(Id);
+		Employee anotherEmployee = managementSystem.FindEmployeeById(id);
 		assertNotEquals(employee, anotherEmployee);
 		return anotherEmployee.getActivities();
 	}
 
 	@Then("a timetable of activity from {string} is given")
-	public List<Activity> aTimetableOfActivity(String Id) throws OperationNotAllowedException {
-		Employee employee = managementSystem.FindEmployeeById(Id);
+	public List<Activity> aTimetableOfActivity(String id) throws OperationNotAllowedException {
+		Employee employee = managementSystem.FindEmployeeById(id);
 		return employee.getActivities();
 	}
 	

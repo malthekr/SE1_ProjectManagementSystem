@@ -305,6 +305,7 @@ public class ManagementSystemApp {
 		//return false;
 		throw new OperationNotAllowedException("Project Manager login required");
 	}
+	
 
 //	public List<Activity> requestEmployeeActivity(int projectID, Employee otherEmployee) throws OperationNotAllowedException {
 //		Project project = findProjectById(projectID);		
