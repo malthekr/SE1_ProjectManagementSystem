@@ -7,7 +7,7 @@ Scenario: Edit activity as project manager
     And employee with ID "mkr" is logged in
     And "mkr" is the project manager
     And there is an activity "act1" in project
-    When "mkr" edits description of activity "act1" to "act2"
+    When edits description of activity "act1" to "act2"
     Then activity description is "act2"
     
 Scenario: PM edits activity for project

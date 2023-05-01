@@ -59,7 +59,7 @@ public class RegisterEmployeeSteps {
 	
 	@Then("the error message {string} is given")
 	public void theErrorMessageIs(String errorMessage){
-		assertEquals(errorMessageHolder.getErrorMessage(), errorMessage);
+		assertEquals(errorMessage, errorMessageHolder.getErrorMessage());
 	}
 	
 	@When("unregister the employee with ID {string}")

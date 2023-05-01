@@ -14,4 +14,4 @@ Scenario: Regular employee attempts to add expected hours to a project
     And employee with ID "mkr" is logged in
     And add employee with ID "mkr" to project
     When set expected project hours to 100.0
-    Then the error message "Only Project Managers are allowed to set expected hours" is given
+    Then the error message "Project Manager login required" is given

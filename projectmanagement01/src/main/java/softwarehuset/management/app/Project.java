@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 public class Project {
 	private String projectName;
-	private Double expectedHours;
+	private double expectedHours;
 	private Calendar startDate, endDate;
 	
 	private Boolean ongoingProject = false;
@@ -133,7 +133,18 @@ public class Project {
 		return activities;
 	}
 	
-	//Så hvad er close project?
+	public double getExpectedHours() {
+		return expectedHours;
+	}
+	
+	public double getWorkedHours(){
+		double sumWorkedHours = 0;
+		for(Activity a : activities){
+			sumWorkedHours += a.getWorkedHours();
+		}
+		return sumWorkedHours;
+	}
+	
 	public void closeProject() {
 		ongoingProject = false;
 	}
@@ -174,10 +185,19 @@ public class Project {
 		}
 		return null;
 	}
-
-	public Object getExpectedHours() {
-		return expectedHours;
-	}
 	
+	public void addEmployeeToActivity(String employeeId, String description){
+		
+	}
 
+	public void generateStatusReport() {
+		double sumExpectedHours = 0;
+		double sumWorkedHours = 0; // Total worked hours on the project
+		for(Activity a : activities){
+			sumExpectedHours += a.getExpectedHours();
+			sumWorkedHours += a.getWorkedHours();
+		}
+		
+		
+	}
 }

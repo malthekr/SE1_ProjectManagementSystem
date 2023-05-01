@@ -16,4 +16,4 @@ Scenario: Close project but project manager is logged out
     And "mkr" is the project manager
     And employee "mkr" is logged out 
     When close project
-    Then the error message "Employee login required" is given
+    Then the error message "Project Manager login required" is given

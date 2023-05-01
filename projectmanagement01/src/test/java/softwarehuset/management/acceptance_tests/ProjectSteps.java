@@ -199,7 +199,6 @@ public class ProjectSteps {
 		assertEquals(project.getProjectName(), projectName);
 	}
 	
-	//Mangler
 	@When("close project")
 	public void closeProject() {
 		try {
@@ -209,7 +208,6 @@ public class ProjectSteps {
 		}
 	}
 	
-	//Mangler
 	@Then("project is closed")
 	public void projectIsClosed() {
 	   assertFalse(project.getOngoingProject());
@@ -249,8 +247,8 @@ public class ProjectSteps {
 	}
 	
 	@Then("expected hours for project is {double}")
-	public void expectedHoursForProjectIs(Double expectedHours) {
-		assertTrue(project.getExpectedHours().equals(expectedHours));
+	public void expectedHoursForProjectIs(double expectedHours) {
+		assertEquals(project.getExpectedHours(), expectedHours, 0);
 	}
 	
 	@Given("there are {int} projects added to the system")
@@ -258,7 +256,6 @@ public class ProjectSteps {
 	    for(int i=0; i<numberOfProjects; i++) {
 	    	project = projectHelper.getProject(Integer.toString(i));
 			managementSystem.createProject(project);
-//			System.out.println(project.getProjectID());
 	    }
 	}
 	
@@ -270,10 +267,9 @@ public class ProjectSteps {
 	    	String description = "activity"+i;
 	    	createActivityWithNameForProject(description);
 	    	Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+	    	activity.setExpectedHours(i);
 	    	employee.addActivity(project, activity);
 	    }
-
-	//assertTrue(employee.getNumOfActivities() == ongoingActvities);
 	}
 
 	@When("add employee with ID {string} to activity in project")
@@ -316,7 +312,7 @@ public class ProjectSteps {
 
 	@Then("expected project hours is {double}")
 	public void expectedProjectHoursIs(double hours) {
-		assertEquals(project.getExpectedHours(), hours);
+		assertEquals(project.getExpectedHours(), hours, 0);
 	}
 	
 	@When("set start date to {int}-{int}-{int} for activity {string}")
@@ -343,7 +339,7 @@ public class ProjectSteps {
 		}
 	}
 	
-	@When("{string} edits description of activity {string} to {string}")
+	@When("edits description of activity {string} to {string}")
 	public void editsDescriptionOfActivityTo(String id, String description1, String description2) {
 	   try {
 		   managementSystem.setActivityDescrption(project, description1, description2);
@@ -356,6 +352,10 @@ public class ProjectSteps {
 	public void activityDescriptionIs(String description) throws OperationNotAllowedException  {
 		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
 		assertEquals(activity.getDescription(), description);
-		
+	}
+	
+	@When("request status report for project")
+	public void requestStatusReportForProject() throws OperationNotAllowedException {
+		managementSystem.generateStatusReport(project.getProjectID());
 	}
 }
