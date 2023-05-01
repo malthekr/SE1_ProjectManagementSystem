@@ -12,8 +12,10 @@ Scenario: View employee activity as project manager
     
 Scenario: View employee activity as employee
     Given there is a project
+    And employee with ID "nik" exists
+    And "nik" is the project manager
     And employee with ID "mkr" is logged in
     And employee is not the project manager
     And employee with ID "thr" exists
     When request employee activity of "thr"
-    Then the error message "Project Manager required" is given
+    Then the error message "Project Manager login required" is given

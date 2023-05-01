@@ -46,7 +46,6 @@ public class Employee {
     	int numbOfActivites = map.values().stream().flatMapToInt(list -> IntStream.of(list.size())).sum();
     	
         return numbOfActivites;
-    	//return activities.size();
     }
     
     public boolean isBusy(){
@@ -58,6 +57,11 @@ public class Employee {
     	return employeeActivities.contains(activity);    	
     }
     
+    public List<Activity> listOfActivitiesInProject(Project project) {    	
+    	List<Activity> employeeActivities = map.get(project);
+    	return employeeActivities;   	
+    }
+     
     public List<Activity> getActivities(){
     	return activities;
     }

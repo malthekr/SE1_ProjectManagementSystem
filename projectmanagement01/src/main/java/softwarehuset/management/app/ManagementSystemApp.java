@@ -2,11 +2,7 @@ package softwarehuset.management.app;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ManagementSystemApp {
 	private boolean adminLoggedIn = false;
@@ -14,7 +10,6 @@ public class ManagementSystemApp {
 	private Employee employeeLoggedInId;
 	private List<Project> projectRepository = new ArrayList<>();
 	private List<Employee> Employees = new ArrayList<>();
-	private DateServer dateServer = new DateServer(); 
 
 	public boolean adminLoggedIn() {
 		return adminLoggedIn;
@@ -53,6 +48,7 @@ public class ManagementSystemApp {
 		return employeeLoggedIn;
 	}
 	
+	// Adds employee to the system
 	public void addEmployee(Employee employee) throws OperationNotAllowedException {
 		if (!adminLoggedIn) {
 			throw new OperationNotAllowedException("Administrator login required");
@@ -60,6 +56,10 @@ public class ManagementSystemApp {
 		
 		if(containsEmployeeWithId(employee.getId())){
 			throw new OperationNotAllowedException("Employee ID already taken");
+		}
+		
+		if(employee.getId().length() > 4){
+			throw new OperationNotAllowedException("Employee ID is too long");
 		}
 		
 		Employees.add(employee);
@@ -101,24 +101,16 @@ public class ManagementSystemApp {
 		return project;
 	}
 	
+	// adds employee to project
 	public void addEmployeeToProject(int ProjectId, String EmployeeId) throws OperationNotAllowedException {
 		Employee employee = FindEmployeeById(EmployeeId);
 		Project project = findProjectById(ProjectId);
 		
-		if(adminLoggedIn) {
+		
+		if (checkAuth(project)) {
 			project.addEmployee(employee);
 			return;
 		}
-		
-		if(employeeLoggedIn) {
-			if(!employeeLoggedInId.equals(project.getProjectManager())) {
-				throw new OperationNotAllowedException("Employee has to be Project Manager to add employees");
-			}
-			project.addEmployee(employee);
-			return;
-		}
-		
-		throw new OperationNotAllowedException("Admin or Project Manager log in required");
 	}
 	
 	public boolean containsEmployeeWithId(String id){
@@ -146,13 +138,17 @@ public class ManagementSystemApp {
 		Employee employee = FindEmployeeById(EmployeeId);
 		Project project = findProjectById(ProjectId);
 		
-		project.removeEmployee(employee);
+		if (checkAuth(project)) {
+			project.removeEmployee(employee);
+			return;
+		}
 	}
-
+	
+	/*
 	public void setDateServer(DateServer dateServer) {
 		this.dateServer = dateServer;		
 	}
-	
+	*/
 	public boolean checkIfUniqueProjectId(int Id) {
 		int num = 0;
 		for(Project i : projectRepository) {
@@ -164,65 +160,50 @@ public class ManagementSystemApp {
 	}
 	
 	public void closeProject(Project project) throws OperationNotAllowedException {
-		checkEmployeeLoggedIn();
-		project.closeProject();
+		if (checkAuth(project)) {
+			project.closeProject();
+		}
 	}
 	
 	public void promoteToPm(int projectId, String Id) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
 		
-		//if(!adminLoggedIn) {
-		//	throw new OperationNotAllowedException("Administrator login required");
-		//}
-		
-		project.promoteEmployee(Id);
+		if (checkAuth(project)) {
+			project.promoteEmployee(Id);
+			return;
+		}
 	}
 	
 	public void editProjectName(int projectId, String projectName) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
 		
-		if(employeeLoggedIn) {
-			if(!employeeLoggedInId.equals(project.getProjectManager())) {
-				throw new OperationNotAllowedException("Employee has to be Project Manager to change project name");
-			}
+		if (checkAuth(project)) {
 			project.editProjectName(projectName);
 			return;
 		}
-		
-		throw new OperationNotAllowedException("Project Manager log in required");
-		
 	}
 	
 	public void editStartDate(int projectId, int days) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
 		
-		if(employeeLoggedIn) {
-			if(!employeeLoggedInId.equals(project.getProjectManager())) {
-				throw new OperationNotAllowedException("Employee has to be Project Manager to change project start date");
-			}
+		if (checkAuth(project)) {
 			Calendar startDate = project.getStartDate();
 			startDate.add(Calendar.DAY_OF_YEAR, days);
 			project.editStartDate(startDate);
 			return;
 		}
-		
-		throw new OperationNotAllowedException("Project Manager log in required");
+		 new OperationNotAllowedException("Project Manager login required");
 	}
 	
 	public void editEndDate(int projectId, int days) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
 		
-		if(employeeLoggedIn) {
-			if(!employeeLoggedInId.equals(project.getProjectManager())) {
-				throw new OperationNotAllowedException("Employee has to be Project Manager to change project end date");
-			}
+		if (checkAuth(project)) {
 			Calendar endDate = project.getEndDate();
 			endDate.add(Calendar.DAY_OF_YEAR, days);
 			project.editEndDate(endDate);
 			return;
 		}
-		
-		throw new OperationNotAllowedException("Project Manager log in required");
 	}
 	
 	public boolean CheckifStartDateMoved(int projectId, int days, Calendar date) throws OperationNotAllowedException {
@@ -242,30 +223,104 @@ public class ManagementSystemApp {
 	public void createActivity(int projectId, String description) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
 		
-		
-		if(employeeLoggedIn && project.hasProjectManager()) {
-			if(!employeeLoggedInId.equals(project.getProjectManager())) {
-				throw new OperationNotAllowedException("Only Project Manager can add activities");
-			}
-			project.createActivity(description);
-			return;
-		} 
-		if (employeeLoggedIn && !project.hasProjectManager()){
-			project.createActivity(description);
-			return;
-		}
-		if(adminLoggedIn()) {
+		if(checkAuth(project)) {
+			//if(project.getActivites().contains(description))
 			project.createActivity(description);
 			return;
 		}
 		
-		throw new OperationNotAllowedException("Admin or Project Manager log in required");
+		throw new OperationNotAllowedException("Admin or Project Manager login required");
 	}
 	
 	public Activity findActivityByDescription(int projectId, String description) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
-		return project.findActivityByDescrption(description);
+		return project.findActivityByDescription(description);
 	}
+	
+	public void UpdateExpectedHours(int projectId, double hours) throws OperationNotAllowedException {
+		Project project = findProjectById(projectId);
+		
+		if(checkAuth(project)) {
+			project.editExpectedHours(hours);
+			}
+	}
+	
+	public void UpdateStartDate(int dd, int mm, int yyyy, int projectId, String description) throws OperationNotAllowedException{
+		Activity activity = findActivityByDescription(projectId, description);
+		Project project = findProjectById(projectId);
+		Calendar startDate = activity.getStartDate();
+		startDate = setDate(startDate, dd, mm, yyyy);
+		if (checkAuth(project)) {
+			activity.setStartDate(startDate);
+			return;
+		}
+	}
+	
+	public void UpdateEndDate(int dd, int mm, int yyyy, int projectId, String description) throws OperationNotAllowedException{
+		Activity activity = findActivityByDescription(projectId, description);
+		Project project = findProjectById(projectId);
+		Calendar endDate = activity.getEndDate();
+		endDate = setDate(endDate, dd, mm, yyyy);
+		if (checkAuth(project)) {
+			activity.setEndDate(endDate);
+			return;
+		}
+	}
+	
+	public Calendar setDate(Calendar date, int dd, int mm, int yyyy) {
+		date.set(Calendar.YEAR, yyyy);
+		date.set(Calendar.MONTH, mm);
+		date.set(Calendar.DAY_OF_MONTH, dd);
+		return date;
+	}
+
+	public void setActivityDescrption(Project project, String description1, String description2) throws OperationNotAllowedException {
+		if(checkAuth(project)) {
+			project.findActivityByDescription(description1).setDescrption(description2);
+		}
+	}
+	
+	public void generateStatusReport(int projectId) throws OperationNotAllowedException{
+		Project project = findProjectById(projectId);
+		if (checkAuth(project)) {
+			project.generateStatusReport();
+			
+		}
+	}
+	
+	public void addEmployeeToActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{
+		project.addEmployeeToActivity(employee, description);
+		employee.addActivity(project, project.findActivityByDescription(description));
+	}
+	
+	public List<Activity> getActivities(int projectId, Employee anotherEmployee) throws OperationNotAllowedException{
+		Project project = findProjectById(projectId);
+		
+		if(checkAuth(project)){
+			return anotherEmployee.listOfActivitiesInProject(project);
+		}
+		
+		throw new OperationNotAllowedException("addEmployeeToActivity error");
+	}
+	
+	private boolean checkAuth(Project project) throws OperationNotAllowedException {
+		if(employeeLoggedIn && project.hasProjectManager()) {
+			if(!employeeLoggedInId.equals(project.getProjectManager())) { 
+				// throws error if employee logged in is not PM
+				throw new OperationNotAllowedException("Project Manager login required");
+			}
+			return true; // returns true PM is logged in
+		} 
+		if (project.findEmployee(employeeLoggedInId) && !project.hasProjectManager()){
+			return true; // returns true if project has no PM and employee (who is part of project) is logged in
+		}
+		if(adminLoggedIn()) {
+			return true;
+		}
+		//return false;
+		throw new OperationNotAllowedException("Project Manager login required");
+	}
+	
 
 //	public List<Activity> requestEmployeeActivity(int projectID, Employee otherEmployee) throws OperationNotAllowedException {
 //		Project project = findProjectById(projectID);		

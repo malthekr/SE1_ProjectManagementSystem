@@ -21,7 +21,7 @@ Scenario: Employee edits project name
 		Given employee with ID "mkr" is logged in
 		And  admin is logged out
     When edits project name to "Alpha Management System"
-    Then the error message "Employee has to be Project Manager to change project name" is given
+    Then the error message "Project Manager login required" is given
 
 Scenario: Employee edits project name while not logged in
 		Given admin is already logged in
@@ -31,4 +31,4 @@ Scenario: Employee edits project name while not logged in
     Given there is an employee with ID "mkr"
     And admin is logged out
     When edits project name to "Alpha Management System"
-    Then the error message "Project Manager log in required" is given    
+    Then the error message "Project Manager login required" is given    

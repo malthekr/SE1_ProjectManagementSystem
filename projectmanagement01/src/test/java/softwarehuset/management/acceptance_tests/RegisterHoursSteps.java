@@ -1,7 +1,5 @@
 package softwarehuset.management.acceptance_tests;
 
-import org.junit.jupiter.api.Test;
-
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
