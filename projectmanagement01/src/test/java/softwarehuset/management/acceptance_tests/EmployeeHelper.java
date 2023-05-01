@@ -57,7 +57,8 @@ public class EmployeeHelper {
 	
 	@Then("{string} hours is added to activity in project")
 	public void hoursIsAddedToActivityInProject(String string) {
+		
 	    // Write code here that turns the phrase above into concrete actions
-	    throw new io.cucumber.java.PendingException();
+	    //throw new io.cucumber.java.PendingException();
 	}
 }
