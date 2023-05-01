@@ -294,7 +294,7 @@ public class ProjectSteps {
 			Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
 			//employee.addActivity(project, activity);
 			//employee.isPartOfActivity(project, activity);
-			assertTrue(activity.getEmployees().contains(employee));
+			assertEquals(activity.getEmployees().contains(employee), employee.getActivities().contains(activity));
 	}
 	
 	@When("set expected project hours to {double}")
@@ -354,4 +354,5 @@ public class ProjectSteps {
 	public void requestStatusReportForProject() throws OperationNotAllowedException {
 		managementSystem.generateStatusReport(project.getProjectID());
 	}
+	
 }

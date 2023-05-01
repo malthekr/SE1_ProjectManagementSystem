@@ -18,6 +18,6 @@ Scenario: Busy employee is added to acitivy
   And "mkr" is the project manager
   And there is also an employee with ID "thr" part of project
   And there is an employee with ID "thr"
-  And employee with ID "thr" has 20 ongoing activities # Max ongoing activites is 20, if >20 you receive error
+  And employee with ID "thr" has 20 ongoing activities
   When add employee with ID "thr" to activity in project
   Then the error message "Employee too busy" is given
