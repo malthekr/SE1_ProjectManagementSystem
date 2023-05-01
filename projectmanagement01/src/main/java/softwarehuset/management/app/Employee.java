@@ -50,7 +50,6 @@ public class Employee {
     	int numbOfActivites = map.values().stream().flatMapToInt(list -> IntStream.of(list.size())).sum();
     	
         return numbOfActivites;
-    	//return activities.size();
     }
     
     public boolean isBusy(){
