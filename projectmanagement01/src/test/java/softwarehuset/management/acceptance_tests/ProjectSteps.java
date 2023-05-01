@@ -1,4 +1,5 @@
 package softwarehuset.management.acceptance_tests;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -8,7 +9,6 @@ import java.util.GregorianCalendar;
 
 import softwarehuset.management.app.ManagementSystemApp;
 import softwarehuset.management.app.Activity;
-import softwarehuset.management.app.DateServer;
 import softwarehuset.management.app.Employee;
 import softwarehuset.management.app.OperationNotAllowedException;
 import softwarehuset.management.app.Project;
@@ -19,15 +19,13 @@ import io.cucumber.java.en.When;
 public class ProjectSteps {
 	private ManagementSystemApp managementSystem;
 	private ErrorMessageHolder errorMessageHolder;
-	private DateServer dateServer;
 	private Project project;
 	private ProjectHelper projectHelper;
 	private EmployeeHelper employeeHelper;
 	
-	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, DateServer dateServer, ProjectHelper projectHelper, EmployeeHelper employeeHelper) {
+	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, ProjectHelper projectHelper, EmployeeHelper employeeHelper) {
 		this.managementSystem = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
-		this.dateServer = dateServer;
 		this.projectHelper = projectHelper;
 		this.employeeHelper = employeeHelper;
 	}

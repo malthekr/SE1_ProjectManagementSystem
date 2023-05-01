@@ -2,11 +2,7 @@ package softwarehuset.management.app;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ManagementSystemApp {
 	private boolean adminLoggedIn = false;
@@ -14,7 +10,7 @@ public class ManagementSystemApp {
 	private Employee employeeLoggedInId;
 	private List<Project> projectRepository = new ArrayList<>();
 	private List<Employee> Employees = new ArrayList<>();
-	private DateServer dateServer = new DateServer(); 
+	//private DateServer dateServer = new DateServer(); 
 
 	public boolean adminLoggedIn() {
 		return adminLoggedIn;
@@ -140,11 +136,12 @@ public class ManagementSystemApp {
 			return;
 		}
 	}
-
+	
+	/*
 	public void setDateServer(DateServer dateServer) {
 		this.dateServer = dateServer;		
 	}
-	
+	*/
 	public boolean checkIfUniqueProjectId(int Id) {
 		int num = 0;
 		for(Project i : projectRepository) {

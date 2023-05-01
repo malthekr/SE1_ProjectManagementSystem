@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Activity {
     private int projectId;
     private String description;
