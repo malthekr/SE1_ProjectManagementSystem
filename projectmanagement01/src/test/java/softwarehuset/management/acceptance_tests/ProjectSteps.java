@@ -252,7 +252,7 @@ public class ProjectSteps {
 	
 	@Then("expected hours for project is {double}")
 	public void expectedHoursForProjectIs(double expectedHours) {
-		assertEquals(project.getExpectedHours(), expectedHours, 0);
+		assertEquals(project.getExpectedHours(), expectedHours, 0.0);
 	}
 	
 	@Given("there are {int} projects added to the system")

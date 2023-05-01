@@ -125,10 +125,6 @@ public class Project {
 		return activities;
 	}
 	
-	public double getExpectedHours() {
-		return expectedHours;
-	}
-	
 	public double getWorkedHours(){
 		double sumWorkedHours = 0;
 		for(Activity a : activities){
@@ -185,7 +181,7 @@ public class Project {
 		}
 	}
 	
-	public Object getExpectedHours() {
+	public double getExpectedHours() {
 		return expectedHours;
 	}
 	
