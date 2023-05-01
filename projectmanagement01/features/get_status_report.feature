@@ -9,8 +9,8 @@ Feature: Get status report
     #And employee with ID "mkr" has 10 ongoing activities
     #And there is an employee with ID "thr"    
     #And employee with ID "thr" has 6 ongoing activities
-  #	When add employee with ID "thr" to activity in project
-  #	Then employee with ID "thr" is added to the project activity
+  	#When add employee with ID "thr" to activity in project
+  	#Then employee with ID "thr" is added to the project activity
     #When request status report for project
     #Then system provides status report for project
     
