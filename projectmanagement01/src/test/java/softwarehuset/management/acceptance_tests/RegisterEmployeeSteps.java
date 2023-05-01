@@ -35,7 +35,7 @@ public class RegisterEmployeeSteps {
 	@Given("there is an employee with ID {string}")
 	public void thereIsAnEmployeeWithID(String id) throws OperationNotAllowedException {
 		employee = new Employee(id);
-		if (managementSystemApp.adminLoggedIn() == true) {
+		if (managementSystemApp.adminLoggedIn()) {
 			addEmployee(employee);
 		}
 		else {

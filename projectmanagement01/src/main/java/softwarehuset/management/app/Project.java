@@ -46,7 +46,11 @@ public class Project {
 	// Add employee - Throws Exception if employee is already part of project
 	public void addEmployee(Employee employee) throws OperationNotAllowedException { 
 		if(!employeesAssignedToProject.contains(employee)){
-			employeesAssignedToProject.add(employee);
+			if(employee.getNumOfActivities() < 20){
+				employeesAssignedToProject.add(employee);
+				} else {
+					throw new OperationNotAllowedException("Employee too busy");
+				}
 		} else {
 			throw new OperationNotAllowedException("Employee already part of project");
 		}

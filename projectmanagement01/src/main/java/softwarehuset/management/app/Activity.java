@@ -37,6 +37,14 @@ public class Activity {
     	throw new OperationNotAllowedException("Employee already part of activity");
     }
     
+    public int getProjectId(){
+        return projectId;
+    }
+    
+    public List<Employee> getEmployees(){
+        return employees;
+    }
+    
     public void setDescrption(String description) {
     	this.description = description;
     }
