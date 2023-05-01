@@ -46,11 +46,7 @@ public class Project {
 	// Add employee - Throws Exception if employee is already part of project
 	public void addEmployee(Employee employee) throws OperationNotAllowedException { 
 		if(!employeesAssignedToProject.contains(employee)){
-			if(employee.getNumOfActivities() < 20){
-				employeesAssignedToProject.add(employee);
-				} else {
-					throw new OperationNotAllowedException("Employee too busy");
-				}
+			employeesAssignedToProject.add(employee);
 		} else {
 			throw new OperationNotAllowedException("Employee already part of project");
 		}
@@ -186,8 +182,11 @@ public class Project {
 		return null;
 	}
 	
-	public void addEmployeeToActivity(String employeeId, String description){
-		
+	public void addEmployeeToActivity(Employee employee, String description) throws OperationNotAllowedException{
+		Activity a = findActivityByDescrption(description);
+		if(findEmployee(employee)){
+			a.addEmployee(employee);
+		}
 	}
 
 	public void generateStatusReport() {
@@ -196,8 +195,6 @@ public class Project {
 		for(Activity a : activities){
 			sumExpectedHours += a.getExpectedHours();
 			sumWorkedHours += a.getWorkedHours();
-		}
-		
-		
+		}	
 	}
 }

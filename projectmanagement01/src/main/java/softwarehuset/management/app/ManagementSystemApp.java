@@ -278,8 +278,20 @@ public class ManagementSystemApp {
 		Project project = findProjectById(projectId);
 		if (checkAuth(project)) {
 			project.generateStatusReport();
+			
 		}
 	}
+	
+	public void addEmployeeToActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{
+		project.addEmployeeToActivity(employee, description);
+		employee.addActivity(project, project.findActivityByDescrption(description));
+	}
+	
+//	public void addEmployeeToActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{
+//		project.addEmployee(employee);
+//		employee.addActivity(project, description);
+//		
+//	}
 	
 	private boolean checkAuth(Project project) throws OperationNotAllowedException {
 		if(employeeLoggedIn && project.hasProjectManager()) {

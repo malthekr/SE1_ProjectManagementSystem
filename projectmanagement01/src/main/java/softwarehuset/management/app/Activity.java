@@ -30,12 +30,12 @@ public class Activity {
     }
     
     // Adds employee to activity
-    public void addEmployee(Employee employee) throws OperationNotAllowedException {
-    	if (!employees.contains(employee) && !employee.isBusy()){
-        	employees.add(employee);
-        	return;
+    public void addEmployee(Employee employee) throws OperationNotAllowedException {  
+    	if (employees.contains(employee)){
+ 			throw new OperationNotAllowedException("Employee already part of activity");      	
     	} 
-    	throw new OperationNotAllowedException("Employee already part of activity");
+    		employees.add(employee);
+        	return;
     }
     
     public int getProjectId(){

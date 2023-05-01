@@ -340,7 +340,7 @@ public class ProjectSteps {
 	}
 	
 	@When("edits description of activity {string} to {string}")
-	public void editsDescriptionOfActivityTo(String id, String description1, String description2) {
+	public void editsDescriptionOfActivityTo(String description1, String description2) {
 	   try {
 		   managementSystem.setActivityDescrption(project, description1, description2);
 	   } catch (OperationNotAllowedException e) {
