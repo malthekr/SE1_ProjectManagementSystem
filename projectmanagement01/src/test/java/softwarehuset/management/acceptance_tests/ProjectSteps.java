@@ -305,7 +305,7 @@ public class ProjectSteps {
 			Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
 			employee.addActivity(project, activity);
 			
-			assertTrue(employee.isPartOfActivity(project, activity));
+			assertTrue(employee.isPartOfActivity(project, activity)); 
 		} catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		}
