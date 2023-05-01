@@ -136,7 +136,7 @@ public class Project {
 	public void closeProject() {
 		ongoingProject = false;
 	}
-
+	
 	public void promoteEmployee(String id) throws OperationNotAllowedException{
 		Boolean assigned = false;
 		
@@ -185,13 +185,23 @@ public class Project {
 		return expectedHours;
 	}
 	
-	public TimeTable getTimeTablesForEmployee(Employee employee) {
-		List<TimeTable> timeTable = timeTables.stream().filter(u -> u.getEmployee().equals(employee)).findAny().orElse(null);
+	public List<TimeTable> getTimeTablesByEmployee(Employee employee) {
+		List<TimeTable> employeeTimeTables = timeTables.stream().filter(u -> u.getEmployee().equals(employee)).collect(Collectors.toList());
+		return employeeTimeTables;
+	}
+	
+	public TimeTable getTimeTablesByDateAndEmployee(Employee employee, Calendar date) {
+		List<TimeTable> employeeTimeTables = timeTables.stream().filter(u -> u.getEmployee().equals(employee)).collect(Collectors.toList());
+		TimeTable finalTimeTable = employeeTimeTables.stream().filter(u -> u.getDate().equals(date)).findAny().orElse(null);
+		return finalTimeTable;
 	}
 	
 	public void editTimeTable(Activity activity, Employee employee, Calendar date, int workHours) {
-		TimeTable timeTable = new TimeTable(activity, employee, date, workHours);
+		TimeTable timeTable = getTimeTablesByDateAndEmployee(employee, date);
 		timeTable.editActivity(activity);
+		timeTable.editEmployee(employee);
+		timeTable.editDate(date);
+		timeTable.editHours(workHours);
 	}
 	
 
