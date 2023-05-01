@@ -57,6 +57,11 @@ public class Employee {
     	return employeeActivities.contains(activity);    	
     }
     
+    public List<Activity> listOfActivitiesInProject(Project project) {    	
+    	List<Activity> employeeActivities = map.get(project);
+    	return employeeActivities;   	
+    }
+     
     public List<Activity> getActivities(){
     	return activities;
     }

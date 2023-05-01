@@ -72,10 +72,15 @@ public class ProjectSteps {
 	}
 	
 	@Given("{string} is the project manager")
-	public void isTheProjectManager(String EmployeeId) throws OperationNotAllowedException {
-		project.addEmployee(managementSystem.FindEmployeeById(EmployeeId));
-		managementSystem.promoteToPm(project.getProjectID(), EmployeeId);
-		assertEquals(project.getProjectManager(), managementSystem.FindEmployeeById(EmployeeId));
+	public void isTheProjectManager(String EmployeeId) {
+		try {
+			project.addEmployee(managementSystem.FindEmployeeById(EmployeeId));
+			managementSystem.promoteToPm(project.getProjectID(), EmployeeId);
+			assertEquals(project.getProjectManager(), managementSystem.FindEmployeeById(EmployeeId));
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		} 
+		
 	}
 	
 	@Given("employee is not the project manager")
@@ -326,7 +331,14 @@ public class ProjectSteps {
 	}
 
 	@Then("start date for activity {string} is set to {int}-{int}-{int}")
-	public void startDateForActivityIsSetTo(String description, int dd, int mm, int yyyy) {
+	public void startDateForActivityIsSetTo(String description, int dd, int mm, int yyyy) throws OperationNotAllowedException {
+			Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+			Calendar calendar = new GregorianCalendar();
+			Calendar newDate = new GregorianCalendar(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+			newDate = managementSystem.setDate(newDate, dd, mm, yyyy);
+			
+		    assertEquals(activity.getStartDate(), newDate);
+		/*
 		try {
 			Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
 			Calendar calendar = new GregorianCalendar();
@@ -337,6 +349,7 @@ public class ProjectSteps {
 		} catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		}
+		*/
 	}
 	
 	@When("edits description of activity {string} to {string}")
@@ -360,12 +373,16 @@ public class ProjectSteps {
 	}
 
 	@When("add {double} hours to activity {string} in project")
-	public void addHoursToActivityInProject(double hours, String description) {
+	public void addHoursToActivityInProject(double hours, String description) throws OperationNotAllowedException {
 		try{
 			managementSystem.findActivityByDescription(project.getProjectID(), description).addWorkedHours(hours);
 		} catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 	   }
+//		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+//		activity.addWorkedHours(hours);
+		//managementSystem.findActivityByDescription(project.getProjectID(), description).addWorkedHours(hours);
+		
 	}
 
 	@Then("{double} hours is added to activity {string} in project")
@@ -374,11 +391,17 @@ public class ProjectSteps {
 	}
 	
 	@When("request employee activity of {string}")
-	public List<Activity> requestEmployeeActivityOfAnotherEmployee(String id) throws OperationNotAllowedException {
-		Employee employee = managementSystem.currentEmployee();
-		Employee anotherEmployee = managementSystem.FindEmployeeById(id);
-		assertNotEquals(employee, anotherEmployee);
-		return anotherEmployee.getActivities();
+	public List<Activity> requestEmployeeActivityOfAnotherEmployee(String id) {	
+		try {
+			Employee employee = managementSystem.currentEmployee();
+			Employee anotherEmployee = managementSystem.FindEmployeeById(id);
+			assertNotEquals(employee, anotherEmployee);
+			return managementSystem.getActivities(project.getProjectID(), anotherEmployee);
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+			return null;
+		}
+		
 	}
 
 	@Then("a timetable of activity from {string} is given")
@@ -403,4 +426,11 @@ public class ProjectSteps {
 		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
 		assertEquals(activity.getWorkedHours(), hours, 0);
 	}
+	/*
+	@Then("the error message {string} is given")
+	public void theErrorMessageIs(String errorMessage){
+		//errorMessageHolder.setErrorMessage(errorMessage);
+		assertEquals(errorMessage, errorMessageHolder.getErrorMessage());
+	}
+	*/
 }

@@ -220,10 +220,12 @@ public class ManagementSystemApp {
 		Project project = findProjectById(projectId);
 		
 		if(checkAuth(project)) {
+			//if(project.getActivites().contains(description))
 			project.createActivity(description);
+			return;
 		}
 		
-		throw new OperationNotAllowedException("Admin or Project Manager log in required");
+		throw new OperationNotAllowedException("Admin or Project Manager login required");
 	}
 	
 	public Activity findActivityByDescription(int projectId, String description) throws OperationNotAllowedException {
@@ -285,6 +287,16 @@ public class ManagementSystemApp {
 	public void addEmployeeToActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{
 		project.addEmployeeToActivity(employee, description);
 		employee.addActivity(project, project.findActivityByDescription(description));
+	}
+	
+	public List<Activity> getActivities(int projectId, Employee anotherEmployee) throws OperationNotAllowedException{
+		Project project = findProjectById(projectId);
+		
+		if(checkAuth(project)){
+			return anotherEmployee.listOfActivitiesInProject(project);
+		}
+		
+		throw new OperationNotAllowedException("addEmployeeToActivity error");
 	}
 	
 	private boolean checkAuth(Project project) throws OperationNotAllowedException {

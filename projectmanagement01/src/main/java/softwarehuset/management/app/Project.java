@@ -54,7 +54,7 @@ public class Project {
 			throw new OperationNotAllowedException("Activities must have a name");
 		}
 		for(Activity a : activities){
-			if(a.getDescription() == description) {
+			if(a.getDescription().equals(description)) {
 				throw new OperationNotAllowedException("Activities must have a unique name");
 			}
 		}
