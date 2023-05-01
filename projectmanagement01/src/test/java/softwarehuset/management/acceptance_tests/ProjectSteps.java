@@ -260,5 +260,48 @@ public class ProjectSteps {
 //			System.out.println(project.getProjectID());
 	    }
 	}
+	
+	@Given("employee with ID {string} has {int} ongoing activities")
+	public void employeeWithIDHasOngoingActivities(String id, int ongoingActvities) throws OperationNotAllowedException {
+	    Employee employee = managementSystem.FindEmployeeById(id);
+	    
+	    for(int i = 0; i <= ongoingActvities; i++) {
+	    	String description = "activity"+i;
+	    	createActivityWithNameForProject(description);
+	    	Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+	    	employee.addActivity(project, activity);
+	    }
 
+	//assertTrue(employee.getNumOfActivities() == ongoingActvities);
+	}
+
+	@When("add employee with ID {string} to activity in project")
+	public void addEmployeeWithIDToActivityInProject(String id) {
+		try {
+			Employee employee = managementSystem.FindEmployeeById(id);
+			String description = "NewActivity20";
+	    	createActivityWithNameForProject(description);
+	    	Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+	    	employee.addActivity(project, activity);
+			
+	    } catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}
+	}
+	
+	@Then("employee with ID {string} is added to the project activity")
+	public void employeeWithIDIsAddedToTheProjectActivity(String id) {
+		try {
+			String description = "NewActivity20";
+			Employee employee = managementSystem.FindEmployeeById(id);
+			Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+			employee.addActivity(project, activity);
+			
+			assertTrue(employee.isPartOfActivity(project, activity));
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}
+		
+	}
+	
 }

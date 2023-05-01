@@ -13,7 +13,7 @@ public class ManagementSystemApp {
 	private boolean employeeLoggedIn = false;
 	private Employee employeeLoggedInId;
 	private List<Project> projectRepository = new ArrayList<>();
-	private List<Employee> Employees = new ArrayList<Employee>();
+	private List<Employee> Employees = new ArrayList<>();
 	private DateServer dateServer = new DateServer(); 
 
 	public boolean adminLoggedIn() {

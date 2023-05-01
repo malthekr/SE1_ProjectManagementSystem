@@ -9,8 +9,11 @@ public class Employee {
 	private String id;
     private String name;
     // private List<Activity> activities = new ArrayList<>();;
-    private static ConcurrentHashMap<Project, List<Activity>> map = new ConcurrentHashMap<>();
-    private static List<Activity> activities;
+    private ConcurrentHashMap<Project, List<Activity>> map = new ConcurrentHashMap<>();
+    private List<Activity> activities;
+    //private static ConcurrentHashMap<Project, List<Activity>> map = new ConcurrentHashMap<>();
+    //private static List<Activity> activities;
+	//Slettede static fra activities og map pga at vi gemmer individuel list for hver employee iforhold til at genere ID.
 	
 	public Employee(String id){
         this.id = id;
@@ -30,10 +33,9 @@ public class Employee {
     }
     
     public void addActivity(Project project, Activity activity) throws OperationNotAllowedException {
-//    	if(!activities.contains(activity)) {
-//    		activities.add(activity);
-//    		return;
-//    	}
+		if(isBusy()) {
+	    		throw new OperationNotAllowedException("Employee too busy");
+	    	}
     	activities = map.computeIfAbsent(project, y -> new ArrayList<>());
     	
     	if(!activities.contains(activity)) {
@@ -49,6 +51,15 @@ public class Employee {
     	
         return numbOfActivites;
     	//return activities.size();
+    }
+    
+    public boolean isBusy(){
+		return getNumOfActivities() > 20 ? true : false;
+	}
+    
+    public boolean isPartOfActivity(Project project, Activity activity) {    	
+    	List<Activity> employeeActivities = map.get(project);
+    	return employeeActivities.contains(activity);    	
     }
     
     public List<Activity> getActivities(){
