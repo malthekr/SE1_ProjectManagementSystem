@@ -17,7 +17,7 @@ public class Employee {
 	
     public Employee(String name, String id){
         this.name = name;
-        this.id = id.toLowerCase();
+        this.id = id;
     }
 
     public String getName(){
@@ -41,24 +41,6 @@ public class Employee {
     	
     	throw new OperationNotAllowedException("Employee is not part of the project");
     }
-    
-    public void removeActivity(Project project, Activity activity) throws OperationNotAllowedException {
-		List<Activity> a = map.get(project);
-		a.remove(activity);
-		activities = map.put(project, a);
-		
-		
-		
-    	/*activities = map.computeIfAbsent(project, y -> new ArrayList<>());
-    	
-    	if(activities.contains(activity)) {
-    		activities.remove(activity);
-    		return;
-    	}*/
-    	//map.get(project).remove(activity);
-    	
-    	//throw new OperationNotAllowedException("Employee is not part of this activity");
-    }
 
     public int getNumOfActivities(){
     	int numbOfActivites = map.values().stream().flatMapToInt(list -> IntStream.of(list.size())).sum();
@@ -81,10 +63,6 @@ public class Employee {
     }
      
     public List<Activity> getActivities(){
-		List<Activity> a = new ArrayList<>();
-		for(Project key : map.keySet()){
-			a.addAll(map.get(key));
-		}
-    	return a;
+    	return activities;
     }
 }
