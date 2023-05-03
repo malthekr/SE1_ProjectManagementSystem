@@ -1,5 +1,5 @@
 Feature: Add expected hours for project
-    tion aboutDescription: Add information about expected hours regarding a project.
+    Description: Add information about expected hours regarding a project.
     Actor: Project Manager
     
 Scenario: Add expected hours to a project as project manager
@@ -14,4 +14,4 @@ Scenario: Regular employee attempts to add expected hours to a project
     And employee with ID "mkr" is logged in
     And add employee with ID "mkr" to project
     When set expected project hours to 100.0
-    Then the error message "Project Manager login required" is given
+    Then the error message "Only Project Managers are allowed to set expected hours" is given
