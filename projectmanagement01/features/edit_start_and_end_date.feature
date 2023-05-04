@@ -20,20 +20,19 @@ Scenario: Employee edits start date of project
    	Given there is a project
     And employee with ID "mkr" is logged in
    	When edits start date by 5 days
-   	Then the error message "Employee has to be Project Manager to change project start date" is given
+   	Then the error message "Project Manager login required" is given
 
-Scenario: Employee edits start date of project
+Scenario: Employee edits end date of project
    	Given there is a project
     And employee with ID "mkr" is logged in
    	When edits end date by 5 days
-   	Then the error message "Employee has to be Project Manager to change project end date" is given   	
+   	Then the error message "Project Manager login required" is given   	
 
 Scenario: Employee logged out and edits start date of project
    	Given there is a project
     And employee with ID "mkr" is logged in
-    
    	When edits start date by 5 days
-   	Then the error message "Employee has to be Project Manager to change project start date" is given
+   	Then the error message "Project Manager login required" is given
 
 Scenario: Employee edits start date of project
    	Given there is a project
@@ -41,7 +40,7 @@ Scenario: Employee edits start date of project
     And there is an employee with ID "mkr"
     And admin is logged out
    	When edits start date by 5 days
-   	Then the error message "Project Manager log in required" is given  
+   	Then the error message "Project Manager login required" is given  
 
 Scenario: Employee edits start date of project
    	Given there is a project
@@ -49,5 +48,5 @@ Scenario: Employee edits start date of project
     And there is an employee with ID "mkr"
     And admin is logged out
    	When edits end date by 5 days
-   	Then the error message "Project Manager log in required" is given  
+   	Then the error message "Project Manager login required" is given  
 

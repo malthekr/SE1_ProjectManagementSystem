@@ -35,4 +35,4 @@ Scenario: Employee attempts to add activity to project with project manager
     And employee with ID "mkr" is logged in
     And employee "mkr" is part of project
     When create activity with name "act1" for project
-    Then the error message "Only Project Manager can add activities" is given
+    Then the error message "Project Manager login required" is given

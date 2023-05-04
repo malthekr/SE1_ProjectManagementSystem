@@ -35,7 +35,14 @@ public class RegisterEmployeeSteps {
 	@Given("there is an employee with ID {string}")
 	public void thereIsAnEmployeeWithID(String id) throws OperationNotAllowedException {
 		employee = new Employee(id);
-		addEmployee(employee);
+		if (managementSystemApp.adminLoggedIn()) {
+			addEmployee(employee);
+		}
+		else {
+			managementSystemApp.adminLogin("admi");
+			addEmployee(employee);
+			managementSystemApp.adminLogout();
+		}
 		assertTrue(managementSystemApp.containsEmployeeWithId(id));	
 	}
 	
@@ -45,14 +52,14 @@ public class RegisterEmployeeSteps {
 		addEmployee(employee);
 	}
 	
-	@Then("the person is an registered employee of the system with ID {string}")
+	@Then("the person is a registered employee of the system with ID {string}")
 	public void thePersonIsAnRegisteredEmployeeOfTheSystemWithId(String id){
 		assertTrue(managementSystemApp.containsEmployeeWithId(id));	
 	}
 	
 	@Then("the error message {string} is given")
 	public void theErrorMessageIs(String errorMessage){
-		assertEquals(errorMessageHolder.getErrorMessage(), errorMessage);
+		assertEquals(errorMessage, errorMessageHolder.getErrorMessage());
 	}
 	
 	@When("unregister the employee with ID {string}")
@@ -68,15 +75,6 @@ public class RegisterEmployeeSteps {
 	@Then("the employee is unregistered from the system")
 	public void theEmployeeIsUnregisteredFromTheSystem() {
 	    assertFalse(managementSystemApp.containsEmployeeWithId(employee.getId()));	
-	}
-	
-	@Given("there is also an employee with ID {string}")
-	public void thereIsAlsoAnEmployeeWithID(String id) {
-		employee = new Employee(id);
-		managementSystemApp.adminLogin("admi");
-		addEmployee(employee);
-		managementSystemApp.adminLogout();
-		assertTrue(managementSystemApp.containsEmployeeWithId(id));	
 	}
 	
 	private void addEmployee(Employee employee){

@@ -1,23 +1,20 @@
 package softwarehuset.management.app;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Project {
 	private String projectName;
-	private Double expectedHours;
+	private double expectedHours;
 	private Calendar startDate, endDate;
 	
 	private Boolean ongoingProject = false;
 	
 	private List<Employee> employeesAssignedToProject = new ArrayList<>();
 	private List<Activity> activities = new ArrayList<>();
+	private List<TimeTable> timeTables = new ArrayList<>();
 	private IDServer idServer = new IDServer();
 	private Employee projectManager;
 	
@@ -56,8 +53,10 @@ public class Project {
 		if(description == "") {
 			throw new OperationNotAllowedException("Activities must have a name");
 		}
-		if(activities.contains(findActivityByDescrption(description))) {
-			throw new OperationNotAllowedException("Activities must have a unique name");
+		for(Activity a : activities){
+			if(a.getDescription().equals(description)) {
+				throw new OperationNotAllowedException("Activities must have a unique name");
+			}
 		}
 		
 		Activity activity = new Activity(projectID, description, startDate, endDate);
@@ -156,13 +155,19 @@ public class Project {
 		return activities;
 	}
 	
-	//Så hvad er close project?
+	public double getWorkedHours(){
+		double sumWorkedHours = 0;
+		for(Activity a : activities){
+			sumWorkedHours += a.getWorkedHours();
+		}
+		return sumWorkedHours;
+	}
+	
 	public void closeProject() {
 		ongoingProject = false;
 	}
-
+	
 	public void promoteEmployee(String id) throws OperationNotAllowedException{
-		Boolean assigned = false;
 		
 		if(projectManager != null) {
 			throw new OperationNotAllowedException("Project already has Project Manager");
@@ -170,16 +175,13 @@ public class Project {
 		
 		for(Employee e : employeesAssignedToProject){
 			if(e.getId().equals(id) == true){
-				assigned = true;
 				setProjectManager(e);
 				
 				return;
 			}
 		}
 		
-		if(!assigned){
-			throw new OperationNotAllowedException("Employee is not part of the project");
-		}
+		throw new OperationNotAllowedException("Employee is not part of the project");
 	}
 	
 	public boolean findEmployee(Employee employee) throws OperationNotAllowedException {
@@ -191,19 +193,31 @@ public class Project {
 		return false;
 	}
 	
-	public Activity findActivityByDescrption(String description) {
+	public Activity findActivityByDescription(String description) throws OperationNotAllowedException {
 		for(Activity activity : activities) {
 			if(activity.getDescription().equals(description)) {
 				return activity;
 			}
 		}
-		return null;
+		throw new OperationNotAllowedException("Activity does not exist");
 	}
-
-	public Object getExpectedHours() {
+	
+	public void addEmployeeToActivity(Employee employee, String description) throws OperationNotAllowedException{
+		Activity a = findActivityByDescription(description);
+		if(findEmployee(employee)){
+			a.addEmployee(employee);
+		}
+	}
+	
+	public double getExpectedHours() {
 		return expectedHours;
 	}
 	et
+	public List<TimeTable> getTimeTablesByEmployee(Employee employee) {
+		List<TimeTable> employeeTimeTables = timeTables.stream().filter(u -> u.getEmployee().equals(employee)).collect(Collectors.toList());
+		return employeeTimeTables;
+	}
+	
 	public List<TimeTable> getTimeTablesByEmployee(Employee employee) {
 		List<TimeTable> employeeTimeTables = timeTables.stream().filter(u -> u.getEmployee().equals(employee)).collect(Collectors.toList());
 		return employeeTimeTables;
