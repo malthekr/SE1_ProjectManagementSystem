@@ -40,7 +40,7 @@ public class EditActivityScreen {
 	
 	private Activity activity;
 	
-	private int buttonPos = 40;
+	private int buttonPos = 28;
 	
 	public EditActivityScreen(ManagementSystemApp ManagementSystem, FindActivityScreen parentWindow, EmployeeScreen parentparentWindow, MainScreen parentparentparentWindow) {
 		this.ManagementSystem = ManagementSystem;
@@ -109,6 +109,41 @@ public class EditActivityScreen {
 	}
 	
 	public void addEventListeners(){
+		// Add employee to activity
+		addEmployeeToActivity.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String input = userInput.getText();
+					ManagementSystem.addEmployeeToActivity(
+							ManagementSystem.FindEmployeeById(input), 
+							ManagementSystem.findProjectById(activity.getProjectId()), 
+							activity.getDescription());
+					userInput.setText("");
+					EnterErrorMessage.setText("Successfully added employee to activity");
+				} catch (OperationNotAllowedException p) {
+					EnterErrorMessage.setText(p.getMessage());
+				}
+			}
+		});
+		
+		
+		// Remove employee from activity
+		removeEmployeeFromActivity.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String input = userInput.getText();
+					ManagementSystem.removeEmployeeFromActivity(
+							ManagementSystem.FindEmployeeById(input), 
+							ManagementSystem.findProjectById(activity.getProjectId()), 
+							activity.getDescription());
+					userInput.setText("");
+					EnterErrorMessage.setText("Successfully removed employee to activity");
+				} catch (OperationNotAllowedException p) {
+					EnterErrorMessage.setText(p.getMessage());
+				}
+			}
+		});
+		
 		// Join Activity
 		joinActivity.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -184,6 +219,11 @@ public class EditActivityScreen {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String input = userInput.getText();
+					if(input.isEmpty()) {
+						EnterErrorMessage.setText("Please enter new description");
+						return;
+					}
+					
 					ManagementSystem.editProjectActivityDescription(activity, input);
 					EnterErrorMessage.setText("Successfully changed description for activity"); 
 				}  catch (OperationNotAllowedException p) {
@@ -193,6 +233,61 @@ public class EditActivityScreen {
 			}
 		});
 		
+		// Edit start date
+		editStartDate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String input = userInput.getText();
+					if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
+						EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
+						return;
+					}
+					String[] date = input.split("-");
+					
+					int dd = Integer.parseInt(date[0]);
+					int mm = Integer.parseInt(date[1]);
+					int yyyy = Integer.parseInt(date[2]);
+					
+					ManagementSystem.UpdateStartDate(
+							dd, mm, yyyy, 
+							activity.getProjectId(), 
+							activity.getDescription());
+					
+					EnterErrorMessage.setText("Successfully changed start date"); 
+				}  catch (OperationNotAllowedException p) {
+					EnterErrorMessage.setText(p.getMessage());
+					return;
+				}
+			}
+		});
+		
+		// Edit end date
+		editEndDate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String input = userInput.getText();
+					if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
+						EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
+						return;
+					}
+					String[] date = input.split("-");
+					
+					int dd = Integer.parseInt(date[0]);
+					int mm = Integer.parseInt(date[1]);
+					int yyyy = Integer.parseInt(date[2]);
+					
+					ManagementSystem.UpdateEndDate(
+							dd, mm, yyyy, 
+							activity.getProjectId(), 
+							activity.getDescription());
+					
+					EnterErrorMessage.setText("Successfully changed end date"); 
+				}  catch (OperationNotAllowedException p) {
+					EnterErrorMessage.setText(p.getMessage());
+					return;
+				}
+			}
+		});
 		
 		
 		
@@ -231,8 +326,9 @@ public class EditActivityScreen {
 	}
 	
 	private int newButtonPos(){
+		int pos = this.buttonPos;
 		this.buttonPos += 41;
-		return this.buttonPos;
+		return pos;
 	}
 	
 	public void setActivity(Activity activity) {

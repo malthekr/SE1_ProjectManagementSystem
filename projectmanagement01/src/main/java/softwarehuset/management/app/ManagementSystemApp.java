@@ -337,21 +337,31 @@ public class ManagementSystemApp extends Observable {
 	
 	// Add employee to activity in project
 	public void addEmployeeToActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{
-		// Adds employee to project employee list
-		project.addEmployeeToActivity(employee, description);
-		
-		// Adds activity to employee project-activity list
-		employee.addActivity(project, project.findActivityByDescription(description));
+		if(checkAuth(project)) {
+			// Adds employee to project employee list
+			project.addEmployeeToActivity(employee, description);
+			
+			// Adds activity to employee project-activity list
+			employee.addActivity(project, project.findActivityByDescription(description));
+		}
 	}
 	
 	// Remove employee from activity in project
 	public void removeEmployeeFromActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{
-		// Remove employee from activity employee list
-		Activity activity =  project.findActivityByDescription(description);
-		activity.removeEmployee(employee);
+		if(checkAuth(project)) {
+			// Removes employee to project employee list
+			project.removeEmployeeFromActivity(employee, description);
+			
+			// Remove activity from employee project-activity list
+			employee.removeActivity(project, project.findActivityByDescription(description));
+		}
 		
-		// Remove activity from employee project-activity list
-		employee.removeActivity(project, project.findActivityByDescription(description));
+		// Remove employee from activity employee list
+//		Activity activity =  project.findActivityByDescription(description);
+//		activity.removeEmployee(employee);
+		
+//		// Remove activity from employee project-activity list
+//		employee.removeActivity(project, project.findActivityByDescription(description));
 	}
 	
 	public List<Activity> getActivities(int projectId, Employee anotherEmployee) throws OperationNotAllowedException{

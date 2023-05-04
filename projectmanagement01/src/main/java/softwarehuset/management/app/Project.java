@@ -209,6 +209,13 @@ public class Project {
 		}
 	}
 	
+	public void removeEmployeeFromActivity(Employee employee, String description) throws OperationNotAllowedException{
+		Activity a = findActivityByDescription(description);
+		if(findEmployee(employee)){
+			a.removeEmployee(employee);
+		}
+	}
+	
 	public double getExpectedHours() {
 		return expectedHours;
 	}
