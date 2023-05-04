@@ -1,18 +1,20 @@
 package softwarehuset.management.app;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class TimeTable {
 	private Activity activity;
 	private Employee employee;
 	private Calendar date;
-	private int workHours;
+	private double workHours;
 	
-	public TimeTable(Activity activity, Employee employee, Calendar date, int workHours) {
+	public TimeTable(Activity activity, Employee employee, double workHours) {
 		this.activity = activity;
 		this.employee = employee;
-		this.date = date;
+		this.date = generateDate();
 		this.workHours = workHours;
+		
 	}
 	
 	public Activity getActivity() {
@@ -27,7 +29,7 @@ public class TimeTable {
 		return date;
 	}
 	
-	public int getHoursWorked() {
+	public double getHoursWorked() {
 		return workHours;
 	}
 	
@@ -43,7 +45,13 @@ public class TimeTable {
 		date = newDate;
 	}
 	
-	public void editHours(int newHours) {
+	public void editHours(double newHours) {
 		workHours = newHours;
+	}
+	
+	public Calendar generateDate(){
+		Calendar dateToday = new GregorianCalendar();
+		//Calendar endDate1 = new GregorianCalendar();
+		return dateToday;
 	}
 }
