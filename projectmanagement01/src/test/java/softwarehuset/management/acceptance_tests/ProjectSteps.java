@@ -23,11 +23,13 @@ public class ProjectSteps {
 	private ErrorMessageHolder errorMessageHolder;
 	private Project project;
 	private ProjectHelper projectHelper;
+	private EmployeeHelper employeeHelper;
 	
-	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, ProjectHelper projectHelper) {
+	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, ProjectHelper projectHelper, EmployeeHelper employeeHelper) {
 		this.managementSystem = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
 		this.projectHelper = projectHelper;
+		this.employeeHelper = employeeHelper;
 	}
 	
 	@Given("there is a project with name {string}")
@@ -276,6 +278,7 @@ public class ProjectSteps {
 	    	Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
 	    	managementSystem.addEmployeeToActivity(employee, project, description);
 	    	activity.setExpectedHours(i);
+	    	//employee.addActivity(project, activity);
 	    }
 	}
 	
@@ -296,9 +299,11 @@ public class ProjectSteps {
 	@When("add employee with ID {string} to activity in project")
 	public void addEmployeeWithIDToActivityInProject(String id) throws OperationNotAllowedException {
 		try {
+			//Employee employee = managementSystem.FindEmployeeById(id);
 			String description = "NewActivity20";
 	    	createActivityWithNameForProject(description);
 	    	managementSystem.addEmployeeToActivity(managementSystem.FindEmployeeById(id), project, description);
+	    	//Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
 			
 	    } catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
@@ -310,6 +315,8 @@ public class ProjectSteps {
 			String description = "NewActivity20";
 			Employee employee = managementSystem.FindEmployeeById(id);
 			Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+			//employee.addActivity(project, activity);
+			//employee.isPartOfActivity(project, activity);
 			assertEquals(activity.getEmployees().contains(employee), employee.getActivities().contains(activity));
 	}
 	
@@ -345,6 +352,18 @@ public class ProjectSteps {
 			newDate = managementSystem.setDate(newDate, dd, mm, yyyy);
 			
 		    assertEquals(activity.getStartDate(), newDate);
+		/*
+		try {
+			Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+			Calendar calendar = new GregorianCalendar();
+			Calendar newDate = new GregorianCalendar(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+			newDate = managementSystem.setDate(newDate, dd, mm, yyyy);
+			
+		    assertEquals(activity.getStartDate(), newDate);
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}
+		*/
 	}
 	
 	@When("edits description of activity {string} to {string}")
@@ -369,6 +388,10 @@ public class ProjectSteps {
 		} catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 	   }
+//		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+//		activity.addWorkedHours(hours);
+		//managementSystem.findActivityByDescription(project.getProjectID(), description).addWorkedHours(hours);
+		
 	}
 
 	@Then("{double} hours is added to activity {string} in project")

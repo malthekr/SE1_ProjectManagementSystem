@@ -56,10 +56,16 @@ public class Activity {
         if (this.workedHours < 0) {
             this.workedHours = 0;
         }
+<<<<<<< HEAD
 
         // return;
         // throw new OperationNotAllowedException("Worked hours is measured in half
         // hours worked");
+=======
+    	
+    	return;
+    	//throw new OperationNotAllowedException("Worked hours is measured in half hours worked");
+>>>>>>> parent of 7c22330 (Removed old code/comments)
     }
 
     public double getWorkedHours() {

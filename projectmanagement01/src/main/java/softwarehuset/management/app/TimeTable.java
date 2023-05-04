@@ -1,7 +1,12 @@
 package softwarehuset.management.app;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+<<<<<<< HEAD
 import java.util.GregorianCalendar;
+=======
+import java.util.List;
+>>>>>>> parent of 7c22330 (Removed old code/comments)
 
 public class TimeTable {
 	private Activity activity;
