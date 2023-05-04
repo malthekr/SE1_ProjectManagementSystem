@@ -99,7 +99,7 @@ public class SearchProjectScreen {
 		lblSearchResultDetail = new JLabel("");
 		lblSearchResultDetail.setVerticalAlignment(SwingConstants.TOP);
 		lblSearchResultDetail.setHorizontalAlignment(SwingConstants.LEFT);
-		lblSearchResultDetail.setBounds(23, 19, 318, 137);
+		lblSearchResultDetail.setBounds(23, 19, 318, 150);
 		panelSearchResult.add(lblSearchResultDetail);
 		
 		btnBack = new JButton("Back");

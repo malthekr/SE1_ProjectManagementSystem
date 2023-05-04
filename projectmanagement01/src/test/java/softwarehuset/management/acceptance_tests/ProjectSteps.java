@@ -47,6 +47,15 @@ public class ProjectSteps {
 		} 
 	}
 	
+	@When("remove project from system")
+	public void whenRemoveProjectFromSystem() throws OperationNotAllowedException {
+		try {
+			managementSystem.removeProject(project);
+	    } catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		} 
+	}
+	
 	@Given("create project")
 	public void createProject() throws OperationNotAllowedException {
 		project = projectHelper.getProject();
@@ -57,12 +66,30 @@ public class ProjectSteps {
 		assertTrue(managementSystem.checkIfUniqueProjectId(project.getProjectID()));
 	}
 	
+	@Then("there is no project named {string}")
+	public void thereIsNoProjectNamed(String projectName) {
+		List<Project> projects = managementSystem.getProjectList();
+		boolean flag = false;
+		for(Project p : projects){
+			if(p.getProjectName() == projectName){
+				flag = true;
+			}
+		}
+		assertFalse(flag);
+		//assertTrue(managementSystem.checkIfUniqueProjectId(project.getProjectID()));
+	}
+	
 	@Given("there is a project")
 	public void thereIsAProject() throws OperationNotAllowedException {	    
-		managementSystem.adminLogin("admi");
-		project = projectHelper.getProject();
-		addProjectToSystem();
-	    managementSystem.adminLogout();
+		if(managementSystem.adminLoggedIn()) {
+			project = projectHelper.getProject();
+			addProjectToSystem();
+		} else {
+			managementSystem.adminLogin("admi");
+			project = projectHelper.getProject();
+			addProjectToSystem();
+		    managementSystem.adminLogout();
+		}
 	}
 	
 	@Given("there is a new project")
@@ -203,6 +230,23 @@ public class ProjectSteps {
 		assertEquals(a.getDescription(), description);
 	}
 	
+	@Then("employee {string} is not part of the activity {string}")
+	public void employeeIsNotPartOfTheActivity(String id, String description) throws OperationNotAllowedException {
+		Activity a = managementSystem.findActivityByDescription(project.getProjectID(), description);
+		List<Employee> employees = a.getEmployees();
+		
+		boolean flag = false;
+		for(Employee e : employees){
+			if(e.getId().equals(id)){
+				flag = true;
+				break;
+			}
+		}
+		assertFalse(flag);
+		//Employee employee = managementSystem.FindEmployeeById(id);
+		//assertFalse(a.getEmployees().contains(employee));
+	}
+	
 	@Then("the project name is {string}")
 	public void theProjectNameIs(String projectName) {
 		assertEquals(project.getProjectName(), projectName);
@@ -270,8 +314,12 @@ public class ProjectSteps {
 	
 	@Given("employee with ID {string} has {int} ongoing activities")
 	public void employeeWithIDHasOngoingActivities(String id, int ongoingActvities) throws OperationNotAllowedException {
+		
 	    Employee employee = managementSystem.FindEmployeeById(id);
-	    	    
+	    
+	    if(!project.findEmployee(employee))
+			managementSystem.addEmployeeToProject(project.getProjectID(), id);
+	    
 	    for(int i = 0; i <= ongoingActvities; i++) {
 	    	String description = "activity"+i;
 	    	createActivityWithNameForProject(description);
@@ -370,7 +418,9 @@ public class ProjectSteps {
 	@When("add {double} hours to activity {string} in project")
 	public void addHoursToActivityInProject(double hours, String description) throws OperationNotAllowedException {
 		try{
-			managementSystem.findActivityByDescription(project.getProjectID(), description).addWorkedHours(hours);
+			//managementSystem.findActivityByDescription(project.getProjectID(), description).addWorkedHours(hours);
+			Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+			managementSystem.addHourToActivity(activity, hours);
 		} catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 	   }
@@ -396,7 +446,6 @@ public class ProjectSteps {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 			return null;
 		}
-		
 	}
 
 	@Then("a timetable of activity from {string} is given")
@@ -431,5 +480,28 @@ public class ProjectSteps {
 	public void systemProvidesStatusReportForProject() {
 		
 	}
-
+	
+	@When("remove activity {string} for project")
+	public void removeActivityForProject(String activityName) {
+		try {
+			Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), activityName);
+			managementSystem.removeActivity(activity);
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}	
+	}
+	
+	@Then("there is no activity named {string}")
+	public void thereIsNoActivityNamed(String activityName) throws OperationNotAllowedException {
+		List<Activity> activites = project.getActivites();
+		boolean flag = false;
+		for(Activity a : activites){
+			if (a.getDescription() == activityName){
+				flag = true;
+			}
+		}
+		assertFalse(flag);
+	}
+	
+	
 }

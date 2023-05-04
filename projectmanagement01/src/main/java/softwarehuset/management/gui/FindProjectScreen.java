@@ -35,6 +35,7 @@ public class FindProjectScreen implements Observer {
 	private MainScreen parentparentWindow; 
 	private EmployeeScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
+	private EditProjectScreen editProject;
 	
 	private JPanel panelFindProject;
 	private JTextField searchField;
@@ -45,15 +46,16 @@ public class FindProjectScreen implements Observer {
 	private JLabel EnterEmployeeStatus = new JLabel("");
 	
 	private JButton btnDeleteProject;
-	//private JButton btnEditActivity;
+	private JButton btnEditProject;
 	
 	private JButton btnBack;
 	
 
-	public FindProjectScreen(ManagementSystemApp ManagementSystem, EmployeeScreen parentWindow, MainScreen parentparentWindow) {
+	public FindProjectScreen(ManagementSystemApp ManagementSystem, EmployeeScreen parentWindow, MainScreen parentparentWindow, EditProjectScreen editProject) {
 		this.ManagementSystem = ManagementSystem;
 		this.parentparentWindow = parentparentWindow;
 		this.parentWindow = parentWindow;
+		this.editProject = editProject;
 		initialize();
 	}
 
@@ -123,23 +125,23 @@ public class FindProjectScreen implements Observer {
 		lblFindResultDetail = new JLabel("");
 		lblFindResultDetail.setVerticalAlignment(SwingConstants.TOP);
 		lblFindResultDetail.setHorizontalAlignment(SwingConstants.LEFT);
-		lblFindResultDetail.setBounds(23, 19, 318, 137);
+		lblFindResultDetail.setBounds(23, 19, 318, 150);
 		panelSearchResult.add(lblFindResultDetail);
-		/*
-		btnEditActivity = new JButton("Edit Activity");
-		btnEditActivity.addActionListener(new ActionListener() {
+		
+		btnEditProject = new JButton("Edit Project");
+		btnEditProject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(listSearchResult.getSelectedValue() != null) {
-					editActivity.setActivity(listSearchResult.getSelectedValue());
+					editProject.setProject(listSearchResult.getSelectedValue());
 					setVisible(false);
 					clear();
-					editActivity.setVisible(true);
+					editProject.setVisible(true);
 				}
 			}
 		});
-		btnEditActivity.setBounds(148, 68, 117, 29);
-		panelFindProject.add(btnEditActivity);
-		*/
+		btnEditProject.setBounds(148, 68, 117, 29);
+		panelFindProject.add(btnEditProject);
+		
 		
 		btnDeleteProject = new JButton("Delete project");
 		btnDeleteProject.addActionListener(new ActionListener() {
@@ -174,7 +176,7 @@ public class FindProjectScreen implements Observer {
 		btnBack.setBounds(21, 28, 59, 29);
 		panelFindProject.add(btnBack);
 		
-		//editActivity = new EditActivityScreen(ManagementSystem, this, parentWindow, parentparentWindow);
+		editProject = new EditProjectScreen(ManagementSystem, this, parentWindow, parentparentWindow);
 			}
 	
 	public void setVisible(boolean visible) {

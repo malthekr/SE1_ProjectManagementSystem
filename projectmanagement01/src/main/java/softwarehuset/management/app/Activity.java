@@ -13,6 +13,7 @@ public class Activity {
     private double workedHours = 0;
     private Calendar startDate, endDate;
     
+    /*
     public Activity(int projectId, String description, double expectedHours, Calendar startDate, Calendar endDate) {
     	this.projectId = projectId;
     	this.description = description;
@@ -20,6 +21,7 @@ public class Activity {
     	this.startDate = startDate;
     	this.endDate = endDate;
     }
+    */
     
     public Activity(int projectId, String description, Calendar startDate, Calendar endDate) {
     	this.projectId = projectId;
@@ -47,8 +49,8 @@ public class Activity {
     	if (!employees.contains(employee)){
  			throw new OperationNotAllowedException("Employee is not part of activity");      	
     	} 
-    		employees.remove(employee);
-        	return;
+    	employees.remove(employee);
+    	// return;
     }
     
     public int getProjectId(){
@@ -125,13 +127,22 @@ public class Activity {
 		String name = this.getDescription().isBlank() ? "No description on activity" : this.getDescription();
 		String id = this.getEmployees() == null ? "No employees assigned yet" : this.getEmployeesAsString();
 		
+		//Format start date as: Week/Year.
+		int week = this.getStartDate().get(Calendar.WEEK_OF_YEAR);
+		int year =  this.getStartDate().get(Calendar.YEAR);
+		String start = week + "/" + year;
+		//Format end date as: Week/Year
+		int week1 = this.getEndDate().get(Calendar.WEEK_OF_YEAR);
+		int year1 =  this.getEndDate().get(Calendar.YEAR);
+		String end = week1 + "/" + year1;
+		
 		StringBuffer b = new StringBuffer();
 		b.append("<html>"+"<br>");
-		b.append(String.format("<b>Name:</b>     %s<br>", name));
+		b.append(String.format("<b>Descriptions:</b>     %s<br>", name)); 
 		b.append(String.format("<b>Employee:</b>     %s<br>", id));
 		b.append(String.format("<b>Project Id:</b>    %s<br>", this.getProjectId()));
-		b.append(String.format("<b>Start date:</b>    %s<br>", this.getStartDate().getTime()));
-		b.append(String.format("<b>End date:</b>    %s<br>", this.getEndDate().getTime()));
+		b.append(String.format("<b>Start date (Week/Year):</b>     %s<br>", start));
+		b.append(String.format("<b>End date (Week/Year):</b>       %s<br>", end));
 		b.append(String.format("<b>Expected Hours:</b> %s<br>", this.getExpectedHours()));
 		b.append(String.format("<b>Worked Hours:</b> %s<br></html>", this.getWorkedHours()));
 		return b.toString();
@@ -153,7 +164,7 @@ public class Activity {
 	
 	public String toString() {
 		String name = this.getDescription().isBlank() ? "" : this.getDescription();
-		return "Project ID: " + String.valueOf(getProjectId()) + " Description: "+ name;
+		return "Project ID: " + String.valueOf(getProjectId()) + " - "+ name;
 	}
     
 }

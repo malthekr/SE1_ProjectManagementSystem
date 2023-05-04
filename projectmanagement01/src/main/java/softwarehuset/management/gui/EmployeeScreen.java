@@ -34,6 +34,7 @@ public class EmployeeScreen implements Observer {
 	private FindActivityScreen findActivity;
 	private EditActivityScreen editActivity;
 	private FindProjectScreen findProject;
+	private EditProjectScreen editProject;
 	
 	private JPanel panelEmployeeFunctions;
 	private JButton btnBack;
@@ -52,12 +53,13 @@ public class EmployeeScreen implements Observer {
 	
 	private int buttonPos = 90;
 
-	public EmployeeScreen(ManagementSystemApp ManagementSystem, MainScreen parentWindow, CreateActivityScreen CreateAndFindActivity, EditActivityScreen editActivity, FindProjectScreen findProject) {
+	public EmployeeScreen(ManagementSystemApp ManagementSystem, MainScreen parentWindow, CreateActivityScreen CreateAndFindActivity, EditActivityScreen editActivity, FindProjectScreen findProject, EditProjectScreen editProject) {
 		this.ManagementSystem = ManagementSystem;
 		this.parentWindow = parentWindow;
 		this.CreateActivity = CreateAndFindActivity;
 		this.editActivity = editActivity;
 		this.findProject = findProject;
+		this.editProject = editProject;
 		initialize();
 	}
 	
@@ -175,7 +177,7 @@ public class EmployeeScreen implements Observer {
 		ManagementSystem.addObserver(this);
 		CreateActivity = new CreateActivityScreen(ManagementSystem, this, parentWindow);
 		findActivity = new FindActivityScreen(ManagementSystem, this, parentWindow, editActivity);
-		findProject = new FindProjectScreen(ManagementSystem, this, parentWindow);
+		findProject = new FindProjectScreen(ManagementSystem, this, parentWindow, editProject);
 	}
 	
 	private int newButtonPos(){

@@ -27,14 +27,14 @@ public class Project {
 		this.endDate = endDate;
 		this.projectID = idServer.generateID(startDate);
 	}
-	
+	/*
 	public Project(Double expectedHours, Calendar startDate, Calendar endDate) {
 		this.expectedHours = expectedHours;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.projectID = idServer.generateID(startDate);
 	}
-	
+	*/
 	// Override and assign the project manager for this project, even if already assigned
 	public void setProjectManager(Employee employee) { 
 		this.projectManager = employee;
@@ -47,6 +47,25 @@ public class Project {
 		} else {
 			throw new OperationNotAllowedException("Employee already part of project");
 		}
+	}
+	
+	public void removeEmployee(Employee employee) throws OperationNotAllowedException {
+		if(employeesAssignedToProject.contains(employee)){
+			employeesAssignedToProject.remove(employee);
+			if(projectManager == employee) {
+				removeProjectManager();
+			}
+			
+			for(Activity a : activities){
+				if(a.getEmployees().contains(employee)){
+					a.removeEmployee(employee);
+				}
+			}
+			//return;
+		} else {
+			throw new OperationNotAllowedException("Employee is not part of project");
+		}
+		
 	}
 	
 	public void createActivity(String description) throws OperationNotAllowedException {
@@ -77,26 +96,6 @@ public class Project {
 		} else {
 			throw new OperationNotAllowedException("Activity already part of project");
 		}
-	}
-	
-	public void removeEmployee(Employee employee) throws OperationNotAllowedException {
-		if(employeesAssignedToProject.contains(employee)){
-			employeesAssignedToProject.remove(employee);
-			if(projectManager == employee) {
-				removeProjectManager();
-			}
-			
-			for(Activity a : activities){
-				if(a.getEmployees().contains(employee)){
-					a.removeEmployee(employee);
-				}
-			}
-			return;
-		}
-		
-		
-		
-		throw new OperationNotAllowedException("Employee is not part of project");
 	}
 	
 	public void removeProjectManager(){
@@ -161,6 +160,10 @@ public class Project {
 			sumWorkedHours += a.getWorkedHours();
 		}
 		return sumWorkedHours;
+	}
+	
+	public void beginProject(){
+		ongoingProject = true;
 	}
 	
 	public void closeProject() {
@@ -266,13 +269,23 @@ public class Project {
 		String name = this.getProjectName().isBlank() ? "No project name yet" : this.getProjectName();
 		String pmid = !this.hasProjectManager() ? "No PM assigned yet" : this.getProjectManager().getId();
 		String id = this.getEmployeesAssignedToProject() == null ? "No employees assigned yet" : this.getEmployeesAsString();
+		//Format start date as: Week/Year.
+		int week = this.getStartDate().get(Calendar.WEEK_OF_YEAR);
+		int year =  this.getStartDate().get(Calendar.YEAR);
+		String start = week + "/" + year;
+		//Format end date as: Week/Year
+		int week1 = this.getEndDate().get(Calendar.WEEK_OF_YEAR);
+		int year1 =  this.getEndDate().get(Calendar.YEAR);
+		String end = week1 + "/" + year1;
 		
 		StringBuffer b = new StringBuffer();
-		b.append("<html>"+"<br>");
+		b.append("<html>");
 		b.append(String.format("<b>Name:</b>     %s<br>", name));
 		b.append(String.format("<b>Project Id:</b>    %s<br>", this.getProjectID()));
 		b.append(String.format("<b>PM:</b>     %s<br>", pmid));
 		b.append(String.format("<b>Employees:</b>     %s<br>", id));
+		b.append(String.format("<b>Start date (Week/Year):</b>     %s<br>", start));
+		b.append(String.format("<b>End date (Week/Year):</b>       %s<br>", end));
 		b.append(String.format("<b>Is project Active?:</b> %s<br>", this.getOngoingProject()));
 		b.append(String.format("<b>Expected Hours:</b> %s<br>", this.getExpectedHours()));
 		b.append(String.format("<b>Worked Hours:</b>     %s<br>", this.getWorkedHours()));
@@ -295,6 +308,7 @@ public class Project {
     }
 	
 	public String toString() {
-		return "Project ID: " + String.valueOf(getProjectID());
+		String name = this.getProjectName().isBlank() ? "No project name yet" : this.getProjectName();
+		return "Project ID: " + String.valueOf(getProjectID()) + " - " + name;
 	}
 }

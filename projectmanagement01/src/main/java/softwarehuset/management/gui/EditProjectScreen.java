@@ -12,37 +12,39 @@ import javax.swing.JTextField;
 import softwarehuset.management.app.Activity;
 import softwarehuset.management.app.ManagementSystemApp;
 import softwarehuset.management.app.OperationNotAllowedException;
+import softwarehuset.management.app.Project;
 
-public class EditActivityScreen {
+public class EditProjectScreen {
 	private MainScreen parentparentparentWindow; 
 	private EmployeeScreen parentparentWindow;
-	private FindActivityScreen parentWindow;
+	private FindProjectScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
-	private EditActivityScreen editActivity;
+	private EditProjectScreen editActivity;
 	
-	private JPanel panelEditActivity;
+	private JPanel panelEditProject;
 	
 	private JLabel EnterErrorMessage = new JLabel("");
 	
 	private JTextField userInput;
 	
-	private JButton addEmployeeToActivity;
+	private JButton addEmployeeToProject;
 	private JButton removeEmployeeFromActivity;
-	private JButton joinActivity;
-	private JButton leaveActivity;
-	private JButton addWorkedHours;
+	private JButton joinProject;
+	private JButton leaveProject;
+	private JButton setProjectToActiv;
 	private JButton editExpectedHours;
-	private JButton editDescription;
+	private JButton editNameOfProject;
 	private JButton editStartDate;
 	private JButton editEndDate;
+	private JButton toggleOngoing;
 
 	private JButton btnBack;
 	
-	private Activity activity;
+	private Project project;
 	
 	private int buttonPos = 28;
 	
-	public EditActivityScreen(ManagementSystemApp ManagementSystem, FindActivityScreen parentWindow, EmployeeScreen parentparentWindow, MainScreen parentparentparentWindow) {
+	public EditProjectScreen(ManagementSystemApp ManagementSystem, FindProjectScreen parentWindow, EmployeeScreen parentparentWindow, MainScreen parentparentparentWindow) {
 		this.ManagementSystem = ManagementSystem;
 		this.parentWindow = parentWindow;
 		this.parentparentWindow = parentparentWindow;
@@ -58,7 +60,7 @@ public class EditActivityScreen {
 	public void finalInit(){
 		//Error Message
 		EnterErrorMessage.setBounds(110, 10, 300, 16);
-		panelEditActivity.add(EnterErrorMessage);
+		panelEditProject.add(EnterErrorMessage);
 
 		//Back Button
 		btnBack = new JButton("Back");
@@ -71,126 +73,117 @@ public class EditActivityScreen {
 			}
 		});
 		btnBack.setBounds(21, 28, 59, 29);
-		panelEditActivity.add(btnBack);
+		panelEditProject.add(btnBack);
 	}
 	
 	public void initPanel() {
-		panelEditActivity = new JPanel();
-		parentparentparentWindow.addPanel(panelEditActivity);
-		panelEditActivity.setLayout(null);
-		panelEditActivity.setBorder(BorderFactory.createTitledBorder("Edit activity"));
+		panelEditProject = new JPanel();
+		parentparentparentWindow.addPanel(panelEditProject);
+		panelEditProject.setLayout(null);
+		panelEditProject.setBorder(BorderFactory.createTitledBorder("Edit project"));
 	}
 	
 	public void addButtonsToPanel() {
-		panelEditActivity.add(userInput);
-		panelEditActivity.add(addEmployeeToActivity);
-		panelEditActivity.add(removeEmployeeFromActivity);
-		panelEditActivity.add(joinActivity);
-		panelEditActivity.add(leaveActivity);
-		panelEditActivity.add(addWorkedHours);
-		panelEditActivity.add(editExpectedHours);
-		panelEditActivity.add(editDescription);
-		panelEditActivity.add(editStartDate);
-		panelEditActivity.add(editEndDate);
+		panelEditProject.add(toggleOngoing);
+		panelEditProject.add(userInput);
+		panelEditProject.add(addEmployeeToProject);
+		panelEditProject.add(removeEmployeeFromActivity);
+		panelEditProject.add(joinProject);
+		panelEditProject.add(leaveProject);
+		//panelEditProject.add(setProjectToActiv);
+		panelEditProject.add(editExpectedHours);
+		panelEditProject.add(editNameOfProject);
+		panelEditProject.add(editStartDate);
+		panelEditProject.add(editEndDate);
 
 	}
 	
 	public void initButtons() {	
 		userInput = addTextField();
-		addEmployeeToActivity = addButton("Add emplyoee to activity");
-		removeEmployeeFromActivity = addButton("Remove employee from activity");
-		joinActivity = addButton("Join activity");
-		leaveActivity = addButton("Leave activity");
-		addWorkedHours = addButton("Add worked hours");
+		toggleOngoing = addButton("Toggle project status");
+		addEmployeeToProject = addButton("Add emplyoee to project");
+		removeEmployeeFromActivity = addButton("Remove employee from project");
+		joinProject = addButton("Join project");
+		leaveProject = addButton("Leave project");
+		//setProjectToActiv = addButton("toggle ongoing");
 		editExpectedHours = addButton("Edit expected hours");
-		editDescription = addButton("Edit description");
+		editNameOfProject = addButton("Edit project name");
 		editStartDate = addButton("Edit start date");
 		editEndDate = addButton("Edit end date");
 	}
 	
 	public void addEventListeners(){
-		// Add employee to activity
-		addEmployeeToActivity.addActionListener(new ActionListener() {
+		// Toggle project status - change project "onGoing" parameter
+		toggleOngoing.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String input = userInput.getText();
+				try {
+					ManagementSystem.toggleProjectOngoing(project);
+					userInput.setText("");
+					
+					String status = project.getOngoingProject() ? "Active" : "Inactive";
+					EnterErrorMessage.setText("Project status: " + status);
+				} catch (OperationNotAllowedException p) {
+					EnterErrorMessage.setText(p.getMessage());
+					return;
+				}
+			}
+		});
+		
+		// Add employee to project
+		addEmployeeToProject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String input = userInput.getText();
-					ManagementSystem.addEmployeeToActivity(
-					ManagementSystem.FindEmployeeById(input), 
-					ManagementSystem.findProjectById(activity.getProjectId()), 
-					activity.getDescription());
+					ManagementSystem.addEmployeeToProject(project.getProjectID(), input);
 					userInput.setText("");
-					EnterErrorMessage.setText("Successfully added employee to activity");
+					EnterErrorMessage.setText("Successfully added employee to project");
 				} catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
 				}
 			}
 		});
-		
-		
-		// Remove employee from activity
+		 
+		// Remove employee from project
 		removeEmployeeFromActivity.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String input = userInput.getText();
-					ManagementSystem.removeEmployeeFromActivity(
-							ManagementSystem.FindEmployeeById(input), 
-							ManagementSystem.findProjectById(activity.getProjectId()), 
-							activity.getDescription());
+					ManagementSystem.removeEmployeeWithIdFromProject(project.getProjectID(), input);
 					userInput.setText("");
-					EnterErrorMessage.setText("Successfully removed employee to activity");
+					EnterErrorMessage.setText("Successfully removed employee to project");
 				} catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
 				}
 			}
 		});
 		
-		// Join Activity
-		joinActivity.addActionListener(new ActionListener() {
+		// Join Project
+		joinProject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ManagementSystem.addEmployeeToActivity(
-						ManagementSystem.currentEmployee(), 
-						ManagementSystem.findProjectById(activity.getProjectId()), 
-						activity.getDescription());
+					ManagementSystem.addEmployeeToProject(
+						project.getProjectID(), 
+						ManagementSystem.currentEmployee().getId());
 					userInput.setText("");
-					EnterErrorMessage.setText("Successfully joined activity");
+					EnterErrorMessage.setText("Successfully joined project");
 				} catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
 				}
 			}
 		});
 		
-		// Leave Activity
-		leaveActivity.addActionListener(new ActionListener() {
+		// Leave project
+		leaveProject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-						ManagementSystem.removeEmployeeFromActivity(
-						ManagementSystem.currentEmployee(), 
-						ManagementSystem.findProjectById(activity.getProjectId()), 
-						activity.getDescription());
-						userInput.setText("");
-						EnterErrorMessage.setText("Successfully left activity");
-				} catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
-				}
-			}
-		});
-		
-		// Add worked hours
-		addWorkedHours.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String input = userInput.getText();
-				if(!isDouble(input)) {
-					EnterErrorMessage.setText("Please enter a number");
-					return;
-				}
-				try {
-					ManagementSystem.addHourToActivity(activity, stringToDouble(input));
+					ManagementSystem.removeEmployeeWithIdFromProject(
+						project.getProjectID(),
+						ManagementSystem.currentEmployee().getId());
 					userInput.setText("");
-					EnterErrorMessage.setText("Successfully changed worked hours");
+					EnterErrorMessage.setText("Successfully left project");
 				} catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
-					return;
 				}
 			}
 		});
@@ -204,7 +197,7 @@ public class EditActivityScreen {
 					return;
 				}
 				try {
-					ManagementSystem.editExpectedHoursActivity(activity, stringToDouble(input));
+					ManagementSystem.UpdateExpectedHours(project.getProjectID(), stringToDouble(input));
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully changed expected hours"); 
 				} catch (OperationNotAllowedException p) {
@@ -214,18 +207,17 @@ public class EditActivityScreen {
 			}
 		});
 		
-		// Edit description
-		editDescription.addActionListener(new ActionListener() {
+		// Edit name of project
+		editNameOfProject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String input = userInput.getText();
 					if(input.isEmpty()) {
-						EnterErrorMessage.setText("Please enter new description");
+						EnterErrorMessage.setText("Please enter new project name");
 						return;
 					}
-					
-					ManagementSystem.editProjectActivityDescription(activity, input);
-					EnterErrorMessage.setText("Successfully changed description for activity"); 
+					ManagementSystem.editProjectName(project.getProjectID(), input);
+					EnterErrorMessage.setText("Successfully changed project name"); 
 				}  catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
 					return;
@@ -245,15 +237,12 @@ public class EditActivityScreen {
 					String[] date = input.split("-");
 					
 					int dd = Integer.parseInt(date[0]);
-					int mm = Integer.parseInt(date[1]) - 1 ;
+					int mm = Integer.parseInt(date[1]) - 1;
 					int yyyy = Integer.parseInt(date[2]);
 					
-					ManagementSystem.UpdateStartDate(
-							dd, mm, yyyy, 
-							activity.getProjectId(), 
-							activity.getDescription());
+					ManagementSystem.UpdateStartDateProject(dd, mm, yyyy,project.getProjectID());
 					
-					EnterErrorMessage.setText("Successfully changed start date"); 
+					EnterErrorMessage.setText("Successfully changed start date for project"); 
 				}  catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
 					return;
@@ -276,12 +265,9 @@ public class EditActivityScreen {
 					int mm = Integer.parseInt(date[1]) - 1;
 					int yyyy = Integer.parseInt(date[2]);
 					
-					ManagementSystem.UpdateEndDate(
-							dd, mm, yyyy, 
-							activity.getProjectId(), 
-							activity.getDescription());
+					ManagementSystem.UpdateEndDateProject(dd, mm, yyyy,project.getProjectID());
 					
-					EnterErrorMessage.setText("Successfully changed end date"); 
+					EnterErrorMessage.setText("Successfully changed end date for project"); 
 				}  catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
 					return;
@@ -308,7 +294,7 @@ public class EditActivityScreen {
 	}
 		
 	public void setVisible(boolean visible) {
-		panelEditActivity.setVisible(visible);
+		panelEditProject.setVisible(visible);
 	}
 	
 	public JTextField addTextField(){
@@ -331,8 +317,8 @@ public class EditActivityScreen {
 		return pos;
 	}
 	
-	public void setActivity(Activity activity) {
-		this.activity = activity;
+	public void setProject(Project project) {
+		this.project = project;
 	}
 	
 	private boolean isDouble(String str) {

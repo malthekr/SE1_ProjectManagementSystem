@@ -23,6 +23,7 @@ public class MainScreen {
 	CreateActivityScreen CreateActivityScreen;
 	EditActivityScreen editActivity;
 	FindProjectScreen findProject;
+	EditProjectScreen editProject;
 	
 	private JFrame frame;
 	private JPanel panelMenu;
@@ -105,7 +106,7 @@ public class MainScreen {
 	
 		
 		administratorFunctionsScreen = new AdministratorScreen(ManagementSystem, this, CreateProject, RegisterEmployeeScreen);
-		employeeFunctionScreen = new EmployeeScreen(ManagementSystem, this, CreateActivityScreen, editActivity, findProject);
+		employeeFunctionScreen = new EmployeeScreen(ManagementSystem, this, CreateActivityScreen, editActivity, findProject, editProject);
 		searchProjectScreen = new SearchProjectScreen(ManagementSystem, this);
 	}
 	
