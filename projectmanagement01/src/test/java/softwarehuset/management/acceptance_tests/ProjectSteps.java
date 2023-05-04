@@ -30,10 +30,12 @@ public class ProjectSteps {
 		this.errorMessageHolder = errorMessageHolder;
 		this.projectHelper = projectHelper;
 		this.employeeHelper = employeeHelper;
-	}
+		
+	} 
 	
 	@Given("there is a project with name {string}")
 	public void createProjectWithName(String projectName) throws OperationNotAllowedException {
+		projectHelper = new ProjectHelper();
 		project = projectHelper.getProject();
 		project.editProjectName(projectName);
 	}
@@ -344,6 +346,17 @@ public class ProjectSteps {
 		}
 	}
 	
+	@When("remove {string} from activity")
+	public void removeFromActivity(String id) {
+	    try {
+	    	//Employee employee = managementSystem.FindEmployeeById(id);
+			String description = "NewActivity20";
+	    	managementSystem.removeEmployeeFromActivity(managementSystem.FindEmployeeById(id), project, description);
+	    } catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}
+	}
+	
 	@Then("employee with ID {string} is added to the project activity")
 	public void employeeWithIDIsAddedToTheProjectActivity(String id) throws OperationNotAllowedException  {
 			String description = "NewActivity20";
@@ -352,6 +365,14 @@ public class ProjectSteps {
 			//employee.addActivity(project, activity);
 			//employee.isPartOfActivity(project, activity);
 			assertEquals(activity.getEmployees().contains(employee), employee.getActivities().contains(activity));
+	}
+	
+	@Then("{string} is removed from activity")
+	public void isRemovedFromActivity(String id) throws OperationNotAllowedException {
+		String description = "NewActivity20";
+		Employee employee = managementSystem.FindEmployeeById(id);
+		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+		assertFalse(activity.getEmployees().contains(employee));
 	}
 	
 	@When("set expected project hours to {double}")
@@ -502,6 +523,4 @@ public class ProjectSteps {
 		}
 		assertFalse(flag);
 	}
-	
-	
 }

@@ -24,6 +24,7 @@ public class MainScreen {
 	EditActivityScreen editActivity;
 	FindProjectScreen findProject;
 	EditProjectScreen editProject;
+	FindEmployeeScreen findEmployee;
 	
 	private JFrame frame;
 	private JPanel panelMenu;
@@ -53,7 +54,7 @@ public class MainScreen {
 	 */
 	public MainScreen() throws Exception {
 		ManagementSystem = new ManagementSystemApp();
-		ManagementSystem.exampleDate();
+		ManagementSystem.exampleData();
 		initialize();
 	}
 
@@ -106,7 +107,7 @@ public class MainScreen {
 	
 		
 		administratorFunctionsScreen = new AdministratorScreen(ManagementSystem, this, CreateProject, RegisterEmployeeScreen);
-		employeeFunctionScreen = new EmployeeScreen(ManagementSystem, this, CreateActivityScreen, editActivity, findProject, editProject);
+		employeeFunctionScreen = new EmployeeScreen(ManagementSystem, this, CreateActivityScreen, editActivity, findProject, editProject, findEmployee);
 		searchProjectScreen = new SearchProjectScreen(ManagementSystem, this);
 	}
 	

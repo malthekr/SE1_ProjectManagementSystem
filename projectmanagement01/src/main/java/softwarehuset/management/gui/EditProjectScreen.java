@@ -2,6 +2,7 @@ package softwarehuset.management.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -27,6 +28,7 @@ public class EditProjectScreen {
 	
 	private JTextField userInput;
 	
+	private JButton claimPM;
 	private JButton addEmployeeToProject;
 	private JButton removeEmployeeFromActivity;
 	private JButton joinProject;
@@ -83,8 +85,9 @@ public class EditProjectScreen {
 		panelEditProject.setBorder(BorderFactory.createTitledBorder("Edit project"));
 	}
 	
-	public void addButtonsToPanel() {
+	public void addButtonsToPanel() { 
 		panelEditProject.add(toggleOngoing);
+		panelEditProject.add(claimPM);
 		panelEditProject.add(userInput);
 		panelEditProject.add(addEmployeeToProject);
 		panelEditProject.add(removeEmployeeFromActivity);
@@ -101,6 +104,7 @@ public class EditProjectScreen {
 	public void initButtons() {	
 		userInput = addTextField();
 		toggleOngoing = addButton("Toggle project status");
+		claimPM = addButton("Claim project manager");
 		addEmployeeToProject = addButton("Add emplyoee to project");
 		removeEmployeeFromActivity = addButton("Remove employee from project");
 		joinProject = addButton("Join project");
@@ -126,6 +130,31 @@ public class EditProjectScreen {
 				} catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
 					return;
+				}
+			}
+		});
+		
+		
+		// Claim/unclaim project manager
+		claimPM.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String input = userInput.getText();
+					
+					if(ManagementSystem.togglePMClaim(project, ManagementSystem.currentEmployee().getId())){
+						claimPM.setText("Unclaim project manager");
+						EnterErrorMessage.setText("Successfully claimed project manager");
+					} else {
+						claimPM.setText("Claim project manager");
+						EnterErrorMessage.setText("Successfully unclaimed project manager");
+					}
+					
+					//ManagementSystem.promoteToPm(activity.getProjectId(), input);
+					
+					//userInput.setText("");
+					
+				} catch (OperationNotAllowedException p) {
+					EnterErrorMessage.setText(p.getMessage());
 				}
 			}
 		});
@@ -292,7 +321,31 @@ public class EditProjectScreen {
 			}
 		});*/
 	}
+	/*
+	private void setEnableButtons(boolean enabled) {
+		claimPM.enable(false);
+		//btnFindActivity.setEnabled(enabled);
+		//btnLogout.setEnabled(enabled);
+		//btnCreateActivity.setEnabled(enabled);
+		//btnFindActivity.setEnabled(enabled);
+		//btnJoinProject.setEnabled(enabled);
+		//btnFindEmployee.setEnabled(enabled);
+		//btnUnregisterEmployee.setEnabled(enabled);
+		//btnPayFine.setEnabled(enabled);
+	}
 		
+	@Override
+	public void update(Observable o, Object arg) {
+		boolean loggedIn = ManagementSystem.currentEmployee().equals(project.getProjectManager());
+		
+		if (loggedIn) {
+			setEnableButtons(loggedIn);
+			
+		} else {
+			setEnableButtons(loggedIn);
+		}
+	}
+	*/
 	public void setVisible(boolean visible) {
 		panelEditProject.setVisible(visible);
 	}
@@ -318,6 +371,10 @@ public class EditProjectScreen {
 	}
 	
 	public void setProject(Project project) {
+		if(project != null) {
+			String name = !ManagementSystem.currentEmployee().equals(project.getProjectManager()) ? "Claim project manager" : "Unclaim project manager";
+			claimPM.setText(name);
+		}
 		this.project = project;
 	}
 	

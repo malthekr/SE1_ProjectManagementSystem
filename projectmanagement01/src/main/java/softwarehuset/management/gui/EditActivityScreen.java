@@ -92,7 +92,6 @@ public class EditActivityScreen {
 		panelEditActivity.add(editDescription);
 		panelEditActivity.add(editStartDate);
 		panelEditActivity.add(editEndDate);
-
 	}
 	
 	public void initButtons() {	
@@ -115,9 +114,9 @@ public class EditActivityScreen {
 				try {
 					String input = userInput.getText();
 					ManagementSystem.addEmployeeToActivity(
-					ManagementSystem.FindEmployeeById(input), 
-					ManagementSystem.findProjectById(activity.getProjectId()), 
-					activity.getDescription());
+						ManagementSystem.FindEmployeeById(input), 
+						ManagementSystem.findProjectById(activity.getProjectId()), 
+						activity.getDescription());
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully added employee to activity");
 				} catch (OperationNotAllowedException p) {

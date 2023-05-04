@@ -235,9 +235,34 @@ public class ManagementSystemApp extends Observable {
 	
 	public void promoteToPm(int projectId, String Id) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
+		Employee employee = FindEmployeeById(Id);
 		
 		if (checkAuth(project)) {
 			project.promoteEmployee(Id);
+			return;
+		}
+		
+		if(employeeLoggedInId.equals(project.getProjectManager())) {
+			throw new OperationNotAllowedException("Project Manager login required");
+			
+			//return;
+		} 
+		if (employeeLogged() && !project.hasProjectManager()){
+			project.addEmployee(employee);
+			return;
+		}
+		if(adminLoggedIn()) {
+			project.addEmployee(employee);
+			return;
+		}
+		
+	}
+	
+	public void removePm(int projectId) throws OperationNotAllowedException {
+		Project project = findProjectById(projectId);
+		
+		if (checkAuth(project)) {
+			project.removeProjectManager();
 			return;
 		}
 	}
@@ -369,6 +394,23 @@ public class ManagementSystemApp extends Observable {
 		}
 	}
 	
+	// Claim/unclaim projectma status
+	public boolean togglePMClaim(Project project, String input) throws OperationNotAllowedException {
+		Employee employee = FindEmployeeById(input);
+		
+		if(employeeLoggedInId.equals(project.getProjectManager())) {
+			removePm(project.getProjectID());
+			return false;
+		} 
+		
+		if (employeeLogged() && !project.hasProjectManager()){
+			promoteToPm(project.getProjectID(), employee.getId());
+			return true;
+		}
+		
+		throw new OperationNotAllowedException("Project already has PM");
+	}
+	
 	public Calendar setDate(Calendar date, int dd, int mm, int yyyy) {
 		date.set(Calendar.YEAR, yyyy);
 		date.set(Calendar.MONTH, mm);
@@ -494,7 +536,11 @@ public class ManagementSystemApp extends Observable {
 	
 	public List<Activity> searchActivity(String searchText) {
 		List<Activity> activites =  new ArrayList<>();
-		
+		/*
+		for(Project p : projectRepository) {
+			System.out.print("("+ p.getProjectID()+ ", " + p.getProjectName()+")");
+		}
+		*/
 			for(Project p : projectRepository) {
 				activites.addAll(p.getActivites().stream()
 				.filter(b -> b.match(searchText))
@@ -506,13 +552,20 @@ public class ManagementSystemApp extends Observable {
 		return activites;
 	}
 	
+	public List<Employee> searchEmployee(String searchText) {
+		return Employees.stream()
+				.filter(b -> b.match(searchText))
+				.collect(Collectors.toList());
+	}
+	
+	// Add worked hour to activity
 	public void addHourToActivity(Activity activity, double hours) throws OperationNotAllowedException {
 		Project project = findProjectById(activity.getProjectId());
-		if(checkAuth(project)) {
-			//activity.addWorkedHours(hours);
-			
-			project.addHoursToActivity(activity, currentEmployee(), hours);
-		}		
+	
+		checkEmployeeLoggedIn();
+		
+		currentEmployee().addProjectActivity(project, activity);
+		project.addHoursToActivity(activity, currentEmployee(), hours);		
 	}
 	
 	public void editExpectedHoursActivity(Activity activity, Double hours) throws OperationNotAllowedException {
@@ -533,13 +586,13 @@ public class ManagementSystemApp extends Observable {
 		Project project = findProjectById(activity.getProjectId());
 		List<TimeTable> timeTable = project.getTimeTablesByEmployee(currentEmployee());
 		//System.out.println(timeTable.size());
-		
+		/*
 		for(TimeTable t : timeTable){
 			System.out.println(t.getActivity()+" "+t.getHoursWorked());
 		}
+		*/
 	}
-	
-	
+
 	
 /*	public void addEmployeeToActivity(Project project, Employee employee, String description) throws OperationNotAllowedException {
 		// Adds employee to project employee list
@@ -550,7 +603,7 @@ public class ManagementSystemApp extends Observable {
 		employee.addActivity(project, activity);
 	}*/
 
-	public void exampleDate() throws OperationNotAllowedException {
+	public void exampleData() throws OperationNotAllowedException {
 		adminLogin("admi");
 		
 		Employee employee1 = new Employee("Malthe", "mkr");
@@ -559,7 +612,7 @@ public class ManagementSystemApp extends Observable {
 		Employee employee4 = new Employee("Matthias", "mat");
 		Employee employee5 = new Employee("Kjølbro", "bro");
 		Employee employee6 = new Employee("Ewald", "ewd");
-		Employee employee7 = new Employee("Thor", "thr");
+		Employee employee7 = new Employee("Thor", "thr"); 
 		Employee employee8 = new Employee("Rumle", "ruml");
 		Employee employee9 = new Employee("professor", "dtu");
 		

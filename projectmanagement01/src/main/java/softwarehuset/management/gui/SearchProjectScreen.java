@@ -93,7 +93,7 @@ public class SearchProjectScreen {
 		panelSearchResult.setBounds(21, 270, 361, 175);
 		panelsearchProject.add(panelSearchResult);
 		panelSearchResult.setBorder(BorderFactory.createTitledBorder(
-                "Detail"));
+                "Detail")); 
 		panelSearchResult.setLayout(null);
 		
 		lblSearchResultDetail = new JLabel("");

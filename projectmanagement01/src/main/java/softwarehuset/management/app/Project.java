@@ -26,7 +26,7 @@ public class Project {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.projectID = idServer.generateID(startDate);
-	}
+	} 
 	/*
 	public Project(Double expectedHours, Calendar startDate, Calendar endDate) {
 		this.expectedHours = expectedHours;
@@ -264,7 +264,7 @@ public class Project {
 			return projectName.contains(searchText);
 		}
 	}
-	
+	 
 	public String printDetail() {
 		String name = this.getProjectName().isBlank() ? "No project name yet" : this.getProjectName();
 		String pmid = !this.hasProjectManager() ? "No PM assigned yet" : this.getProjectManager().getId();

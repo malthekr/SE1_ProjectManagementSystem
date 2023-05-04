@@ -62,7 +62,7 @@ public class FindActivityScreen implements Observer {
 	public void initialize() {
 		panelFindActivity = new JPanel();
 		parentparentWindow.addPanel(panelFindActivity);
-		panelFindActivity.setLayout(null);
+		panelFindActivity.setLayout(null); 
 		panelFindActivity.setBorder(BorderFactory.createTitledBorder(
                 "Find activity"));
 		

@@ -29,12 +29,13 @@ import softwarehuset.management.app.OperationNotAllowedException;
 public class EmployeeScreen implements Observer {
 
 	private MainScreen parentWindow;
-	private ManagementSystemApp ManagementSystem;
+	private ManagementSystemApp ManagementSystem; 
 	private CreateActivityScreen CreateActivity;
 	private FindActivityScreen findActivity;
 	private EditActivityScreen editActivity;
 	private FindProjectScreen findProject;
 	private EditProjectScreen editProject;
+	private FindEmployeeScreen findEmployee;
 	
 	private JPanel panelEmployeeFunctions;
 	private JButton btnBack;
@@ -48,18 +49,20 @@ public class EmployeeScreen implements Observer {
 	//private JButton btnCreateActivity;
 	//private JButton btnUnregisterEmployee;
 	private JButton btnCreateActivity;
+	private JButton btnFindEmployee;
 	private JButton btnFindActivity;
 	private JButton btnJoinProject;
 	
 	private int buttonPos = 90;
 
-	public EmployeeScreen(ManagementSystemApp ManagementSystem, MainScreen parentWindow, CreateActivityScreen CreateAndFindActivity, EditActivityScreen editActivity, FindProjectScreen findProject, EditProjectScreen editProject) {
+	public EmployeeScreen(ManagementSystemApp ManagementSystem, MainScreen parentWindow, CreateActivityScreen CreateAndFindActivity, EditActivityScreen editActivity, FindProjectScreen findProject, EditProjectScreen editProject, FindEmployeeScreen findEmployee) {
 		this.ManagementSystem = ManagementSystem;
 		this.parentWindow = parentWindow;
 		this.CreateActivity = CreateAndFindActivity;
 		this.editActivity = editActivity;
 		this.findProject = findProject;
 		this.editProject = editProject;
+		this.findEmployee = findEmployee;
 		initialize();
 	}
 	
@@ -155,19 +158,18 @@ public class EmployeeScreen implements Observer {
 		btnFindActivity.setBounds(120, newButtonPos(), 170, 29);
 		panelEmployeeFunctions.add(btnFindActivity);
 		
-		/*
-		btnCreateActivity = new JButton("Register/Un Employee");
-		btnCreateActivity.setEnabled(false);
-		btnCreateActivity.setBounds(120, 212, 170, 29);;
-		btnCreateActivity.addActionListener(new ActionListener() {
+		
+		btnFindEmployee = new JButton("Find Employee");
+		btnFindEmployee.setEnabled(false);
+		btnFindEmployee.setBounds(120, newButtonPos(), 170, 29);;
+		btnFindEmployee.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				//RegisterEmployeeScreen.setVisible(true);
+				findEmployee.setVisible(true);
 			}
 		});
+		panelEmployeeFunctions.add(btnFindEmployee);
 		
-		panelEmployeeFunctions.add(btnCreateActivity);
-		*/
 		
 		lblEnterPasswordStatus.setBounds(120, 74, 200, 16);
 		panelEmployeeFunctions.add(lblEnterPasswordStatus);
@@ -178,6 +180,7 @@ public class EmployeeScreen implements Observer {
 		CreateActivity = new CreateActivityScreen(ManagementSystem, this, parentWindow);
 		findActivity = new FindActivityScreen(ManagementSystem, this, parentWindow, editActivity);
 		findProject = new FindProjectScreen(ManagementSystem, this, parentWindow, editProject);
+		findEmployee = new FindEmployeeScreen(ManagementSystem, this, parentWindow);
 	}
 	
 	private int newButtonPos(){
@@ -203,7 +206,7 @@ public class EmployeeScreen implements Observer {
 		btnCreateActivity.setEnabled(enabled);
 		btnFindActivity.setEnabled(enabled);
 		btnJoinProject.setEnabled(enabled);
-		//btnCreateActivity.setEnabled(enabled);
+		btnFindEmployee.setEnabled(enabled);
 		//btnUnregisterEmployee.setEnabled(enabled);
 		//btnPayFine.setEnabled(enabled);
 	}
