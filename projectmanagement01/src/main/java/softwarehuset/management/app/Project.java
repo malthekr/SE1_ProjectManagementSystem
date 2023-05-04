@@ -209,13 +209,15 @@ public class Project {
 		}
 	}
 	
+	public void removeEmployeeFromActivity(Employee employee, String description) throws OperationNotAllowedException{
+		Activity a = findActivityByDescription(description);
+		if(findEmployee(employee)){
+			a.removeEmployee(employee);
+		}
+	}
+	
 	public double getExpectedHours() {
 		return expectedHours;
-	}
-	et
-	public List<TimeTable> getTimeTablesByEmployee(Employee employee) {
-		List<TimeTable> employeeTimeTables = timeTables.stream().filter(u -> u.getEmployee().equals(employee)).collect(Collectors.toList());
-		return employeeTimeTables;
 	}
 	
 	public List<TimeTable> getTimeTablesByEmployee(Employee employee) {
