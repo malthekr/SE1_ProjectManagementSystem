@@ -281,20 +281,6 @@ public class ProjectSteps {
 	    	//employee.addActivity(project, activity);
 	    }
 	}
-	
-	@When("set expected project hours to {double}")
-	public void setExpectedProjectHoursTo(double hours) throws OperationNotAllowedException {
-		try {
-			managementSystem.UpdateExpectedHours(project.getProjectID(), hours);
-	    } catch (OperationNotAllowedException e) {
-			errorMessageHolder.setErrorMessage(e.getMessage());
-		}
-	}
-
-	@Then("expected project hours is {double}")
-	public void expectedProjectHoursIs(double hours) {
-		assertEquals(project.getExpectedHours(), hours);
-	}
 
 	@When("add employee with ID {string} to activity in project")
 	public void addEmployeeWithIDToActivityInProject(String id) throws OperationNotAllowedException {
