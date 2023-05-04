@@ -69,7 +69,7 @@ public class LoginLogoutSteps {
 	
 	@Given("employee {string} is logged out")
 	public void employeeIsLoggedOut(String Id) {
-	    assertFalse(managementSystem.employeeLogout(Id));
+	    assertFalse(managementSystem.employeeLogout());
 	}
 	
 	@When("{string} logs in")
