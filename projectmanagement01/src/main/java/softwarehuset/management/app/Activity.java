@@ -11,7 +11,7 @@ public class Activity {
     private List<Employee> employees = new ArrayList<>();
     private double expectedHours;
     private Calendar startDate, endDate;
-    private int unspecifiedEndDate = 14;
+    private double workedHours;
 
     public Activity(int projectId, String description, double expectedHours, Calendar startDate, Calendar endDate) {
         this.projectId = projectId;
@@ -33,6 +33,7 @@ public class Activity {
     	if (!employees.contains(employee)){
         	employees.add(employee);
         	return;
+    	}
     }
 
     // Removes employee from activity

@@ -18,6 +18,7 @@ public class Project {
 
 	private List<Employee> employeesAssignedToProject = new ArrayList<>();
 	private List<Activity> activities = new ArrayList<>();
+	private List<TimeTable> timeTables = new ArrayList<>();
 	private IDServer idServer = new IDServer();
 	private Employee projectManager;
 
@@ -199,7 +200,7 @@ public class Project {
 		return null;
 	}
 
-	public Object getExpectedHours() {
+	public double getExpectedHours() {
 		return expectedHours;
 	}
 
