@@ -247,7 +247,7 @@ public class Project {
 		TimeTable timeTable = new TimeTable(activity, employee, hours);
 		timeTables.add(timeTable);
 	}
-	
+	/*
 	public void generateStatusReport() {
 		double sumExpectedHours = 0;
 		double sumWorkedHours = 0; // Total worked hours on the project
@@ -256,7 +256,7 @@ public class Project {
 			sumWorkedHours += a.getWorkedHours();
 		}	
 	}
-	
+	*/
 	public String getStatusReport() {
 		StringBuffer b = new StringBuffer();
 		b.append("<html>");

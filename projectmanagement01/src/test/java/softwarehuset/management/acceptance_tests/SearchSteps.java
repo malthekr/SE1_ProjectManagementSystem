@@ -23,6 +23,7 @@ public class SearchSteps {
 	private ErrorMessageHolder errorMessageHolder;
 	private List<Project> projects = new ArrayList<>();
 	private List<Activity> activities = new ArrayList<>();
+	private List<Employee> employees = new ArrayList<>();
 	
 	public SearchSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder) {
 		this.managementSystem = managementSystem;
@@ -32,16 +33,26 @@ public class SearchSteps {
 	@When("Employee searches for {string} project")
 	public void employeeSearchesForProject(String searchText) {
 		projects = managementSystem.searchProject(searchText);
-		//System.out.println("length: "+projects.size());
-		//System.out.println(managementSystem.getProjectList().size());
 	}
 	
-	@Then("project named {string} appears")
-	public void projectNamedAppears(String projectName) {
-		//System.out.println(projects.get(0).getProjectName());
-	    assertTrue(projectName.equals(projects.get(0).getProjectName()));
-	}
+	@Then("project named {string} appears with details")
+	public void projectNamedAppears(String projectName) throws OperationNotAllowedException {
+		boolean s = projectName.equals(projects.get(0).getProjectName());
 		
+		String p = managementSystem.projectDetails(projects.get(0));
+		
+	    assertTrue(s && (p != null));
+	}
+	
+	@When("Employee searches for {int} project")
+	public void employeeSearchesForProject(Integer projectId) {
+		try {
+			managementSystem.findProjectById(projectId);
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}
+	}
+	
 	@Then("project named {string} and {string} appears")
 	public void projectNamedAndAppears(String projectName1, String projectName2) {
 		assertTrue(projectName1.equals(projects.get(0).getProjectName()) && projectName2.equals(projects.get(1).getProjectName()));
@@ -54,12 +65,29 @@ public class SearchSteps {
 
 	@When("Employee searches for {string} activities")
 	public void employeeSearchesForActivities(String searchText) {
-		activities = managementSystem.searchActivity(searchText);
+		activities = managementSystem.searchActivity((searchText));
 	}
 
 	@Then("activities named {string} and {string} appears")
-	public void activitiesNamedAndAppears(String activityName1, String activityName2) {
-		 assertTrue(activityName1.equals(activities.get(0).getDescription()) && activityName2.equals(activities.get(1).getDescription()));
+	public void activitiesNamedAndAppears(String activityName1, String activityName2) throws OperationNotAllowedException {
+		Activity a = managementSystem.findActivityByDescription(activities.get(0).getProjectId(), activityName1);
+		Activity b = managementSystem.findActivityByDescription(activities.get(1).getProjectId(), activityName2);
+		
+		 assertTrue(a.toString().equals(activities.get(0).toString()) &&  b.toString().equals(activities.get(1).toString()));;
 	}
 	
+	@When("Employee searches for {string} employees")
+	public void employeeSearchesForEmployees(String searchText) {
+	    employees = managementSystem.searchEmployee(searchText);
+	}
+
+	@Then("employee named {string} and {string} appears")
+	public void employeeNamedAndAppears(String name1, String name2) {
+		assertTrue(name1.equals(employees.get(0).getName()) && name2.equals(employees.get(1).getName()));
+	}
+
+	@Then("emlpoyee named {string} appears")
+	public void emlpoyeeNamedAppears(String name) {
+		assertTrue(name.equals(employees.get(0).getName()));
+	}
 }

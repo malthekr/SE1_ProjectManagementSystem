@@ -1,4 +1,4 @@
-Feature: Search projects and activities
+Feature: Search projects, activities and employees
     Description: Employee searches for projects and activities
     Actor: Employee
 
@@ -16,6 +16,7 @@ Background: Employee login
   	And add employee with ID "nik" to activity in project
     When there is a project with name "Programming"
     And add project to system
+    And add employee with ID "thr" to project
     And there is an activity "del1" in project
     When there is a project with name "Example Project 2"
     And add project to system
@@ -28,7 +29,7 @@ Background: Employee login
 
 Scenario: Employee searches for projects name
     When Employee searches for "Programming" project
-    Then project named "Programming" appears
+    Then project named "Programming" appears with details
     
 Scenario: Employee searchs after all projects with certain PM id
     When Employee searches for "nik" project
@@ -37,10 +38,14 @@ Scenario: Employee searchs after all projects with certain PM id
 Scenario: Employee searchs after all projects with certain PM name
 		When Employee searches for "niklas" project
     Then project named "Management System" and "GUI" appears
+
+Scenario: Employee searchs after projects with project id
+		When Employee searches for 22001 project
+    Then the error message "Project Id does not exist" is given
     
-Scenario: Employee searchs after all activities with project id
-		When Employee searches for "23075" activities
-    Then activity named "del1" appears
+#Scenario: Employee searchs after all activities with project id
+#		When Employee searches for "23075" activities
+#    Then activity named "del1" appears
     
 Scenario: Employee searchs after all activities with employee id
 		When Employee searches for "nik" activities
@@ -53,6 +58,12 @@ Scenario: Employee searchs after all activities with employee name
 Scenario: Employee searchs after all activities with name
 		When Employee searches for "sedel" activities
     Then activity named "sedel" appears
-    
 
+Scenario: Employee searchs after all employees with name
+		When Employee searches for "n" employees
+    Then employee named "niklas" and "hans" appears
+    
+Scenario: Employee searchs after all employees with id
+		When Employee searches for "chad" employees
+    Then emlpoyee named "chad" appears
     

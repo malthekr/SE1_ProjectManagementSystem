@@ -73,7 +73,7 @@ public class FindEmployeeScreen implements Observer {
 		searchField = new JTextField();
 		searchField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				searchActivity();
+				searchEmployee();
 			}
 		});
 		searchField.setBounds(138, 28, 130, 26);
@@ -83,7 +83,7 @@ public class FindEmployeeScreen implements Observer {
 		JButton btnSearch = new JButton("Search");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				searchActivity();
+				searchEmployee();
 			}
 		});
 		btnSearch.setBounds(21, 68, 117, 29);
@@ -135,9 +135,15 @@ public class FindEmployeeScreen implements Observer {
 				
 				if(b) {
 					btnShow.setText("Show all");
+					if(listSearchResult.getSelectedValue() != null) {
+					lblFindResultDetail.setText(listSearchResult.getSelectedValue().getStatusOfEmployee(b));
+					}
 					
 				} else {
 					btnShow.setText("Show Active");
+					if(listSearchResult.getSelectedValue() != null) {
+					lblFindResultDetail.setText(listSearchResult.getSelectedValue().getStatusOfEmployee(b));
+					}
 				}
 			}
 		});
@@ -156,7 +162,6 @@ public class FindEmployeeScreen implements Observer {
 		btnBack.setBounds(21, 28, 59, 29);
 		panelFindEmployee.add(btnBack);
 		
-		//editActivity = new EditActivityScreen(ManagementSystem, this, parentWindow, parentparentWindow);
 			}
 	
 	public void setVisible(boolean visible) {
@@ -168,7 +173,7 @@ public class FindEmployeeScreen implements Observer {
 	public void update(Observable o, Object arg) {
 		
 	}
-	protected void searchActivity() {
+	protected void searchEmployee() {
 		searchResults.clear();
 		ManagementSystem.searchEmployee(searchField.getText())
 		.forEach((m) -> {searchResults.addElement(m);});
