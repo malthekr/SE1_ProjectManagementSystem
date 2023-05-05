@@ -134,10 +134,10 @@ public class FindEmployeeScreen implements Observer {
 				b = btnShow.getText() == "Show Active" ? true : false;
 				
 				if(b) {
-					btnShow.setText("Show Active");
+					btnShow.setText("Show all");
 					
 				} else {
-					btnShow.setText("Show all");
+					btnShow.setText("Show Active");
 				}
 			}
 		});

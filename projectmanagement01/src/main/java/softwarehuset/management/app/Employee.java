@@ -118,13 +118,13 @@ public class Employee {
 		StringBuffer b = new StringBuffer();
 		b.append("<html>");
 		
-		boolean containsActivities = false;
+		boolean containsActivities = true;
+		
 		for(Project p : projects){
 			if(p.getOngoingProject() || !showActiveProjects){
 				b.append(String.format("<b>Project:</b>     %s<br>", p.getProjectName())); 
 				List<TimeTable> timeTables = p.getTimeTablesByEmployee(this);
-				for(TimeTable t : timeTables){
-					
+				for(TimeTable t : timeTables){					
 					//Format start date as: day/month/Year.
 					int day = t.getDate().get(Calendar.DAY_OF_MONTH);
 					int month = t.getDate().get(Calendar.MONTH) + 1;
@@ -132,17 +132,19 @@ public class Employee {
 					String datee = day + "/" + month + "/" + year;
 					
 					String s = t.getActivity().getDescription() + " - " 
-					+ t.getHoursWorked() + " - "
-					+ t.getActivity().getWorkedHours() + " of " + t.getActivity().getExpectedHours() 
-					+ " - " + datee;
-					b.append(String.format("<b> - </b>     %s<br>", s));
-					
-					containsActivities = true;
+						+ t.getHoursWorked() + " - "
+						+ t.getActivity().getWorkedHours() + " of " + t.getActivity().getExpectedHours() 
+						+ " - " + datee;
+						b.append(String.format("<b> - </b>     %s<br>", s));
+				}
+				if(p.getOngoingProject()) {
+					containsActivities = false;
 				}
 			}
 		}
-		if(!containsActivities){
-			b.append("<b>No active projects or activities assigned to this employee</b>");
+		//System.out.println(containsActivities);
+		if(containsActivities){
+			b.append("<br><b>No active projects or activities assigned to this employee</b>");
 		}
 		
 		b.append("</html>");
