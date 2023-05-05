@@ -37,9 +37,10 @@ public class SearchSteps {
 	
 	@Then("project named {string} appears with details")
 	public void projectNamedAppears(String projectName) throws OperationNotAllowedException {
-		boolean s = projectName.equals(projects.get(0).getProjectName());
 		
 		String p = managementSystem.projectDetails(projects.get(0));
+		
+		boolean s = managementSystem.findProjectById(projects.get(0).getProjectID()).toString().equals(projects.get(0).toString());
 		
 	    assertTrue(s && (p != null));
 	}
@@ -58,8 +59,11 @@ public class SearchSteps {
 		assertTrue(projectName1.equals(projects.get(0).getProjectName()) && projectName2.equals(projects.get(1).getProjectName()));
 	}
 
-	@Then("activity named {string} appears")
-	public void activityNamedAppears(String activityName) {
+	@Then("activity named {string} appears with details")
+	public void activityNamedAppears(String activityName) throws OperationNotAllowedException {
+		
+		String p = managementSystem.activityDetails(activities.get(0));
+		
 	    assertTrue(activityName.equals(activities.get(0).getDescription()));
 	}
 
@@ -87,7 +91,9 @@ public class SearchSteps {
 	}
 
 	@Then("emlpoyee named {string} appears")
-	public void emlpoyeeNamedAppears(String name) {
-		assertTrue(name.equals(employees.get(0).getName()));
+	public void emlpoyeeNamedAppears(String name) throws OperationNotAllowedException {
+		Employee m = managementSystem.FindEmployeeById(name);
+		
+		assertTrue(m.toString().equals(employees.get(0).toString()));
 	}
 }

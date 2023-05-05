@@ -14,6 +14,7 @@ import softwarehuset.management.app.Activity;
 import softwarehuset.management.app.Employee;
 import softwarehuset.management.app.OperationNotAllowedException;
 import softwarehuset.management.app.Project;
+import softwarehuset.management.app.TimeTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -492,6 +493,40 @@ public class ProjectSteps {
 	public void hoursIsAddedToActivityInProject(double hours, String description) throws OperationNotAllowedException {
 		assertEquals(hours, managementSystem.findActivityByDescription(project.getProjectID(), description).getWorkedHours(), 0);
 	}
+	/*
+	@When("{string} adds {double} worked hours to activity {string} in project")
+	public void addsWorkedHoursToActivityInProject(String id, double hour, String description) throws OperationNotAllowedException {
+		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+	    Employee employee = managementSystem.FindEmployeeById(id);
+	    managementSystem.addHourToActivity(activity, hour);
+	}
+	*/
+	@Then("worked {double} hours in activity {string} in project")
+	public void workedHoursInActivityInProject(double hour, String descripton) throws OperationNotAllowedException {
+		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), descripton);
+	    TimeTable t = managementSystem.getActivityTimeTable(activity);
+	    
+	    assertEquals(t.getHoursWorked(), hour, 0);
+	}
+	
+	@When("edit hour to {double} hours is added as worked hour to activity {string} in project")
+	public void editHourToHoursIsAddedAsWorkedHourToActivityInProject(double hour, String description) {
+		try {
+	    Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+	    TimeTable t = managementSystem.getActivityTimeTable(activity);
+	    managementSystem.editActivityTimeTable(activity, t.getDate(), hour);
+	    } catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}
+	}
+
+	@Then("{double} hours is added as worked hour to activity {string} in project")
+	public void hoursIsAddedOfEmployeeToActivityInProject(double hour, String description) throws OperationNotAllowedException {
+		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+	    TimeTable t = managementSystem.getActivityTimeTable(activity);
+	    assertEquals(t.getHoursWorked(), hour, 0);
+	}
+	
 	
 	@When("request employee activity of {string}")
 	public List<Activity> requestEmployeeActivityOfAnotherEmployee(String id) {	
@@ -623,4 +658,6 @@ public class ProjectSteps {
 		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
 	    assertEquals(activity.getDescription(), description);
 	}
+	
+	
 }

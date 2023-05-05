@@ -57,7 +57,7 @@ Scenario: Employee searchs after all activities with employee name
 
 Scenario: Employee searchs after all activities with name
 		When Employee searches for "sedel" activities
-    Then activity named "sedel" appears
+    Then activity named "sedel" appears with details
 
 Scenario: Employee searchs after all employees with name
 		When Employee searches for "n" employees

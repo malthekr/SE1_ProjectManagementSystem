@@ -575,6 +575,10 @@ public class ManagementSystemApp extends Observable {
 			return project.printDetail();
 	}
 	
+	public String activityDetails(Activity activity) throws OperationNotAllowedException {
+		return activity.printDetail();
+}
+	
 	public String getStatusOfEmployee(Employee employee, boolean active) {
 		return employee.getStatusOfEmployee(active);
 	}
@@ -584,6 +588,17 @@ public class ManagementSystemApp extends Observable {
 			return project.getStatusReport();
 		}
 		return null;
+	}
+	
+	public void editActivityTimeTable(Activity activity, Calendar date, double workHours) throws OperationNotAllowedException {
+		Project project = findProjectById(activity.getProjectId());
+		project.editTimeTable(activity, currentEmployee(), date, workHours);
+	}
+	
+	public TimeTable getActivityTimeTable(Activity activity) throws OperationNotAllowedException {
+		checkEmployeeLoggedIn();
+		Project project = findProjectById(activity.getProjectId());
+		return project.getTimeTablesByEmployee(currentEmployee()).get(0);
 	}
 	
 	/*
@@ -603,7 +618,7 @@ public class ManagementSystemApp extends Observable {
 	}*/
 	
 	public void exampleData() throws OperationNotAllowedException {
-		/*
+		
 		adminLogin("admi");
 		
 		Employee employee1 = new Employee("Malthe", "mkr");
@@ -758,7 +773,7 @@ public class ManagementSystemApp extends Observable {
 		addEmployeeToActivity(employee1, project5, "kommer snart");
 		
 		adminLogout();
-		*/
+		
 	}
 
 //	public List<Activity> requestEmployeeActivity(int projectID, Employee otherEmployee) throws OperationNotAllowedException {

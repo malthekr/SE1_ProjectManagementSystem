@@ -37,3 +37,5 @@ Scenario: View employee activity as employee
     And employee with ID "thr" exists
     When request employee activity of "thr"
     Then the error message "Project Manager login required" is given
+
+    

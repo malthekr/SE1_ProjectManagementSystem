@@ -79,7 +79,7 @@ public class Project {
 		}
 		
 		Activity activity = new Activity(projectID, description, startDate, endDate);
-		activities.add(activity);
+		addActivity(activity);
 	}
 	
 	public void removeActivity(Activity activity) throws OperationNotAllowedException {
@@ -234,7 +234,7 @@ public class Project {
 		return finalTimeTable;
 	}
 	
-	public void editTimeTable(Activity activity, Employee employee, Calendar date, int workHours) {
+	public void editTimeTable(Activity activity, Employee employee, Calendar date, double workHours) {
 		TimeTable timeTable = getTimeTablesByDateAndEmployee(employee, date);
 		timeTable.editActivity(activity);
 		timeTable.editEmployee(employee);
