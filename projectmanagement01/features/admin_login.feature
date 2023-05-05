@@ -29,3 +29,11 @@ Scenario: Employee login but not registered
 		And admin is logged out
 		When "mpr" logs in
 		Then the error message "Employee ID does not exist" is given
+
+Scenario: Employee login but not registered
+		Given admin is already logged in
+		And there is an employee with ID "mkr"
+		And admin is logged out
+		When "mpr" logs in
+		Then the error message "Employee ID does not exist" is given
+

@@ -189,6 +189,35 @@ public class ProjectSteps {
 		}
 	}
 	
+	@When("set start date to {int}-{int}-{int} for project")
+	public void setStartDateToForProject(int dd, int mm, int yyyy) throws OperationNotAllowedException {
+		managementSystem.UpdateStartDateProject(dd, mm, yyyy, project.getProjectID());
+	}
+
+	@Then("start date project is set to {int}-{int}-{int}")
+	public void startDateProjectIsSetTo(int dd, int mm, int yyyy) {
+		Calendar calendar = new GregorianCalendar();
+		Calendar newDate = new GregorianCalendar(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+		newDate = managementSystem.setDate(newDate, dd, mm, yyyy);
+		
+	    assertEquals(project.getStartDate(), newDate);
+	}
+
+	@When("set end date to {int}-{int}-{int}")
+	public void setEndDateTo(int dd, int mm, int yyyy) throws OperationNotAllowedException {
+		managementSystem.UpdateEndDateProject(dd, mm, yyyy, project.getProjectID());
+	}
+
+	@Then("end date for project is set to {int}-{int}-{int}")
+	public void endDateForProjectIsSetTo(int dd, int mm, int yyyy) {
+		Calendar calendar = new GregorianCalendar();
+		Calendar newDate = new GregorianCalendar(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+		newDate = managementSystem.setDate(newDate, dd, mm, yyyy);
+		
+	    assertEquals(project.getEndDate(), newDate);
+	}
+	
+	/*
 	@When("edits start date by {int} days")
 	public void editsStartDateByDays(int days) {
 		try {
@@ -216,7 +245,7 @@ public class ProjectSteps {
 	public void projectEndsDaysLater(int days) throws OperationNotAllowedException {
 		assertTrue(managementSystem.CheckifEndDateMoved(project.getProjectID(), days, project.getEndDate()));
 	}
-	
+	*/
 	@When("creates activity {string} for project")
 	public void createsActivityForProject(String description) {
 		try {
@@ -254,10 +283,15 @@ public class ProjectSteps {
 		assertEquals(project.getProjectName(), projectName);
 	}
 	
+	@Given("project is active")
+	public void projectIsActive() {
+	   closeProject();
+	}
+	
 	@When("close project")
 	public void closeProject() {
 		try {
-			managementSystem.closeProject(project);
+			managementSystem.toggleProjectOngoing(project);
 	    } catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		}
@@ -343,7 +377,7 @@ public class ProjectSteps {
 			
 	    } catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
-		}
+		} 
 	}
 	
 	@When("remove {string} from activity")
@@ -407,18 +441,21 @@ public class ProjectSteps {
 			newDate = managementSystem.setDate(newDate, dd, mm, yyyy);
 			
 		    assertEquals(activity.getStartDate(), newDate);
-		/*
-		try {
-			Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
-			Calendar calendar = new GregorianCalendar();
-			Calendar newDate = new GregorianCalendar(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
-			newDate = managementSystem.setDate(newDate, dd, mm, yyyy);
-			
-		    assertEquals(activity.getStartDate(), newDate);
-		} catch (OperationNotAllowedException e) {
-			errorMessageHolder.setErrorMessage(e.getMessage());
-		}
-		*/
+	}
+	
+	@When("set end date to {int}-{int}-{int} for activity {string}")
+	public void setEndDateToForActivity(int dd, int mm, int yyyy, String description) throws OperationNotAllowedException {
+		managementSystem.UpdateEndDate(dd, mm, yyyy, project.getProjectID(), description);
+	}
+
+	@Then("end date for activity {string} is set to {int}-{int}-{int}")
+	public void endDateForActivityIsSetTo(String description, int dd, int mm, int yyyy) throws OperationNotAllowedException {
+		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+		Calendar calendar = new GregorianCalendar();
+		Calendar newDate = new GregorianCalendar(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+		newDate = managementSystem.setDate(newDate, dd, mm, yyyy);
+		
+	    assertEquals(activity.getEndDate(), newDate);
 	}
 	
 	@When("edits description of activity {string} to {string}")
@@ -475,6 +512,29 @@ public class ProjectSteps {
 		return employee.getActivities();
 	}
 	
+	@When("request active status of employee {string}")
+	public void requestActiveStatusOfEmployee(String id) throws OperationNotAllowedException {
+		Employee employee = managementSystem.FindEmployeeById(id);
+		String s = managementSystem.getStatusOfEmployee(employee, false);
+		assertTrue(s != null);
+	}
+
+	@Then("status of employee from {string} with no active {string}")
+	public void statusOfEmployeeFromWithNoActive(String id, String status) throws OperationNotAllowedException {
+		Employee employee = managementSystem.FindEmployeeById(id);
+		//Since no active project we can expect message
+		String statusEmployee = managementSystem.getStatusOfEmployee(employee, false).replace("<html><br><b>", "").replace("</b></html>", "");
+	    assertEquals(statusEmployee, status);
+	}
+	
+	@Then("status of employee from {string} is printed")
+	public void statusOfEmployeeFromIsPrinted(String id) throws OperationNotAllowedException {
+		Employee employee = managementSystem.FindEmployeeById(id);
+	
+		
+		assertTrue(managementSystem.getStatusOfEmployee(employee, true) != null);
+	}
+	
 	@When("add registered hours to {double} hours to activity")
 	public void addRegisteredHoursToHoursToActivity(double hours) {
 		try {
@@ -494,12 +554,14 @@ public class ProjectSteps {
 	
 	@When("request status report for project")
 	public void requestStatusReportForProject() throws OperationNotAllowedException {
-		managementSystem.generateStatusReport(project.getProjectID());
+		String s = managementSystem.getStatReportOfProject(project);
+		assertTrue(s != null);
+		//managementSystem.generateStatusReport(project.getProjectID());
 	}
 	
 	@Then("system provides status report for project")
-	public void systemProvidesStatusReportForProject() {
-		
+	public void systemProvidesStatusReportForProject() throws OperationNotAllowedException {
+		assertTrue(managementSystem.getStatReportOfProject(project) != null);
 	}
 	
 	@When("remove activity {string} for project")
@@ -522,5 +584,43 @@ public class ProjectSteps {
 			}
 		}
 		assertFalse(flag);
+	}
+	
+	@Given("{string} claims position project manager")
+	public void claimsPositionProjectManager(String Id) {
+		try {
+			managementSystem.togglePMClaim(project, Id);
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}
+	}
+	
+	@When("{string} unclaims position project manager")
+	public void unclaimsPositionProjectManager(String Id) {
+		claimsPositionProjectManager(Id);
+	}
+	
+	@When("edits expected hour to {double} for activity {string}")
+	public void editsExpectedHourToForActivity(double hour, String description) throws OperationNotAllowedException {
+		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+		managementSystem.editExpectedHoursActivity(activity, hour);
+	}
+
+	@Then("expected hour for activity {string} is {double}")
+	public void expectedHourForActivityIs(String description, double hour) throws OperationNotAllowedException {
+       Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+       assertEquals(activity.getExpectedHours(), hour, 0);
+	}
+
+	@When("edits activity description to {string} for activity {string}")
+	public void editsActivityDescriptionToForActivity(String newDescription, String description) throws OperationNotAllowedException {
+		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+		managementSystem.editProjectActivityDescription(activity, newDescription);
+	}
+
+	@Then("description of activity is {string}")
+	public void descriptionOfActivityIs(String description) throws OperationNotAllowedException {
+		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
+	    assertEquals(activity.getDescription(), description);
 	}
 }

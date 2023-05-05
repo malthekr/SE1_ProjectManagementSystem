@@ -1,6 +1,6 @@
-Feature: Edit project name
+Feature: Edit project
     Description: A project manager edits details on project
-    Actor: Project Manager
+    Actor: Project Manager and Employee
     
 Scenario: Project manager edits project name
 		Given admin is already logged in
@@ -32,3 +32,17 @@ Scenario: Employee edits project name while not logged in
     And admin is logged out
     When edits project name to "Alpha Management System"
     Then the error message "Project Manager login required" is given    
+    
+Scenario: PM edits start date of project
+    Given there is a project
+    And employee with ID "mkr" is logged in
+    And "mkr" is the project manager
+    When set start date to 10-05-2023 for project
+    Then start date project is set to 10-05-2023
+
+Scenario: PM edits end date of project
+    Given there is a project
+    And employee with ID "mkr" is logged in
+    And "mkr" is the project manager
+    When set end date to 10-05-2024
+    Then end date for project is set to 10-05-2024

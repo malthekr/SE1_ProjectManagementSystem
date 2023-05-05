@@ -149,11 +149,6 @@ public class ManagementSystemApp extends Observable {
 		Project project = findProjectById(ProjectId);
 		
 		if(employeeLogged() && project.hasProjectManager() && employeeLoggedInId.equals(project.getProjectManager())) {
-			/*
-			  if(!employeeLoggedInId.equals(project.getProjectManager())) { 
-				throw new OperationNotAllowedException("Project Manager login required");
-			}
-			 */
 			project.addEmployee(employee);
 			return;
 		} 
@@ -215,7 +210,7 @@ public class ManagementSystemApp extends Observable {
 	
 	public boolean checkIfProjectHasPM(int ProjectId) throws OperationNotAllowedException {
 		Project project = findProjectById(ProjectId);
-		return project.getProjectManager() != null ? true : false;
+		return project.hasProjectManager();
 	}
 	
 	public boolean checkIfUniqueProjectId(int Id) {
@@ -227,13 +222,13 @@ public class ManagementSystemApp extends Observable {
 		}
 		return (num == 1);
 	} 
-	
+	/*
 	public void closeProject(Project project) throws OperationNotAllowedException {
 		if (checkAuth(project)) {
 			project.closeProject();
 		}
 	}
-	
+	*/
 	public void promoteToPm(int projectId, String Id) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
 		Employee employee = FindEmployeeById(Id);
@@ -242,7 +237,7 @@ public class ManagementSystemApp extends Observable {
 			project.promoteEmployee(Id);
 			return;
 		}
-		
+		/*
 		if(employeeLoggedInId.equals(project.getProjectManager())) {
 			throw new OperationNotAllowedException("Project Manager login required");
 			
@@ -256,6 +251,7 @@ public class ManagementSystemApp extends Observable {
 			project.addEmployee(employee);
 			return;
 		}
+		*/
 		
 	}
 	
@@ -276,7 +272,7 @@ public class ManagementSystemApp extends Observable {
 			return;
 		}
 	}
-	
+/*
 	public void editStartDate(int projectId, int days) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
 		
@@ -298,6 +294,7 @@ public class ManagementSystemApp extends Observable {
 			return;
 		}
 	}
+
 	
 	public boolean CheckifStartDateMoved(int projectId, int days, Calendar date) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
@@ -312,7 +309,7 @@ public class ManagementSystemApp extends Observable {
 		Datee.add(Calendar.DAY_OF_YEAR, days);
 		return project.getEndDate() == Datee ? true : false;
 	}
-	
+*/
 	public void createActivity(int projectId, String description) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
 		
@@ -322,7 +319,7 @@ public class ManagementSystemApp extends Observable {
 			return;
 		}
 		
-		throw new OperationNotAllowedException("Admin or Project Manager login required");
+		//throw new OperationNotAllowedException("Admin or Project Manager login required");
 	}
 	
 	public Activity findActivityByDescription(int projectId, String description) throws OperationNotAllowedException {
@@ -395,9 +392,9 @@ public class ManagementSystemApp extends Observable {
 		}
 	}
 	
-	// Claim/unclaim project manager status
-	public boolean togglePMClaim(Project project, String input) throws OperationNotAllowedException {
-		Employee employee = FindEmployeeById(input);						// 1
+	// Claim/unclaim projectma status
+	public boolean togglePMClaim(Project project, String id) throws OperationNotAllowedException {
+		Employee employee = FindEmployeeById(id);							// 1
 		
 		if(employeeLoggedInId.equals(project.getProjectManager())) {		// 2
 			removePm(project.getProjectID());								// 3
@@ -424,14 +421,14 @@ public class ManagementSystemApp extends Observable {
 			project.findActivityByDescription(description1).setDescrption(description2);
 		}
 	}
-	
+	/*
 	public void generateStatusReport(int projectId) throws OperationNotAllowedException{
 		Project project = findProjectById(projectId);
 		if (checkAuth(project)) {
 			project.generateStatusReport();
 		}
 	}
-	
+	*/
 	// Add employee to activity in project
 	public void addEmployeeToActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{
 		if(checkAuth(project)) {
@@ -460,13 +457,6 @@ public class ManagementSystemApp extends Observable {
 			}
 			throw new OperationNotAllowedException("Employee not part of project");
 		}
-		
-		// Remove employee from activity employee list
-//		Activity activity =  project.findActivityByDescription(description);
-//		activity.removeEmployee(employee);
-		
-//		// Remove activity from employee project-activity list
-//		employee.removeActivity(project, project.findActivityByDescription(description));
 	}
 	
 	public List<Activity> getActivities(int projectId, Employee anotherEmployee) throws OperationNotAllowedException{
@@ -475,8 +465,8 @@ public class ManagementSystemApp extends Observable {
 		if(checkAuth(project)){
 			return anotherEmployee.listOfActivitiesInProject(project);
 		}
-		
-		throw new OperationNotAllowedException("addEmployeeToActivity error");
+		return null;
+		//throw new OperationNotAllowedException("addEmployeeToActivity error");
 	}
 	
 	private boolean checkAuth(Project project) throws OperationNotAllowedException {
@@ -581,19 +571,29 @@ public class ManagementSystemApp extends Observable {
 		}
 	}
 	
+	public String projectDetails(Project project) throws OperationNotAllowedException {
+			return project.printDetail();
+	}
+	
+	public String getStatusOfEmployee(Employee employee, boolean active) {
+		return employee.getStatusOfEmployee(active);
+	}
+	
+	public String getStatReportOfProject(Project project) throws OperationNotAllowedException {
+		if(checkAuth(project)){
+			return project.getStatusReport();
+		}
+		return null;
+	}
+	
+	/*
 	public void getStatus(Activity activity) throws OperationNotAllowedException {
 		Project project = findProjectById(activity.getProjectId());
 		List<TimeTable> timeTable = project.getTimeTablesByEmployee(currentEmployee());
-		//System.out.println(timeTable.size());
-		/*
-		for(TimeTable t : timeTable){
-			System.out.println(t.getActivity()+" "+t.getHoursWorked());
-		}
-		*/
 	}
 
 	
-/*	public void addEmployeeToActivity(Project project, Employee employee, String description) throws OperationNotAllowedException {
+	public void addEmployeeToActivity(Project project, Employee employee, String description) throws OperationNotAllowedException {
 		// Adds employee to project employee list
 		project.addEmployeeToActivity(employee, description);
 		
@@ -601,8 +601,9 @@ public class ManagementSystemApp extends Observable {
 		Activity activity = project.findActivityByDescription(description);
 		employee.addActivity(project, activity);
 	}*/
-
+	
 	public void exampleData() throws OperationNotAllowedException {
+		/*
 		adminLogin("admi");
 		
 		Employee employee1 = new Employee("Malthe", "mkr");
@@ -757,6 +758,7 @@ public class ManagementSystemApp extends Observable {
 		addEmployeeToActivity(employee1, project5, "kommer snart");
 		
 		adminLogout();
+		*/
 	}
 
 //	public List<Activity> requestEmployeeActivity(int projectID, Employee otherEmployee) throws OperationNotAllowedException {

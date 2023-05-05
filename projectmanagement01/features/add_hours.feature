@@ -10,6 +10,15 @@ Scenario: Employee adds worked hours to an activity
     When add 5.99 hours to activity "act1" in project
     Then 5.5 hours is added to activity "act1" in project
     
+Scenario: Employee adds worked hours to an activity but is not logged in
+    Given there is a project
+    And employee with ID "mkr" is logged in
+    And employee "mkr" is part of project
+    And there is an activity "act1" in project
+    And employee "mkr" is logged out
+    When add 5.99 hours to activity "act1" in project
+    Then the error message "Employee login required" is given
+    
 Scenario: Employee attempts to add worked hours to an activity that does not exist
     Given there is a project
     And employee with ID "mkr" is logged in

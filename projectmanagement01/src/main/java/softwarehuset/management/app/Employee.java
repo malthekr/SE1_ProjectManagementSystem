@@ -89,12 +89,12 @@ public class Employee {
     public boolean isBusy(){
 		return getNumOfActivities() > 20 ? true : false;
 	}
-    
+    /*
     public boolean isPartOfActivity(Project project, Activity activity) {    	
     	List<Activity> employeeActivities = map.get(project);
     	return employeeActivities.contains(activity);    	
     }
-    
+    */
     public List<Activity> listOfActivitiesInProject(Project project) {    	
     	List<Activity> employeeActivities = map.get(project);
     	return employeeActivities;   	
