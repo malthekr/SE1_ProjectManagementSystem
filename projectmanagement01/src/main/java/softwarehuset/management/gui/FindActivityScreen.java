@@ -118,8 +118,7 @@ public class FindActivityScreen implements Observer {
 		JPanel panelSearchResult = new JPanel();
 		panelSearchResult.setBounds(21, 270, 361, 175);
 		panelFindActivity.add(panelSearchResult);
-		panelSearchResult.setBorder(BorderFactory.createTitledBorder(
-                "Detail"));
+		panelSearchResult.setBorder(BorderFactory.createTitledBorder("Detail"));
 		panelSearchResult.setLayout(null);
 		
 		lblFindResultDetail = new JLabel("");

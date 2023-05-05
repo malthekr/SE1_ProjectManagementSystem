@@ -257,6 +257,32 @@ public class Project {
 		}	
 	}
 	
+	public String getStatusReport() {
+//		for(Employee e : employeesAssignedToProject) {
+//			List<Activity> as = e.listOfActivitiesInProject(this);
+//			System.out.println(e.getId());
+//			if(as != null) {
+//				for(Activity a : as) {
+//					System.out.println(" - " + a.getDescription());
+//				}
+//			}
+//		}
+		
+		for(Activity a : activities) {
+			System.out.println(a.getDescription());
+			for(Employee e : employeesAssignedToProject) {
+				if(e.listOfActivitiesInProject(this).contains(a)) {
+					System.out.println(" - " + e.getId());
+				}
+			}
+		}
+		
+		
+		
+		
+		return null;
+	}
+	
 	public boolean match(String searchText) {
 		if(this.hasProjectManager()) {
 			return projectName.contains(searchText) || projectManager.getName().contains(searchText) || projectManager.getId().contains(searchText.toLowerCase());

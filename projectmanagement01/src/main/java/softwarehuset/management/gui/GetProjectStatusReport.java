@@ -31,15 +31,16 @@ import softwarehuset.management.app.Project;
 public class GetProjectStatusReport implements Observer {
 	private MainScreen parentparentWindow; 
 	private FindProjectScreen parentWindow;
-	private ManagementSystemApp ManagementSystem;
+	private ManagementSystemApp managementSystem;
 	
 	private Project project;
 	
 	// Panel
 	private JPanel panelGetStatusReport;
+	private JPanel panelShowStatusReport;
 	
-	// Label
-	private JLabel lblFindResultDetail;
+	// JLabel
+	private JLabel labelStatusReport = new JLabel();;
 	
 	// Buttons
 	private JButton btnBack;
@@ -47,15 +48,14 @@ public class GetProjectStatusReport implements Observer {
 	// Button position tracker
 	private int buttonPos = 28;
 	
-	public GetProjectStatusReport(ManagementSystemApp ManagementSystem, FindProjectScreen parentWindow, MainScreen parentparentWindow) {
-		this.ManagementSystem = ManagementSystem;
+	public GetProjectStatusReport(ManagementSystemApp managementSystem, FindProjectScreen parentWindow, MainScreen parentparentWindow) {
+		this.managementSystem = managementSystem;
 		this.parentparentWindow = parentparentWindow;
 		this.parentWindow = parentWindow;
 		
 		initPanel();
-		initButtons();
-		addEventListeners();
-		addButtonsToPanel();
+		initStatusReport();
+		addToPanel();
 		finalInit();
 	}
 	
@@ -66,16 +66,23 @@ public class GetProjectStatusReport implements Observer {
 		// panel text is set under setProject();
 	}
 	
-	public void initButtons() {
-		lblFindResultDetail = new JLabel("");
+	public void initStatusReport() {
+		// Label containing status report print
+		labelStatusReport.setVerticalAlignment(SwingConstants.TOP);
+		labelStatusReport.setHorizontalAlignment(SwingConstants.LEFT);
+		labelStatusReport.setBounds(23, 19, 318, 137);
+		
+		
+		panelShowStatusReport = new JPanel ();
+		panelShowStatusReport.setBorder(BorderFactory.createTitledBorder(""));
+		panelShowStatusReport.setBounds(21, 68, 361, 361);
+		panelShowStatusReport.add(labelStatusReport);
+		
+		panelShowStatusReport.setLayout(null);
 	}
 	
-	public void addEventListeners() {
-		
-	}
-	
-	public void addButtonsToPanel() {
-		
+	public void addToPanel() {
+		panelGetStatusReport.add(panelShowStatusReport);
 	}
 	
 	public void finalInit() {
@@ -102,5 +109,6 @@ public class GetProjectStatusReport implements Observer {
 	public void setProject(Project project) {
 		this.project = project;
 		panelGetStatusReport.setBorder(BorderFactory.createTitledBorder("Status report of " + project.getProjectID() + " " + project.getProjectName()));
+		labelStatusReport.setText(project.getStatusReport());
 	}
 }

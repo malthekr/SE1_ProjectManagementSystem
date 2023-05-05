@@ -428,7 +428,6 @@ public class ManagementSystemApp extends Observable {
 		Project project = findProjectById(projectId);
 		if (checkAuth(project)) {
 			project.generateStatusReport();
-			
 		}
 	}
 	
