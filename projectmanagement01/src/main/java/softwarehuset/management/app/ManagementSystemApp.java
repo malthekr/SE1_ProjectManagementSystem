@@ -83,16 +83,17 @@ public class ManagementSystemApp extends Observable {
 	
 	// Removes employee from the system
 	public void removeEmployee(Employee employee) throws OperationNotAllowedException {
-		if(!adminLoggedIn()) {
-			throw new OperationNotAllowedException("Administrator login required");
+		if(!adminLoggedIn()) {															// 1
+			throw new OperationNotAllowedException("Administrator login required");		// 2
 		}
-		for(Project p : projectRepository) {
-			if(p.getEmployeesAssignedToProject().contains(employee)) {
-				p.removeEmployee(employee);
+		for(Project p : projectRepository) {											// 3
+			if(p.getEmployeesAssignedToProject().contains(employee)) {					// 4
+				p.removeEmployee(employee);												// 5
 			}
-		} 
-		Employees.remove(employee);
-		return;
+		}
+		if(Employees.contains(employee)) {												// 6
+			Employees.remove(employee);													// 7
+		}
 	}
 	/*
 	public void removeEmployeeFromAllActivites(String employeeId) throws OperationNotAllowedException {
@@ -382,30 +383,30 @@ public class ManagementSystemApp extends Observable {
 	
 	// Toggle the project status - ON/OFF
 	public void toggleProjectOngoing(Project project) throws OperationNotAllowedException {		
-		if(checkAuth(project)){
-			if (project.getOngoingProject()){
-				project.closeProject();
-			} else{
-				project.beginProject();
+		if(checkAuth(project)){							
+			if (project.getOngoingProject()){			
+				project.closeProject();					
+			} else{										
+				project.beginProject();					
 			}
 		}
 	}
 	
 	// Claim/unclaim projectma status
 	public boolean togglePMClaim(Project project, String id) throws OperationNotAllowedException {
-		Employee employee = FindEmployeeById(id);
+		Employee employee = FindEmployeeById(id);							// 1
 		
-		if(employeeLoggedInId.equals(project.getProjectManager())) {
-			removePm(project.getProjectID());
-			return false;
+		if(employeeLoggedInId.equals(project.getProjectManager())) {		// 2
+			removePm(project.getProjectID());								// 3
+			return false;													// 4
 		} 
 		
-		if (employeeLogged() && !project.hasProjectManager()){
-			promoteToPm(project.getProjectID(), employee.getId());
-			return true;
+		if (employeeLogged() && !project.hasProjectManager()){				// 5
+			promoteToPm(project.getProjectID(), employee.getId());			// 6
+			return true;													// 7
 		}
 		
-		throw new OperationNotAllowedException("Project already has PM");
+		throw new OperationNotAllowedException("Project already has PM");	// 8
 	}
 	
 	public Calendar setDate(Calendar date, int dd, int mm, int yyyy) {
@@ -469,22 +470,21 @@ public class ManagementSystemApp extends Observable {
 	}
 	
 	private boolean checkAuth(Project project) throws OperationNotAllowedException {
-		
-		if(employeeLoggedIn && project.hasProjectManager()) {
-			if(!employeeLoggedInId.equals(project.getProjectManager())) { 
+		if(employeeLoggedIn && project.hasProjectManager()) {															
+			if(!employeeLoggedInId.equals(project.getProjectManager())) { 												
 				// throws error if employee logged in is not PM
-				throw new OperationNotAllowedException("Project Manager login required");
+				throw new OperationNotAllowedException("Project Manager login required");							
 			}
-			return true; // returns true PM is logged in
+			return true; // returns true PM is logged in																
 		} 
-		if (employeeLoggedIn && project.findEmployee(currentEmployee()) && !project.hasProjectManager()){
-			return true; // returns true if project has no PM and employee (who is part of project) is logged in
+		if (employeeLoggedIn && project.findEmployee(currentEmployee()) && !project.hasProjectManager()){				
+			return true; // returns true if project has no PM and employee (who is part of project) is logged in		
 		}
-		if(adminLoggedIn()) {
-			return true;
+		if(adminLoggedIn()) {																							
+			return true;																								
 		}
 		//return false;
-		throw new OperationNotAllowedException("Project Manager login required");
+		throw new OperationNotAllowedException("Project Manager login required");								
 	}
 	
 	// Removes activity from project and employees

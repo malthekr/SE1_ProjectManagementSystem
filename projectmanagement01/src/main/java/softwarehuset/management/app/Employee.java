@@ -40,8 +40,8 @@ public class Employee {
     
     public void addActivity(Project project, Activity activity) throws OperationNotAllowedException {
 		if(isBusy()) {
-	    		throw new OperationNotAllowedException("Employee too busy");
-	    	}
+    		throw new OperationNotAllowedException("Employee too busy");
+    	}
     	activities = map.computeIfAbsent(project, y -> new ArrayList<>());
     	
     	if(!activities.contains(activity)) {
