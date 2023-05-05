@@ -70,7 +70,7 @@ public class GetProjectStatusReport implements Observer {
 		// Label containing status report print
 		labelStatusReport.setVerticalAlignment(SwingConstants.TOP);
 		labelStatusReport.setHorizontalAlignment(SwingConstants.LEFT);
-		labelStatusReport.setBounds(23, 19, 318, 137);
+		labelStatusReport.setBounds(23, 19, 318, 318);
 		
 		
 		panelShowStatusReport = new JPanel ();
@@ -108,7 +108,8 @@ public class GetProjectStatusReport implements Observer {
 	
 	public void setProject(Project project) {
 		this.project = project;
-		panelGetStatusReport.setBorder(BorderFactory.createTitledBorder("Status report of " + project.getProjectID() + " " + project.getProjectName()));
+		String borderText = "Status report of " + project.getProjectID() + ", " + project.getProjectName() + ", " + project.getWorkedHours() + "h ~ " + project.getExpectedHours() + "h";
+		panelGetStatusReport.setBorder(BorderFactory.createTitledBorder(borderText));
 		labelStatusReport.setText(project.getStatusReport());
 	}
 }

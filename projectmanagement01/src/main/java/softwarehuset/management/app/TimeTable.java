@@ -18,35 +18,35 @@ public class TimeTable {
 	}
 	
 	public Activity getActivity() {
-		return activity;
+		return this.activity;
 	}
 	
 	public Employee getEmployee() {
-		return employee;
+		return this.employee;
 	}
 	
 	public Calendar getDate() {
-		return date;
+		return this.date;
 	}
 	
 	public double getHoursWorked() {
-		return workHours;
+		return this.workHours;
 	}
 	
 	public void editActivity(Activity newActivity) {
-		activity = newActivity;
+		this.activity = newActivity;
 	}
 	
 	public void editEmployee(Employee newEmployee) {
-		employee = newEmployee;
+		this.employee = newEmployee;
 	}
 	
 	public void editDate(Calendar newDate) {
-		date = newDate;
+		this.date = newDate;
 	}
 	
 	public void editHours(double newHours) {
-		workHours = newHours;
+		this.workHours = newHours;
 	}
 	
 	public Calendar generateDate(){

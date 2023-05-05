@@ -258,29 +258,101 @@ public class Project {
 	}
 	
 	public String getStatusReport() {
-//		for(Employee e : employeesAssignedToProject) {
-//			List<Activity> as = e.listOfActivitiesInProject(this);
-//			System.out.println(e.getId());
-//			if(as != null) {
-//				for(Activity a : as) {
-//					System.out.println(" - " + a.getDescription());
-//				}
-//			}
-//		}
-		
+		StringBuffer b = new StringBuffer();
+		b.append("<html>");
 		for(Activity a : activities) {
-			System.out.println(a.getDescription());
-			for(Employee e : employeesAssignedToProject) {
-				if(e.listOfActivitiesInProject(this).contains(a)) {
-					System.out.println(" - " + e.getId());
+			List<Employee> employeesWithHoursInActivity = getEmployeesFromTimeTable(a);
+			System.out.println(employeesWithHoursInActivity.size());
+			
+			String activityInfo = a.getDescription() + "(" + a.getWorkedHours() + "h ~ " + a.getExpectedHours() + "h)";
+			b.append(String.format("<b>%s</b><br>", activityInfo)); 
+			System.out.println(activityInfo);
+			
+			//for(Employee e : employeesAssignedToProject) {	
+			for(Employee e : employeesWithHoursInActivity) {
+				// If employee added hours to project he is not part of
+				
+				
+				if(e.listOfActivitiesInProject(this) != null) {
+					if(e.listOfActivitiesInProject(this).contains(a)) {
+						String employeeInfo = " - " + e.getId();
+						
+						
+						if(!a.getEmployees().contains(e)) {
+							employeeInfo += " (not part of activity)";
+						}
+						
+						//System.out.print(employeeInfo);
+						
+						
+						double workedHoursSum = 0;
+						for(TimeTable t : getTimeTableForEmployeeAndActivity(e, a, timeTables)) {
+							workedHoursSum += t.getHoursWorked();
+							//System.out.println(" - " + t.getHoursWorked());
+						}
+						String workedHours = ": " + workedHoursSum + "h";
+						//System.out.print(workedHours);
+						//System.out.println();
+						
+						String employeeWorkedHours = employeeInfo + workedHours;
+						b.append(String.format("%s <br>", employeeWorkedHours)); 
+						
+						//System.out.println(getTimeTableForEmployee(e).size());
+					}
 				}
 			}
 		}
 		
+		b.append("</html>");
+		return b.toString();
+	}
+	
+//	private List<Activity> activityInTimeTable(List<TimeTable> timeTableInput){
+//		List<Activity> a = new ArrayList<>();
+//		for(TimeTable t : timeTableInput) {
+//			a.add(t.getActivity());
+//		}
+//		
+//		return a;
+//	}
+	
+	public List<Employee> getEmployeesFromTimeTable(Activity a){
+		List<Employee> es = new ArrayList<>(a.getEmployees());
+		for(TimeTable t : this.timeTables) {
+			if(!es.contains(t.getEmployee()) /*&& (t.getHoursWorked() != 0)*/ && (t.getActivity().equals(a))) {
+				es.add(t.getEmployee());
+			}
+		}
+		return es;
+	}
+	
+	private List<TimeTable> getTimeTableForEmployeeAndActivity(Employee employee, Activity activity, List<TimeTable> timeTableInput){
+		List<TimeTable> list = new ArrayList<>();
+		list = getTimeTableForEmployee(employee, timeTableInput);
+		list = getTimeTableForActivity(activity, list);
+		return list;
+	}
+	
+	private List<TimeTable> getTimeTableForEmployee(Employee employee, List<TimeTable> timeTableInput){
+		List<TimeTable> timeTablesWithEmployee = new ArrayList<>();
 		
+		for(TimeTable t : timeTableInput) {
+			if(t.getEmployee().equals(employee)) {
+				timeTablesWithEmployee.add(t);
+			}
+		}
+		return timeTablesWithEmployee;
+	}
+	
+	private List<TimeTable> getTimeTableForActivity(Activity activity, List<TimeTable> timeTableInput){
+		List<TimeTable> timeTablesWithEmployee = new ArrayList<>();
 		
-		
-		return null;
+		for(TimeTable t : timeTableInput) {
+			if(t.getActivity().equals(activity)) {
+				timeTablesWithEmployee.add(t);
+			}
+		}
+		return timeTablesWithEmployee;
 	}
 	
 	public boolean match(String searchText) {
