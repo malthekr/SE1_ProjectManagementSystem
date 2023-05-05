@@ -386,30 +386,30 @@ public class ManagementSystemApp extends Observable {
 	
 	// Toggle the project status - ON/OFF
 	public void toggleProjectOngoing(Project project) throws OperationNotAllowedException {		
-		if(checkAuth(project)){
-			if (project.getOngoingProject()){
-				project.closeProject();
-			} else{
-				project.beginProject();
+		if(checkAuth(project)){							
+			if (project.getOngoingProject()){			
+				project.closeProject();					
+			} else{										
+				project.beginProject();					
 			}
 		}
 	}
 	
-	// Claim/unclaim projectma status
+	// Claim/unclaim project manager status
 	public boolean togglePMClaim(Project project, String input) throws OperationNotAllowedException {
-		Employee employee = FindEmployeeById(input);
+		Employee employee = FindEmployeeById(input);						// 1
 		
-		if(employeeLoggedInId.equals(project.getProjectManager())) {
-			removePm(project.getProjectID());
-			return false;
+		if(employeeLoggedInId.equals(project.getProjectManager())) {		// 2
+			removePm(project.getProjectID());								// 3
+			return false;													// 4
 		} 
 		
-		if (employeeLogged() && !project.hasProjectManager()){
-			promoteToPm(project.getProjectID(), employee.getId());
-			return true;
+		if (employeeLogged() && !project.hasProjectManager()){				// 5
+			promoteToPm(project.getProjectID(), employee.getId());			// 6
+			return true;													// 7
 		}
 		
-		throw new OperationNotAllowedException("Project already has PM");
+		throw new OperationNotAllowedException("Project already has PM");	// 8
 	}
 	
 	public Calendar setDate(Calendar date, int dd, int mm, int yyyy) {
