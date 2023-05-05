@@ -35,6 +35,7 @@ public class EmployeeScreen implements Observer {
 	private EditActivityScreen editActivity;
 	private FindProjectScreen findProject;
 	private EditProjectScreen editProject;
+	private GetProjectStatusReport getStatus;
 	private FindEmployeeScreen findEmployee;
 	
 	private JPanel panelEmployeeFunctions;
@@ -55,7 +56,7 @@ public class EmployeeScreen implements Observer {
 	
 	private int buttonPos = 90;
 
-	public EmployeeScreen(ManagementSystemApp ManagementSystem, MainScreen parentWindow, CreateActivityScreen CreateAndFindActivity, EditActivityScreen editActivity, FindProjectScreen findProject, EditProjectScreen editProject, FindEmployeeScreen findEmployee) {
+	public EmployeeScreen(ManagementSystemApp ManagementSystem, MainScreen parentWindow, CreateActivityScreen CreateAndFindActivity, EditActivityScreen editActivity, FindProjectScreen findProject, EditProjectScreen editProject, FindEmployeeScreen findEmployee, GetProjectStatusReport getStatus) {
 		this.ManagementSystem = ManagementSystem;
 		this.parentWindow = parentWindow;
 		this.CreateActivity = CreateAndFindActivity;
@@ -63,6 +64,7 @@ public class EmployeeScreen implements Observer {
 		this.findProject = findProject;
 		this.editProject = editProject;
 		this.findEmployee = findEmployee;
+		this.getStatus = getStatus;
 		initialize();
 	}
 	
@@ -179,7 +181,7 @@ public class EmployeeScreen implements Observer {
 		ManagementSystem.addObserver(this);
 		CreateActivity = new CreateActivityScreen(ManagementSystem, this, parentWindow);
 		findActivity = new FindActivityScreen(ManagementSystem, this, parentWindow, editActivity);
-		findProject = new FindProjectScreen(ManagementSystem, this, parentWindow, editProject);
+		findProject = new FindProjectScreen(ManagementSystem, this, parentWindow, editProject, getStatus);
 		findEmployee = new FindEmployeeScreen(ManagementSystem, this, parentWindow);
 	}
 	

@@ -36,6 +36,7 @@ public class FindProjectScreen implements Observer {
 	private EmployeeScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
 	private EditProjectScreen editProject;
+	private GetProjectStatusReport getStatus;
 	
 	private JPanel panelFindProject;
 	private JTextField searchField;
@@ -47,15 +48,19 @@ public class FindProjectScreen implements Observer {
 	
 	private JButton btnDeleteProject;
 	private JButton btnEditProject;
+	private JButton getStatusReport;
 	
 	private JButton btnBack;
 	
+	private boolean isPM = false;
+	
 
-	public FindProjectScreen(ManagementSystemApp ManagementSystem, EmployeeScreen parentWindow, MainScreen parentparentWindow, EditProjectScreen editProject) {
+	public FindProjectScreen(ManagementSystemApp ManagementSystem, EmployeeScreen parentWindow, MainScreen parentparentWindow, EditProjectScreen editProject, GetProjectStatusReport getStatus) {
 		this.ManagementSystem = ManagementSystem;
 		this.parentparentWindow = parentparentWindow;
 		this.parentWindow = parentWindow;
 		this.editProject = editProject;
+		this.getStatus = getStatus;
 		initialize();
 	}
 
@@ -63,8 +68,7 @@ public class FindProjectScreen implements Observer {
 		panelFindProject = new JPanel();
 		parentparentWindow.addPanel(panelFindProject);
 		panelFindProject.setLayout(null);
-		panelFindProject.setBorder(BorderFactory.createTitledBorder(
-                "Find project"));
+		panelFindProject.setBorder(BorderFactory.createTitledBorder("Find project"));
 		
 		//Error Message
 		EnterEmployeeStatus.setBounds(110, 10, 300, 16);
@@ -95,10 +99,19 @@ public class FindProjectScreen implements Observer {
 		listSearchResult.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listSearchResult.setSelectedIndex(0);
 		listSearchResult.addListSelectionListener(new ListSelectionListener() {
-		
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-		        if (e.getValueIsAdjusting() == false) {
+				
+				if(listSearchResult.getSelectedValue() != null){
+					if(ManagementSystem.currentEmployee().equals(listSearchResult.getSelectedValue().getProjectManager())) {
+						getStatusReport.setEnabled(true);
+					} else {
+						getStatusReport.setEnabled(false);
+					}
+				}
+				
+				
+				if (e.getValueIsAdjusting() == false) {
 
 		            if (listSearchResult.getSelectedIndex() == -1) {
 		            	lblFindResultDetail.setText("");
@@ -177,7 +190,26 @@ public class FindProjectScreen implements Observer {
 		panelFindProject.add(btnBack);
 		
 		editProject = new EditProjectScreen(ManagementSystem, this, parentWindow, parentparentWindow);
+		
+		// Get Status Report
+		getStatusReport = new JButton("Status Report");
+		getStatusReport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(listSearchResult.getSelectedValue() != null) {
+						getStatus.setProject(listSearchResult.getSelectedValue());
+						setVisible(false);
+						clear();
+						getStatus.setVisible(true);
+				}
 			}
+		});
+		
+		getStatusReport.setBounds(270, 20, 117, 29);
+		panelFindProject.add(getStatusReport);
+
+		getStatus = new GetProjectStatusReport(ManagementSystem, this, parentparentWindow);
+		
+	}
 	
 	public void setVisible(boolean visible) {
 		panelFindProject.setVisible(visible);
