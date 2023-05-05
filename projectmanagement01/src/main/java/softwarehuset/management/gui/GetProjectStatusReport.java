@@ -39,7 +39,7 @@ public class GetProjectStatusReport implements Observer {
 	private JPanel panelGetStatusReport;
 	
 	// Label
-	private JLabel EnterErrorMessage = new JLabel("");
+	private JLabel lblFindResultDetail;
 	
 	// Buttons
 	private JButton btnBack;
@@ -67,7 +67,7 @@ public class GetProjectStatusReport implements Observer {
 	}
 	
 	public void initButtons() {
-		
+		lblFindResultDetail = new JLabel("");
 	}
 	
 	public void addEventListeners() {
@@ -79,15 +79,10 @@ public class GetProjectStatusReport implements Observer {
 	}
 	
 	public void finalInit() {
-		//Error Message
-		EnterErrorMessage.setBounds(110, 10, 300, 16);
-		panelGetStatusReport.add(EnterErrorMessage);
-
 		//Back Button
 		btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				EnterErrorMessage.setText("");
 				setVisible(false);
 				parentWindow.setVisible(true);
 			}
@@ -98,31 +93,10 @@ public class GetProjectStatusReport implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		
 	}
 	
 	public void setVisible(boolean visible) {
 		panelGetStatusReport.setVisible(visible);
-	}
-	
-	public JTextField addTextField(){
-		JTextField txtField = new JTextField();
-		txtField.setBounds(120, newButtonPos(), 170, 29);
-		return txtField;
-	};
-	
-	public JButton addButton(String label){
-		JButton btn = new JButton(label);
-		btn.setEnabled(true);
-		btn.setBounds(120, newButtonPos(), 170, 29);
-		
-		return btn;
-	}
-	
-	private int newButtonPos(){
-		int pos = this.buttonPos;
-		this.buttonPos += 41;
-		return pos;
 	}
 	
 	public void setProject(Project project) {

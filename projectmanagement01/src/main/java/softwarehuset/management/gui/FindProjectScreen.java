@@ -103,7 +103,7 @@ public class FindProjectScreen implements Observer {
 			public void valueChanged(ListSelectionEvent e) {
 				
 				if(listSearchResult.getSelectedValue() != null){
-					if(ManagementSystem.currentEmployee().equals(listSearchResult.getSelectedValue().getProjectManager())) {
+					if(ManagementSystem.currentEmployee().equals(listSearchResult.getSelectedValue().getProjectManager()) || !listSearchResult.getSelectedValue().hasProjectManager()) {
 						getStatusReport.setEnabled(true);
 					} else {
 						getStatusReport.setEnabled(false);
