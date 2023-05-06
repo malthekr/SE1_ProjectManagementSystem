@@ -473,21 +473,21 @@ public class ManagementSystemApp extends Observable {
 		}
 	}
 	
-	public String projectDetails(Project project) throws OperationNotAllowedException {
-			return project.printDetail();
+	public String projectDetails(Project project) {
+			return PrintDetails.projectDetails(project);
 	}
 	
-	public String activityDetails(Activity activity) throws OperationNotAllowedException {
-		return activity.printDetail();
+	public String activityDetails(Activity activity) {
+		return PrintDetails.activityDetail(activity);
 }
 	
 	public String getStatusOfEmployee(Employee employee, boolean active) {
-		return employee.getStatusOfEmployee(active);
+		return PrintDetails.getStatusOfEmployee(employee, active);
 	}
 	
 	public String getStatReportOfProject(Project project) throws OperationNotAllowedException {
 		if(checkAuth(project)){
-			return project.getStatusReport();
+			return PrintDetails.getStatusReport(project);
 		}
 		return null;
 	}
@@ -506,7 +506,7 @@ public class ManagementSystemApp extends Observable {
 	}
 	
 	public void exampleData() throws OperationNotAllowedException {
-		/*
+	/*	
 		adminLogin("admi");
 		
 		Employee employee1 = new Employee("Malthe", "mkr");
@@ -661,7 +661,7 @@ public class ManagementSystemApp extends Observable {
 		addEmployeeToActivity(employee1, project5, "kommer snart");
 		
 		adminLogout();
-		*/
+	*/	
 	}
 }
 
