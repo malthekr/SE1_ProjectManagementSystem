@@ -58,7 +58,7 @@ public class ManagementSystemApp extends Observable {
 		return employeeLoggedIn;
 	}
     
-	// Current logged in employee logs out 
+	// Current employee logs out 
 	public boolean employeeLogout() {
 		employeeLoggedInId = null;
 		employeeLoggedIn = false;
