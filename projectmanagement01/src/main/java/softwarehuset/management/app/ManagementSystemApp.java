@@ -197,10 +197,10 @@ public class ManagementSystemApp extends Observable {
 	} 
 	
 	// add employee to project
-	public void addEmployeeToProject(int ProjectId, String EmployeeId) throws OperationNotAllowedException {
+	public void addEmployeeToProject(int projectId, String employeeId) throws OperationNotAllowedException {
 		assert (employeeId != null) && ((String.valueOf(projectId).length() <= 5) == true) && (projectId > 0 == true) : "Precondition";
-		Employee employee = FindEmployeeById(EmployeeId);
-		Project project = findProjectById(ProjectId);
+		Employee employee = FindEmployeeById(employeeId);
+		Project project = findProjectById(projectId);
 		
 		if(employeeLogged() && project.hasProjectManager() && employeeLoggedInId.equals(project.getProjectManager())) {
 			project.addEmployee(employee);
