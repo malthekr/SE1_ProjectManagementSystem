@@ -501,20 +501,35 @@ public class ProjectSteps {
 	    managementSystem.addHourToActivity(activity, hour);
 	}
 	*/
+	
+	private double hoursInTimeTable(List<TimeTable> timeTables) {
+		double workedHours = 0;
+	    for(TimeTable t : timeTables) {
+	    	workedHours += t.getHoursWorked();
+	    }
+		return workedHours;
+	}
+	
 	@Then("worked {double} hours in activity {string} in project")
 	public void workedHoursInActivityInProject(double hour, String descripton) throws OperationNotAllowedException {
 		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), descripton);
-	    TimeTable t = managementSystem.getActivityTimeTable(activity);
+	    //TimeTable t = managementSystem.getActivityTimeTable(activity);
+	    List<TimeTable> timeTables = managementSystem.getActivityTimeTableCurrentEmployee(activity);
 	    
-	    assertEquals(t.getHoursWorked(), hour, 0);
+		double workedHours = hoursInTimeTable(timeTables);
+		
+	    assertEquals(workedHours, hour, 0);
 	}
 	
 	@When("edit hour to {double} hours is added as worked hour to activity {string} in project")
 	public void editHourToHoursIsAddedAsWorkedHourToActivityInProject(double hour, String description) {
 		try {
 	    Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
-	    TimeTable t = managementSystem.getActivityTimeTable(activity);
-	    managementSystem.editActivityTimeTable(activity, t.getDate(), hour);
+	    List<TimeTable> timeTables = managementSystem.getActivityTimeTableCurrentEmployee(activity);
+	    
+	    for(TimeTable t : timeTables) {
+		    managementSystem.editActivityTimeTable(activity, t.getDate(), hour);
+	    }
 	    } catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		}
@@ -523,8 +538,10 @@ public class ProjectSteps {
 	@Then("{double} hours is added as worked hour to activity {string} in project")
 	public void hoursIsAddedOfEmployeeToActivityInProject(double hour, String description) throws OperationNotAllowedException {
 		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
-	    TimeTable t = managementSystem.getActivityTimeTable(activity);
-	    assertEquals(t.getHoursWorked(), hour, 0);
+	    List<TimeTable> timeTables = managementSystem.getActivityTimeTableCurrentEmployee(activity);
+	    
+	    double hoursWorked = hoursInTimeTable(timeTables);
+	    assertEquals(hoursWorked, hour, 0);
 	}
 	
 	

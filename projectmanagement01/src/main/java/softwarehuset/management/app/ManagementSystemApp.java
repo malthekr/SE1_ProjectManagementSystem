@@ -595,10 +595,13 @@ public class ManagementSystemApp extends Observable {
 		project.editTimeTable(activity, currentEmployee(), date, workHours);
 	}
 	
-	public TimeTable getActivityTimeTable(Activity activity) throws OperationNotAllowedException {
+	public List<TimeTable> getActivityTimeTableCurrentEmployee(Activity activity) throws OperationNotAllowedException {
 		checkEmployeeLoggedIn();
 		Project project = findProjectById(activity.getProjectId());
-		return project.getTimeTablesByEmployee(currentEmployee()).get(0);
+		List<TimeTable> employeeActivityTimeTable = project.getTimeTableForEmployeeAndActivity(currentEmployee(), activity, project.getTimeTables());
+		
+		return employeeActivityTimeTable;
+		//return project.getTimeTablesByEmployee(currentEmployee()).get(0);
 	}
 	
 	/*

@@ -223,6 +223,10 @@ public class Project {
 		return expectedHours;
 	}
 	
+	public List<TimeTable> getTimeTables(){
+		return this.timeTables;
+	}
+	
 	public List<TimeTable> getTimeTablesByEmployee(Employee employee) {
 		List<TimeTable> employeeTimeTables = timeTables.stream().filter(u -> u.getEmployee().equals(employee)).collect(Collectors.toList());
 		return employeeTimeTables;
@@ -326,7 +330,7 @@ public class Project {
 		return es;
 	}
 	
-	private List<TimeTable> getTimeTableForEmployeeAndActivity(Employee employee, Activity activity, List<TimeTable> timeTableInput){
+	public List<TimeTable> getTimeTableForEmployeeAndActivity(Employee employee, Activity activity, List<TimeTable> timeTableInput){
 		List<TimeTable> list = new ArrayList<>();
 		list = getTimeTableForEmployee(employee, timeTableInput);
 		list = getTimeTableForActivity(activity, list);
