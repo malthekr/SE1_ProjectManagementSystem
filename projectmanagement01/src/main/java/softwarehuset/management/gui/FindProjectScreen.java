@@ -82,7 +82,7 @@ public class FindProjectScreen implements Observer {
 		});
 		searchField.setBounds(138, 28, 130, 26);
 		panelFindProject.add(searchField);
-		searchField.setColumns(10);
+		searchField.setColumns(10); 
 		
 		JButton btnSearch = new JButton("Search");
 		btnSearch.addActionListener(new ActionListener() {
@@ -117,7 +117,9 @@ public class FindProjectScreen implements Observer {
 		            	lblFindResultDetail.setText("");
 
 		            } else {
-		            	lblFindResultDetail.setText(listSearchResult.getSelectedValue().printDetail());
+		            	//lblFindResultDetail.setText(listSearchResult.getSelectedValue().printDetail());
+		            	lblFindResultDetail.setText(ManagementSystem.projectDetails(listSearchResult.getSelectedValue()));
+		            			//listSearchResult.getSelectedValue().printDetail());
 		            }
 		        }
 			}
@@ -144,7 +146,7 @@ public class FindProjectScreen implements Observer {
 		btnEditProject = new JButton("Edit Project");
 		btnEditProject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(listSearchResult.getSelectedValue() != null) {
+				if(listSearchResult.getSelectedValue() != null) { 
 					editProject.setProject(listSearchResult.getSelectedValue());
 					setVisible(false);
 					clear();
@@ -196,7 +198,11 @@ public class FindProjectScreen implements Observer {
 		getStatusReport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(listSearchResult.getSelectedValue() != null) {
-						getStatus.setProject(listSearchResult.getSelectedValue());
+						try {
+							getStatus.setProject(listSearchResult.getSelectedValue());
+						} catch (OperationNotAllowedException p) {
+							EnterEmployeeStatus.setText(p.getMessage());
+						}
 						setVisible(false);
 						clear();
 						getStatus.setVisible(true);

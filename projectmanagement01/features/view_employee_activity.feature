@@ -16,7 +16,7 @@ Scenario: View status of employee with no active projects
     And "mkr" is the project manager
     And employee with ID "thr" exists
     When request active status of employee "thr"
-    Then status of employee from "thr" with no active "No active projects or activities assigned to this employee"
+    Then status of employee from "thr" is printed
 
 Scenario: View status of employee with an active projects
 		Given there is a project

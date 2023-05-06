@@ -172,7 +172,6 @@ public class Project {
 		for(Employee e : employeesAssignedToProject){
 			if(e.getId().equals(id) == true){
 				setProjectManager(e);
-				
 				return;
 			}
 		}
@@ -245,48 +244,7 @@ public class Project {
 		timeTables.add(timeTable);
 	}
 	
-	public String getStatusReport() {
-		StringBuffer b = new StringBuffer();
-		b.append("<html>");
-		for(Activity a : activities) {
-			List<Employee> employeesWithHoursInActivity = getEmployeesFromTimeTable(a);
-			
-			String activityInfo = a.getDescription() + "(" + a.getWorkedHours() + "h ~ " + a.getExpectedHours() + "h)";
-			b.append(String.format("<b>%s</b><br>", activityInfo)); 
-			
-			for(Employee e : employeesWithHoursInActivity) {
-				// If employee added hours to project he is not part of
-				
-				
-				if(e.listOfActivitiesInProject(this) != null) {
-					if(e.listOfActivitiesInProject(this).contains(a)) {
-						String employeeInfo = " - " + e.getId();
-						
-						
-						if(!a.getEmployees().contains(e)) {
-							employeeInfo += " (not part of activity)";
-						}
-						
-						
-						double workedHoursSum = 0;
-						for(TimeTable t : getTimeTableForEmployeeAndActivity(e, a, timeTables)) {
-							workedHoursSum += t.getHoursWorked();
-						}
-						
-						String workedHours = ": " + workedHoursSum + "h";
-						
-						String employeeWorkedHours = employeeInfo + workedHours;
-						b.append(String.format("%s <br>", employeeWorkedHours)); 
-						
-					}
-				}
-			}
-		}
-		
-		b.append("</html>");
-		return b.toString();
-	}
-	
+
 	public List<Employee> getEmployeesFromTimeTable(Activity a){
 		List<Employee> es = new ArrayList<>(a.getEmployees());
 		for(TimeTable t : this.timeTables) {
@@ -333,7 +291,58 @@ public class Project {
 			return projectName.contains(searchText);
 		}
 	}
-	 
+	
+	//To display on GUI what comes up when we search for a key word
+	public String toString() {
+		String name = this.getProjectName().isBlank() ? "No project name yet" : this.getProjectName();
+		return "Project ID: " + String.valueOf(getProjectID()) + " - " + name;
+	}
+	
+	/*
+	public String getStatusReport() {
+		StringBuffer b = new StringBuffer();
+		b.append("<html>");
+		for(Activity a : activities) {
+			List<Employee> employeesWithHoursInActivity = getEmployeesFromTimeTable(a);
+			
+			String activityInfo = a.getDescription() + "(" + a.getWorkedHours() + "h ~ " + a.getExpectedHours() + "h)";
+			b.append(String.format("<b>%s</b><br>", activityInfo)); 
+			
+			for(Employee e : employeesWithHoursInActivity) {
+				// If employee added hours to project he is not part of
+				
+				
+				if(e.listOfActivitiesInProject(this) != null) {
+					if(e.listOfActivitiesInProject(this).contains(a)) {
+						String employeeInfo = " - " + e.getId();
+						
+						
+						if(!a.getEmployees().contains(e)) {
+							employeeInfo += " (not part of activity)";
+						}
+						
+						
+						double workedHoursSum = 0;
+						for(TimeTable t : getTimeTableForEmployeeAndActivity(e, a, timeTables)) {
+							workedHoursSum += t.getHoursWorked();
+						}
+						
+						String workedHours = ": " + workedHoursSum + "h";
+						
+						String employeeWorkedHours = employeeInfo + workedHours;
+						b.append(String.format("%s <br>", employeeWorkedHours)); 
+						
+					}
+				}
+			}
+		}
+		
+		b.append("</html>");
+		return b.toString();
+	}
+	*/
+	
+	/* 
 	public String printDetail() {
 		String name = this.getProjectName().isBlank() ? "No project name yet" : this.getProjectName();
 		String pmid = !this.hasProjectManager() ? "No PM assigned yet" : this.getProjectManager().getId();
@@ -380,4 +389,5 @@ public class Project {
 		String name = this.getProjectName().isBlank() ? "No project name yet" : this.getProjectName();
 		return "Project ID: " + String.valueOf(getProjectID()) + " - " + name;
 	}
+	*/
 }

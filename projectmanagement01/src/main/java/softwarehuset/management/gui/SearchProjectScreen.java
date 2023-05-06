@@ -78,7 +78,8 @@ public class SearchProjectScreen {
 		            	lblSearchResultDetail.setText("");
 
 		            } else {
-		            	lblSearchResultDetail.setText(listSearchResult.getSelectedValue().printDetail());
+		            	lblSearchResultDetail.setText(ManagementSystem.projectDetails(listSearchResult.getSelectedValue()));
+		            	//lblSearchResultDetail.setText(listSearchResult.getSelectedValue().printDetail());
 		            }
 		        }
 			}
