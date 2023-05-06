@@ -2,6 +2,7 @@ package softwarehuset.management.acceptance_tests;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import softwarehuset.management.app.Employee;
 import softwarehuset.management.app.ManagementSystemApp;
@@ -62,6 +63,12 @@ public class LoginLogoutSteps {
 	    assertTrue(managementSystem.employeeLogin(Id));
 	}
 	
+	@Given("employee with ID {string} exists")
+	public void employeeWithIDExists(String Id) throws OperationNotAllowedException{
+	    createEmployee(Id);
+	    assertNotNull(managementSystem.FindEmployeeById(Id));
+	}
+	
 	@Given("admin is logged out")
 	public void adminIsLoggedOut() {
 		assertFalse(managementSystem.adminLogout());
@@ -69,7 +76,7 @@ public class LoginLogoutSteps {
 	
 	@Given("employee {string} is logged out")
 	public void employeeIsLoggedOut(String Id) {
-	    assertFalse(managementSystem.employeeLogout(Id));
+	    assertFalse(managementSystem.employeeLogout());
 	}
 	
 	@When("{string} logs in")

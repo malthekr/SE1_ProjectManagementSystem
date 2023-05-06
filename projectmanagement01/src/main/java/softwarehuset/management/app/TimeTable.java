@@ -1,55 +1,57 @@
 package softwarehuset.management.app;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
-
-import softwarehuset.management.app.Employee;
-import softwarehuset.management.app.ManagementSystemApp;
-import softwarehuset.management.app.OperationNotAllowedException;
-import softwarehuset.management.app.Project;
-import softwarehuset.management.app.Activity;
-import softwarehuset.management.app.HoursWorked;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class TimeTable {
-
+	private Activity activity;
 	private Employee employee;
-	private ManagementSystemApp managementSystem;
-	private Project project;
-	private String emp = "mkr";
+	private Calendar date;
+	private double workHours;
 	
-	@Given("employee is part of project")
-	public void employeeIsPartOfProject() throws OperationNotAllowedException {
-		assertTrue(managementSystem.checkIfEmployeeIsPartOfProject(project.getProjectID(), emp));  
-	    //throw new io.cucumber.java.PendingException();
-	}
-	
-	@Given("project has the activity {string}")
-	public void projectHasTheActivity(String activity) throws OperationNotAllowedException {
-		Activity a = managementSystem.findActivityByDescription(project.getProjectID(), activity);
-	    assertEquals(a.getDescription(), activity);
-		//throw new io.cucumber.java.PendingException();
-	}
-	
-	@When("add {string} hours to activity in project")
-	public void addHoursToActivityInProject(String hours) {
-	    String b = hours;
-	    //throw new io.cucumber.java.PendingException();
-	}
-	
-	@Then("{string} hours is added to activity in project")
-	public void hoursIsAddedToActivityInProject(String string) {
+	public TimeTable(Activity activity, Employee employee, double workHours) {
+		this.activity = activity;
+		this.employee = employee;
+		this.date = generateDate();
+		this.workHours = workHours - workHours % 0.5;
 		
-	    // Write code here that turns the phrase above into concrete actions
-	    //throw new io.cucumber.java.PendingException();
 	}
-
 	
+	public Activity getActivity() {
+		return this.activity;
+	}
 	
+	public Employee getEmployee() {
+		return this.employee;
+	}
 	
+	public Calendar getDate() {
+		return this.date;
+	}
+	
+	public double getHoursWorked() {
+		return this.workHours;
+	}
+	
+	public void editActivity(Activity newActivity) {
+		this.activity = newActivity;
+	}
+	
+	public void editEmployee(Employee newEmployee) {
+		this.employee = newEmployee;
+	}
+	
+	public void editDate(Calendar newDate) {
+		this.date = newDate;
+	}
+	
+	public void editHours(double newHours) {
+		this.workHours = newHours - newHours % 0.5;
+	}
+	
+	public Calendar generateDate(){
+		Calendar dateToday = new GregorianCalendar();
+		
+		return dateToday;
+	}
 }

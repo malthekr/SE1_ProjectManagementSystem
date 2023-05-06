@@ -7,7 +7,6 @@ import java.util.GregorianCalendar;
 
 public class ProjectHelper {
 	private Project project;
-	private MockDateHolder dateHolder;
 	private Calendar startDate;
 	private Calendar endDate;
 	private Double workHours;
@@ -39,8 +38,9 @@ public class ProjectHelper {
 		Project project= new Project("Example project", workHours, startDate, endDate);
 		return project;
 	}
-
+/*
 	public void setUser(Project projectInfo) {
 		project = projectInfo;
 	}
+*/
 }

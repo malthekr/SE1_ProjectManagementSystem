@@ -59,7 +59,7 @@ public class RegisterEmployeeSteps {
 	
 	@Then("the error message {string} is given")
 	public void theErrorMessageIs(String errorMessage){
-		assertEquals(errorMessageHolder.getErrorMessage(), errorMessage);
+		assertEquals(errorMessage, errorMessageHolder.getErrorMessage());
 	}
 	
 	@When("unregister the employee with ID {string}")
@@ -71,12 +71,12 @@ public class RegisterEmployeeSteps {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		}
 	}
-
+	
 	@Then("the employee is unregistered from the system")
 	public void theEmployeeIsUnregisteredFromTheSystem() {
 	    assertFalse(managementSystemApp.containsEmployeeWithId(employee.getId()));	
 	}
-	
+
 	private void addEmployee(Employee employee){
 		try {
 			managementSystemApp.addEmployee(employee);
