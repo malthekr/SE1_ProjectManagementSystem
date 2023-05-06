@@ -218,35 +218,6 @@ public class ProjectSteps {
 	    assertEquals(project.getEndDate(), newDate);
 	}
 	
-	/*
-	@When("edits start date by {int} days")
-	public void editsStartDateByDays(int days) {
-		try {
-			managementSystem.editStartDate(project.getProjectID(), days);
-	    } catch (OperationNotAllowedException e) {
-			errorMessageHolder.setErrorMessage(e.getMessage());
-		}
-	}
-	
-	@When("edits end date by {int} days")
-	public void editsEndDateByDays(int days) {
-		try {
-			managementSystem.editEndDate(project.getProjectID(), days);
-	    } catch (OperationNotAllowedException e) {
-			errorMessageHolder.setErrorMessage(e.getMessage());
-		}
-	}
-	
-	@Then("project starts {int} days later")
-	public void projectStartsDaysLater(int days) throws OperationNotAllowedException {
-		assertTrue(managementSystem.CheckifStartDateMoved(project.getProjectID(), days, project.getStartDate()));
-	}
-	
-	@Then("project ends {int} days later")
-	public void projectEndsDaysLater(int days) throws OperationNotAllowedException {
-		assertTrue(managementSystem.CheckifEndDateMoved(project.getProjectID(), days, project.getEndDate()));
-	}
-	*/
 	@When("creates activity {string} for project")
 	public void createsActivityForProject(String description) {
 		try {
@@ -570,7 +541,7 @@ public class ProjectSteps {
 		String s = managementSystem.getStatusOfEmployee(employee, false);
 		assertTrue(s != null);
 	}
-
+	/*
 	@Then("status of employee from {string} with no active {string}")
 	public void statusOfEmployeeFromWithNoActive(String id, String status) throws OperationNotAllowedException {
 		Employee employee = managementSystem.FindEmployeeById(id);
@@ -578,7 +549,7 @@ public class ProjectSteps {
 		String statusEmployee = managementSystem.getStatusOfEmployee(employee, false).replace("<html><br><b>", "").replace("</b></html>", "");
 	    assertEquals(statusEmployee, status);
 	}
-	
+	*/
 	@Then("status of employee from {string} is printed")
 	public void statusOfEmployeeFromIsPrinted(String id) throws OperationNotAllowedException {
 		Employee employee = managementSystem.FindEmployeeById(id);

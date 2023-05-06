@@ -109,7 +109,14 @@ public class Activity {
 			return description.contains(searchText);
 		}
 	}
+   
+    //To display on GUI what comes up when we search for a key word
+    public String toString() {
+		String name = this.getDescription().isBlank() ? "" : this.getDescription();
+		return "Project ID: " + String.valueOf(getProjectId()) + " - "+ name;
+	}
 	
+    /*
 	public String printDetail() {
 		String name = this.getDescription().isBlank() ? "No description on activity" : this.getDescription();
 		String id = this.getEmployees() == null ? "No employees assigned yet" : this.getEmployeesAsString();
@@ -148,10 +155,6 @@ public class Activity {
         }
         return name;
     }
-	
-	public String toString() {
-		String name = this.getDescription().isBlank() ? "" : this.getDescription();
-		return "Project ID: " + String.valueOf(getProjectId()) + " - "+ name;
-	}
+    */
     
 }

@@ -106,45 +106,7 @@ public class Employee {
 		return this.getName().contains(searchText) || this.getId().contains(searchText);
 	}
     
-    public String getStatusOfEmployee(boolean showActiveProjects){
-		List<Project> projects = this.getProjects();
-		
-		StringBuffer b = new StringBuffer();
-		b.append("<html>");
-		
-		boolean containsActivities = true;
-		
-		for(Project p : projects){
-			if(p.getOngoingProject() || !showActiveProjects){
-				b.append(String.format("<b>Project:</b>     %s<br>", p.getProjectName())); 
-				List<TimeTable> timeTables = p.getTimeTablesByEmployee(this);
-				for(TimeTable t : timeTables){					
-					//Format start date as: day/month/Year.
-					int day = t.getDate().get(Calendar.DAY_OF_MONTH);
-					int month = t.getDate().get(Calendar.MONTH) + 1;
-					int year =  t.getDate().get(Calendar.YEAR);
-					String datee = day + "/" + month + "/" + year;
-					
-					String s = t.getActivity().getDescription() + " - " 
-						+ t.getHoursWorked() + " - "
-						+ t.getActivity().getWorkedHours() + " of " + t.getActivity().getExpectedHours() 
-						+ " - " + datee;
-						b.append(String.format("<b> - </b>     %s<br>", s));
-				}
-				if(p.getOngoingProject()) {
-					containsActivities = false;
-				}
-			}
-		}
-		
-		if(containsActivities){
-			b.append("<br><b>No active projects or activities assigned to this employee</b>");
-		}
-		
-		b.append("</html>");
-		return b.toString();
-	}
-    
+    //To display on GUI what comes up when we search for a key word
     public String toString() {
 		String name = this.getName().isBlank() ? "" : this.getName();
 		return "Employee ID: " + this.getId() + " - "+ name;

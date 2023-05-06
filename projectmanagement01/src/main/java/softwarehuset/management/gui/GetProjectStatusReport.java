@@ -53,7 +53,7 @@ public class GetProjectStatusReport implements Observer {
 		this.parentparentWindow = parentparentWindow;
 		this.parentWindow = parentWindow;
 		
-		initPanel();
+		initPanel(); 
 		initStatusReport();
 		addToPanel();
 		finalInit();
@@ -92,11 +92,6 @@ public class GetProjectStatusReport implements Observer {
 	
 	public void finalInit() {
 		
-		//JScrollPane resScrollPane = new JScrollPane(labelStatusReport);
-		//resScrollPane.setBounds(28, 70, 350, 358);
-		//resScrollPane.getViewport().setBackground(panelGetStatusReport.getBackground());
-		//panelGetStatusReport.add(resScrollPane);
-		
 		//Back Button
 		btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
@@ -117,10 +112,10 @@ public class GetProjectStatusReport implements Observer {
 		panelGetStatusReport.setVisible(visible);
 	}
 	
-	public void setProject(Project project) {
+	public void setProject(Project project) throws OperationNotAllowedException {
 		this.project = project;
 		String borderText = "Status report of " + project.getProjectID() + ", " + project.getProjectName() + ", " + project.getWorkedHours() + "h ~ " + project.getExpectedHours() + "h";
 		panelGetStatusReport.setBorder(BorderFactory.createTitledBorder(borderText));
-		labelStatusReport.setText(project.getStatusReport());
+		labelStatusReport.setText(managementSystem.getStatReportOfProject(project));
 	}
 }

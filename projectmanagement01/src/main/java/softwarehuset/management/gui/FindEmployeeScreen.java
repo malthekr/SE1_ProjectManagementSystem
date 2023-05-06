@@ -105,8 +105,8 @@ public class FindEmployeeScreen implements Observer {
 		            	lblFindResultDetail.setText("");
 
 		            } else {
-		            	lblFindResultDetail.setText(listSearchResult.getSelectedValue().getStatusOfEmployee(b));
-		        
+		            	//lblFindResultDetail.setText(listSearchResult.getSelectedValue().getStatusOfEmployee(b));
+		            	lblFindResultDetail.setText(ManagementSystem.getStatusOfEmployee(listSearchResult.getSelectedValue(),b));
 		            	
 		            }
 		        }
@@ -146,13 +146,15 @@ public class FindEmployeeScreen implements Observer {
 				if(b) {
 					btnShow.setText("Show all");
 					if(listSearchResult.getSelectedValue() != null) {
-					lblFindResultDetail.setText(listSearchResult.getSelectedValue().getStatusOfEmployee(b));
+					//lblFindResultDetail.setText(listSearchResult.getSelectedValue().getStatusOfEmployee(b));
+					  lblFindResultDetail.setText(ManagementSystem.getStatusOfEmployee(listSearchResult.getSelectedValue(),b));
 					}
 					
 				} else {
 					btnShow.setText("Show Active");
 					if(listSearchResult.getSelectedValue() != null) {
-					lblFindResultDetail.setText(listSearchResult.getSelectedValue().getStatusOfEmployee(b));
+					//lblFindResultDetail.setText(listSearchResult.getSelectedValue().getStatusOfEmployee(b));
+					  lblFindResultDetail.setText(ManagementSystem.getStatusOfEmployee(listSearchResult.getSelectedValue(),b));
 					}
 				}
 			}
