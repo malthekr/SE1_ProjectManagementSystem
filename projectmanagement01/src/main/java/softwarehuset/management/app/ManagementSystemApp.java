@@ -105,18 +105,18 @@ public class ManagementSystemApp extends Observable {
 	// Removes employee from the system
 	public void removeEmployee(Employee employee) throws OperationNotAllowedException {
 		assert (employee != null) && (employee.getId() != null): "Precondition";
-		if(!adminLoggedIn()) {															// 1
-			throw new OperationNotAllowedException("Administrator login required");		// 2
+		if(!adminLoggedIn()) {															
+			throw new OperationNotAllowedException("Administrator login required");		
 		}
-		for(Project p : projectRepository) {											// 3
+		for(Project p : projectRepository) {											
 			assert p != null : "Precondition";
-			if(p.getEmployeesAssignedToProject().contains(employee)) {					// 4
-				p.removeEmployee(employee);												// 5
+			if(p.getEmployeesAssignedToProject().contains(employee)) {					
+				p.removeEmployee(employee);											
 				assert !p.getEmployeesAssignedToProject().contains(employee) : "Postcondition";
 			}
 		}
-		if(Employees.contains(employee)) {												// 6
-			Employees.remove(employee);													// 7
+		if(Employees.contains(employee)) {	
+			Employees.remove(employee);	
 			assert !Employees.contains(employee) : "Postcondition";
 		}
 	}
@@ -421,21 +421,21 @@ public class ManagementSystemApp extends Observable {
 	// Claim/unclaim project manager status
 	public boolean togglePMClaim(Project project, String id) throws OperationNotAllowedException {
 		assert (employeeLoggedIn == true) && (project != null) && (id != null) && (id.length() <= 4) && (id.length() > 0): "Precondition";
-		Employee employee = FindEmployeeById(id);							// 1
+		Employee employee = FindEmployeeById(id);							
 		
-		if(employeeLoggedInId.equals(project.getProjectManager())) {		// 2
-			removePm(project.getProjectID());								// 3
+		if(employeeLoggedInId.equals(project.getProjectManager())) {		
+			removePm(project.getProjectID());								
 			assert project.getProjectManager() != employee : "Postcondition";
-			return false;													// 4
+			return false;													
 		} 
 		
-		if (employeeLogged() && !project.hasProjectManager()){				// 5
-			promoteToPm(project.getProjectID(), employee.getId());			// 6
+		if (employeeLogged() && !project.hasProjectManager()){				
+			promoteToPm(project.getProjectID(), employee.getId());			
 			assert project.getProjectManager() == employee : "Postcondition";
-			return true;													// 7
+			return true;													
 		}
 		assert project.hasProjectManager() == true : "Postcondition";
-		throw new OperationNotAllowedException("Project already has PM");	// 8
+		throw new OperationNotAllowedException("Project already has PM");	
 	}
 	
 	// Create a specific date as dd-mm-yyyy
