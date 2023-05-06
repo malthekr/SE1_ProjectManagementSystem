@@ -1,49 +1,57 @@
 package softwarehuset.management.app;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class TimeTable {
 	private Activity activity;
 	private Employee employee;
 	private Calendar date;
-	private int workHours;
+	private double workHours;
 	
-	public TimeTable(Activity activity, Employee employee, Calendar date, int workHours) {
+	public TimeTable(Activity activity, Employee employee, double workHours) {
 		this.activity = activity;
 		this.employee = employee;
-		this.date = date;
-		this.workHours = workHours;
+		this.date = generateDate();
+		this.workHours = workHours - workHours % 0.5;
+		
 	}
 	
 	public Activity getActivity() {
-		return activity;
+		return this.activity;
 	}
 	
 	public Employee getEmployee() {
-		return employee;
+		return this.employee;
 	}
 	
 	public Calendar getDate() {
-		return date;
+		return this.date;
 	}
 	
-	public int getHoursWorked() {
-		return workHours;
+	public double getHoursWorked() {
+		return this.workHours;
 	}
 	
 	public void editActivity(Activity newActivity) {
-		activity = newActivity;
+		this.activity = newActivity;
 	}
 	
 	public void editEmployee(Employee newEmployee) {
-		employee = newEmployee;
+		this.employee = newEmployee;
 	}
 	
 	public void editDate(Calendar newDate) {
-		date = newDate;
+		this.date = newDate;
 	}
 	
-	public void editHours(int newHours) {
-		workHours = newHours;
+	public void editHours(double newHours) {
+		this.workHours = newHours - newHours % 0.5;
+	}
+	
+	public Calendar generateDate(){
+		Calendar dateToday = new GregorianCalendar();
+		
+		return dateToday;
 	}
 }
