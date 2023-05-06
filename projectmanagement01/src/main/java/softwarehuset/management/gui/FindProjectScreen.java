@@ -144,7 +144,7 @@ public class FindProjectScreen implements Observer {
 		btnEditProject = new JButton("Edit Project");
 		btnEditProject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(listSearchResult.getSelectedValue() != null) {
+				if(listSearchResult.getSelectedValue() != null) { 
 					editProject.setProject(listSearchResult.getSelectedValue());
 					setVisible(false);
 					clear();

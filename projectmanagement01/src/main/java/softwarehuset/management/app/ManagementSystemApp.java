@@ -195,13 +195,7 @@ public class ManagementSystemApp extends Observable {
 		}
 		return (num == 1);
 	} 
-	/*
-	public void closeProject(Project project) throws OperationNotAllowedException {
-		if (checkAuth(project)) {
-			project.closeProject();
-		}
-	}
-	*/
+
 	public void promoteToPm(int projectId, String Id) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
 		Employee employee = FindEmployeeById(Id);
@@ -210,22 +204,6 @@ public class ManagementSystemApp extends Observable {
 			project.promoteEmployee(Id);
 			return;
 		}
-		/*
-		if(employeeLoggedInId.equals(project.getProjectManager())) {
-			throw new OperationNotAllowedException("Project Manager login required");
-			
-			//return;
-		} 
-		if (employeeLogged() && !project.hasProjectManager()){
-			project.addEmployee(employee);
-			return;
-		}
-		if(adminLoggedIn()) {
-			project.addEmployee(employee);
-			return;
-		}
-		*/
-		
 	}
 	
 	public void removePm(int projectId) throws OperationNotAllowedException {
@@ -244,7 +222,7 @@ public class ManagementSystemApp extends Observable {
 			project.editProjectName(projectName);
 			return;
 		}
-	}
+	} 
 
 	public void createActivity(int projectId, String description) throws OperationNotAllowedException {
 		Project project = findProjectById(projectId);
@@ -528,7 +506,7 @@ public class ManagementSystemApp extends Observable {
 	}
 	
 	public void exampleData() throws OperationNotAllowedException {
-		
+		/*
 		adminLogin("admi");
 		
 		Employee employee1 = new Employee("Malthe", "mkr");
@@ -683,7 +661,7 @@ public class ManagementSystemApp extends Observable {
 		addEmployeeToActivity(employee1, project5, "kommer snart");
 		
 		adminLogout();
-		
+		*/
 	}
 }
 

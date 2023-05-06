@@ -92,11 +92,6 @@ public class GetProjectStatusReport implements Observer {
 	
 	public void finalInit() {
 		
-		//JScrollPane resScrollPane = new JScrollPane(labelStatusReport);
-		//resScrollPane.setBounds(28, 70, 350, 358);
-		//resScrollPane.getViewport().setBackground(panelGetStatusReport.getBackground());
-		//panelGetStatusReport.add(resScrollPane);
-		
 		//Back Button
 		btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
