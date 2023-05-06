@@ -104,7 +104,8 @@ public class FindActivityScreen implements Observer {
 		            	lblFindResultDetail.setText("");
 
 		            } else {
-		            	lblFindResultDetail.setText(listSearchResult.getSelectedValue().printDetail());
+		            	//lblFindResultDetail.setText(listSearchResult.getSelectedValue().printDetail());
+		            	lblFindResultDetail.setText(ManagementSystem.activityDetails(listSearchResult.getSelectedValue()));
 		            }
 		        }
 			}
