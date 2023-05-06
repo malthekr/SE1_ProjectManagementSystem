@@ -241,6 +241,22 @@ public class Project {
 		ongoingProject = false;
 	}
 	
+	public void promoteEmployee(String id) throws OperationNotAllowedException{
+		
+		if(projectManager != null) {
+			throw new OperationNotAllowedException("Project already has Project Manager");
+		}
+		
+		for(Employee e : employeesAssignedToProject){
+			if(e.getId().equals(id) == true){
+				setProjectManager(e);
+				return;
+			}
+		}
+		
+		throw new OperationNotAllowedException("Employee is not part of the project");
+	}
+	
 	public boolean findEmployee(Employee employee) throws OperationNotAllowedException {
 		for(Employee e : employeesAssignedToProject){
 			if(e.equals(employee) == true){

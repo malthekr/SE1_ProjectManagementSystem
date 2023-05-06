@@ -375,7 +375,7 @@ public class ManagementSystemApp extends Observable {
 		//throw new OperationNotAllowedException("addEmployeeToActivity error");
 	}
 	
-	private boolean checkAuth(Project project) throws OperationNotAllowedException {
+	public boolean checkAuth(Project project) throws OperationNotAllowedException {
 		if(employeeLoggedIn && project.hasProjectManager()) {															
 			if(!employeeLoggedInId.equals(project.getProjectManager())) { 												
 				// throws error if employee logged in is not PM
