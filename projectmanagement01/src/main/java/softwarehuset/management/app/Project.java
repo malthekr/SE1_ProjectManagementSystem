@@ -271,7 +271,7 @@ public class Project {
 		}
 	}
 	
-	// Remove an employee from specific activity associated wit this project
+	// Remove an employee from specific activity associated with this project
 	public void removeEmployeeFromActivity(Employee employee, String description) throws OperationNotAllowedException{
 		Activity a = findActivityByDescription(description);
 		if(findEmployee(employee)){
@@ -279,6 +279,7 @@ public class Project {
 		}
 	}
 	
+	// Edit a specific time table that an employee has made in an activity with this project
 	public void editTimeTable(Activity activity, Employee employee, Calendar date, double workHours) {
 		TimeTable timeTable = getTimeTablesByDateAndEmployee(employee, date);
 		timeTable.editActivity(activity);
@@ -287,6 +288,7 @@ public class Project {
 		timeTable.editHours(workHours);
 	}
 	
+	// Add worked hours to an activity
 	public void addHoursToActivity(Activity activity, Employee employee, double hours){
 		activity.addWorkedHours(hours);
 		TimeTable timeTable = new TimeTable(activity, employee, hours);
@@ -302,13 +304,13 @@ public class Project {
 		}
 	}
 	
-	//To display on GUI what comes up when we search for a key word
+	// Display on GUI what comes up when we search for a key word
 	public String toString() {
 		String name = this.getProjectName().isBlank() ? "No project name yet" : this.getProjectName();
 		return "Project ID: " + String.valueOf(getProjectID()) + " - " + name;
 	}
 	
-	//Private method to get time tables for a certain employee
+	// Private method to get time tables for a certain employee
 	private List<TimeTable> getTimeTableForEmployee(Employee employee, List<TimeTable> timeTableInput){
 		List<TimeTable> timeTablesWithEmployee = new ArrayList<>();
 		
@@ -320,7 +322,7 @@ public class Project {
 		return timeTablesWithEmployee;
 	}
 	
-	//Private method to get time tables for a certain activity
+	// Private method to get time tables for a certain activity
 	private List<TimeTable> getTimeTableForActivity(Activity activity, List<TimeTable> timeTableInput){
 		List<TimeTable> timeTablesWithEmployee = new ArrayList<>();
 		
@@ -331,96 +333,4 @@ public class Project {
 		}
 		return timeTablesWithEmployee;
 	}
-	/*
-	public String getStatusReport() {
-		StringBuffer b = new StringBuffer();
-		b.append("<html>");
-		for(Activity a : activities) {
-			List<Employee> employeesWithHoursInActivity = getEmployeesFromTimeTable(a);
-			
-			String activityInfo = a.getDescription() + "(" + a.getWorkedHours() + "h ~ " + a.getExpectedHours() + "h)";
-			b.append(String.format("<b>%s</b><br>", activityInfo)); 
-			
-			for(Employee e : employeesWithHoursInActivity) {
-				// If employee added hours to project he is not part of
-				
-				
-				if(e.listOfActivitiesInProject(this) != null) {
-					if(e.listOfActivitiesInProject(this).contains(a)) {
-						String employeeInfo = " - " + e.getId();
-						
-						
-						if(!a.getEmployees().contains(e)) {
-							employeeInfo += " (not part of activity)";
-						}
-						
-						
-						double workedHoursSum = 0;
-						for(TimeTable t : getTimeTableForEmployeeAndActivity(e, a, timeTables)) {
-							workedHoursSum += t.getHoursWorked();
-						}
-						
-						String workedHours = ": " + workedHoursSum + "h";
-						
-						String employeeWorkedHours = employeeInfo + workedHours;
-						b.append(String.format("%s <br>", employeeWorkedHours)); 
-						
-					}
-				}
-			}
-		}
-		
-		b.append("</html>");
-		return b.toString();
-	}
-	*/
-	
-	/* 
-	public String printDetail() {
-		String name = this.getProjectName().isBlank() ? "No project name yet" : this.getProjectName();
-		String pmid = !this.hasProjectManager() ? "No PM assigned yet" : this.getProjectManager().getId();
-		String id = this.getEmployeesAssignedToProject() == null ? "No employees assigned yet" : this.getEmployeesAsString();
-		//Format start date as: Week/Year.
-		int week = this.getStartDate().get(Calendar.WEEK_OF_YEAR);
-		int year =  this.getStartDate().get(Calendar.YEAR);
-		String start = week + "/" + year;
-		//Format end date as: Week/Year
-		int week1 = this.getEndDate().get(Calendar.WEEK_OF_YEAR);
-		int year1 =  this.getEndDate().get(Calendar.YEAR);
-		String end = week1 + "/" + year1;
-		
-		StringBuffer b = new StringBuffer();
-		b.append("<html>");
-		b.append(String.format("<b>Name:</b>     %s<br>", name));
-		b.append(String.format("<b>Project Id:</b>    %s<br>", this.getProjectID()));
-		b.append(String.format("<b>Project Manager:</b>     %s<br>", pmid));
-		b.append(String.format("<b>Employees:</b>     %s<br>", id));
-		b.append(String.format("<b>Start date (Week/Year):</b>     %s<br>", start));
-		b.append(String.format("<b>End date (Week/Year):</b>       %s<br>", end));
-		b.append(String.format("<b>Is project Active?:</b> %s<br>", this.getOngoingProject()));
-		b.append(String.format("<b>Expected Hours:</b> %s<br>", this.getExpectedHours()));
-		b.append(String.format("<b>Worked Hours:</b>     %s<br>", this.getWorkedHours()));
-		b.append("</html>");
-		return b.toString();
-	}
-	
-	public String getEmployeesAsString(){
-        String name = "";
-        int i = 0;
-        
-        for(Employee e : this.getEmployeesAssignedToProject()) {
-            name += e.getId();
-            if (i++ == this.getEmployeesAssignedToProject().size() - 1){
-                break;
-            }
-            name += ", ";
-        }
-        return name;
-    }
-	
-	public String toString() {
-		String name = this.getProjectName().isBlank() ? "No project name yet" : this.getProjectName();
-		return "Project ID: " + String.valueOf(getProjectID()) + " - " + name;
-	}
-	*/
 }

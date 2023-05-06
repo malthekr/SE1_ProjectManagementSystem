@@ -6,7 +6,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class IDServer {
 	private static ConcurrentHashMap<Integer, AtomicInteger> counters = new ConcurrentHashMap<>();
-				
+	
+	// Generate a new unique project id number 
 	public int generateID(Calendar startDate) {
 		int year = startDate.get(Calendar.YEAR) % 100;
 		

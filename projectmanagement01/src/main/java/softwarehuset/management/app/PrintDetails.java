@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PrintDetails {
 	
-	//Print project details on GUI
+	// Print project details on GUI
 	public static String projectDetails(Project project) {
 		String name = project.getProjectName().isBlank() ? "No project name yet" : project.getProjectName();
 		String pmid = !project.hasProjectManager() ? "No PM assigned yet" : project.getProjectManager().getId();
@@ -60,7 +60,7 @@ public class PrintDetails {
 		return b.toString(); 
 	}
 	
-	//Print status of employee on GUI
+	// Print status of employee on GUI
 	static String getStatusOfEmployee(Employee employee, boolean showActiveProjects){
 		List<Project> projects = employee.getProjects();
 		
@@ -93,14 +93,14 @@ public class PrintDetails {
 		}
 		
 		if(containsActivities){
-			b.append("<br><b>No active projects or activities assigned to employee employee</b>");
+			b.append("<br><b>No active projects/activities assigned to employee</b>");
 		}
 		
 		b.append("</html>");
 		return b.toString();
 	}
 	
-	//Print status report of project on GUI
+	// Print status report of project on GUI
 	static String getStatusReport(Project project) {		
 		StringBuffer b = new StringBuffer();
 		b.append("<html>");
@@ -142,7 +142,7 @@ public class PrintDetails {
 	}
 	
 	
-	//Print employees working on activity
+	// Print employees working on activity
 	private static String getActivityEmployeesAsString(Activity activity){
         String name = "";
         int i = 0;
@@ -159,7 +159,7 @@ public class PrintDetails {
 	
 	
 	
-	//Print employees working on project
+	// Print employees working on project
 	private static String getProjectEmployeesAsString(Project project){
 	    String name = "";
 	    int i = 0;
