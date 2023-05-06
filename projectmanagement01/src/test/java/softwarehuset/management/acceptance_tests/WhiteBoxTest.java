@@ -295,7 +295,116 @@ public class WhiteBoxTest {
 	}
 	
 	// CheckAuth
+	@Test
+	public void testCheckAuthInputDataSetA() throws OperationNotAllowedException {
+		// Input Data
+		managementSystem.adminLogin("admi");
+		
+		Employee e1 = new Employee("thr");
+		managementSystem.addEmployee(e1);
+		Employee e2 = new Employee("nik");
+		managementSystem.addEmployee(e2);
+		
+		Project p1 = projectHelper.getProject("proj1");
+		managementSystem.createProject(p1);
+		
+		managementSystem.adminLogout();
+		
+		managementSystem.employeeLogin(e2.getId());
+		
+		// Expected Result
+		try {
+			managementSystem.checkAuth(p1);
+		} catch (OperationNotAllowedException e) {
+	    	errorMessage = e.getMessage();
+		}
+		assertEquals("Project Manager login required", errorMessage);
+	}
 	
+	@Test
+	public void testCheckAuthInputDataSetB() throws OperationNotAllowedException {
+		// Input Data
+		managementSystem.adminLogin("admi");
+		
+		Employee e1 = new Employee("nik");
+		managementSystem.addEmployee(e1);
+		
+		Project p1 = projectHelper.getProject("proj1");
+		managementSystem.createProject(p1);
+		p1.setProjectManager(e1);
+		managementSystem.adminLogout();
+		
+		managementSystem.employeeLogin(e1.getId());
+		
+		// Expected Result
+		assertTrue(managementSystem.checkAuth(p1));
+	}
+	
+	@Test
+	public void testCheckAuthInputDataSetC() throws OperationNotAllowedException {
+		// Input Data
+		managementSystem.adminLogin("admi");
+		
+		Employee e1 = new Employee("nik");
+		managementSystem.addEmployee(e1);
+		
+		Project p1 = projectHelper.getProject("proj1");
+		managementSystem.createProject(p1);
+		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
+		
+		managementSystem.adminLogout();
+		
+		managementSystem.employeeLogin(e1.getId());
+		
+		// Expected Result
+		assertFalse(p1.hasProjectManager());
+		assertTrue(managementSystem.checkAuth(p1));
+	}
+	
+	@Test
+	public void testCheckAuthInputDataSetD() throws OperationNotAllowedException {
+		// Input Data
+		managementSystem.adminLogin("admi");
+		
+		Employee e1 = new Employee("nik");
+		managementSystem.addEmployee(e1);
+		
+		Project p1 = projectHelper.getProject("proj1");
+		managementSystem.createProject(p1);
+		
+		// Expected Result
+		assertTrue(managementSystem.adminLoggedIn());
+		assertTrue(managementSystem.checkAuth(p1));
+		
+	}
+	
+	@Test
+	public void testCheckAuthInputDataSetE() throws OperationNotAllowedException {
+		// Input Data
+		managementSystem.adminLogin("admi");
+		
+		Employee e1 = new Employee("thr");
+		managementSystem.addEmployee(e1);
+		Employee e2 = new Employee("nik");
+		managementSystem.addEmployee(e2);
+		
+		Project p1 = projectHelper.getProject("proj1");
+		managementSystem.createProject(p1);
+		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
+		p1.setProjectManager(e1);
+		
+		managementSystem.adminLogout();
+		
+		managementSystem.employeeLogin(e2.getId());
+		
+		// Expected Result
+		try {
+			managementSystem.checkAuth(p1);
+		} catch (OperationNotAllowedException e) {
+	    	errorMessage = e.getMessage();
+		}
+		assertEquals("Project Manager login required", errorMessage);
+	}
 	
 	
 }
