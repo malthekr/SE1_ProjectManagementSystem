@@ -1,48 +1,38 @@
 package softwarehuset.management.acceptance_tests;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.runner.RunWith;
 
 import softwarehuset.management.app.Employee;
 import softwarehuset.management.app.Project;
 import softwarehuset.management.app.ManagementSystemApp;
 import softwarehuset.management.app.OperationNotAllowedException;
 
-import io.cucumber.junit.Cucumber;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-import org.junit.Before;
-
-
-@RunWith(Cucumber.class)
 public class WhiteBoxTest {
-	private ManagementSystemApp managementSystem;
-	private ErrorMessageHolder errorMessageHolder;
-	private ProjectHelper projectHelper;
-
-	public WhiteBoxTest(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, ProjectHelper projectHelper) {
-		this.managementSystem = managementSystem;
-		this.errorMessageHolder = errorMessageHolder;
-		this.projectHelper = projectHelper;
-	}
+	private ManagementSystemApp managementSystem = new ManagementSystemApp();
+	private String errorMessage;
+	private ProjectHelper projectHelper = new ProjectHelper();
 	
 	@Test
 	public void testRemoveEmployeeInputDataSetA() throws OperationNotAllowedException {
-		assertFalse(managementSystem.adminLogin(""));
+		assertTrue(managementSystem.adminLogin("admi"));	// Admin needs to be logged in for employees to be added to system
 		Employee e1 = new Employee("mkr");
 		Employee e2 = new Employee("nik");
 		managementSystem.addEmployee(e1);
 		managementSystem.addEmployee(e2);
+		managementSystem.adminLogout();						// Logout for admin
+		assertFalse(managementSystem.adminLoggedIn());
 		
 		try {
 			managementSystem.removeEmployee(e1);
 	    } catch (OperationNotAllowedException e) {
-			errorMessageHolder.setErrorMessage(e.getMessage());
+	    	errorMessage = e.getMessage();
 		}
-		assertEquals("Administrator login required", errorMessageHolder);
+		assertEquals("Administrator login required", errorMessage);
 	}
 	
 	@Test
@@ -79,7 +69,7 @@ public class WhiteBoxTest {
 		managementSystem.removeEmployee(e2);
 		
 		assertTrue(e1.getProjects().isEmpty());
-		assertFalse(managementSystem.containsEmployeeWithId(e1.getId()));
+		assertFalse(managementSystem.containsEmployeeWithId(e2.getId()));
 	}
 	
 	@Test
