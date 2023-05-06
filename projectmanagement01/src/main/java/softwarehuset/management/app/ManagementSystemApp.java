@@ -392,7 +392,7 @@ public class ManagementSystemApp extends Observable {
 		}
 	}
 	
-	// Claim/unclaim projectma status
+	// Claim/unclaim projectmanager status
 	public boolean togglePMClaim(Project project, String id) throws OperationNotAllowedException {
 		Employee employee = FindEmployeeById(id);							// 1
 		
