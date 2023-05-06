@@ -51,7 +51,7 @@ public class TimeTable {
 	
 	public Calendar generateDate(){
 		Calendar dateToday = new GregorianCalendar();
-		//Calendar endDate1 = new GregorianCalendar();
+		
 		return dateToday;
 	}
 }
