@@ -172,7 +172,6 @@ public class Project {
 		for(Employee e : employeesAssignedToProject){
 			if(e.getId().equals(id) == true){
 				setProjectManager(e);
-				
 				return;
 			}
 		}

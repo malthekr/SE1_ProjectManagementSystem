@@ -3,6 +3,7 @@ package softwarehuset.management.acceptance_tests;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 import softwarehuset.management.app.Employee;
@@ -17,6 +18,8 @@ public class WhiteBoxTest {
 	private String errorMessage;
 	private ProjectHelper projectHelper = new ProjectHelper();
 	
+	
+	// Remove Employee
 	@Test
 	public void testRemoveEmployeeInputDataSetA() throws OperationNotAllowedException {
 		assertTrue(managementSystem.adminLogin("admi"));	// Admin needs to be logged in for employees to be added to system
@@ -86,5 +89,111 @@ public class WhiteBoxTest {
 		assertFalse(managementSystem.containsEmployeeWithId(e2.getId()));
 	}
 	
+	// Claim/unclaim project manager status
+	@Test
+	public void testTogglePMClaimInputDataSetA() throws OperationNotAllowedException {
+		// Input Data
+		assertTrue(managementSystem.adminLogin("admi"));
+		Employee e1 = new Employee("mkr");
+		managementSystem.addEmployee(e1);
+		
+		Project p1 = projectHelper.getProject("pr1");
+		managementSystem.createProject(p1);
+		
+		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
+		
+		managementSystem.promoteToPm(p1.getProjectID(), e1.getId());
+		managementSystem.adminLogout();
+		
+		String input = "mkr";
+	
+		managementSystem.employeeLogin(e1.getId());
+		
+		// Expected Result
+		assertFalse(managementSystem.togglePMClaim(p1, input));
+		assertNull(p1.getProjectManager());
+	}
+	
+	@Test
+	public void testTogglePMClaimInputDataSetB() throws OperationNotAllowedException {
+		// Input Data
+		assertTrue(managementSystem.adminLogin("admi"));
+		Employee e1 = new Employee("mkr");
+		managementSystem.addEmployee(e1);
+		
+		Project p1 = projectHelper.getProject("pr1");
+		managementSystem.createProject(p1);
+		
+		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
+		managementSystem.adminLogout();
+		
+		String input = "mkr";
+	
+		managementSystem.employeeLogin(e1.getId());
+		
+		// Expected Result
+		assertNull(p1.getProjectManager());
+		assertTrue(managementSystem.togglePMClaim(p1, input));
+		assertTrue(p1.getProjectManager().equals(e1));
+	}
+	
+	@Test
+	public void testTogglePMClaimInputDataSetC() throws OperationNotAllowedException {
+		// Input Data
+		assertTrue(managementSystem.adminLogin("admi"));
+		Employee e1 = new Employee("mkr");
+		managementSystem.addEmployee(e1);
+		Employee e2 = new Employee("thr");
+		managementSystem.addEmployee(e2);
+		
+		Project p1 = projectHelper.getProject("pr1");
+		managementSystem.createProject(p1);
+		
+		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
+		managementSystem.addEmployeeToProject(p1.getProjectID(), e2.getId());
+		
+		managementSystem.promoteToPm(p1.getProjectID(), e2.getId());		// "thr" is project manager
+		managementSystem.adminLogout();
+		
+		String input = "mkr";
+	
+		managementSystem.employeeLogin(e1.getId());
+		
+		// Expected Result
+		try {
+			managementSystem.togglePMClaim(p1, input);
+		} catch (OperationNotAllowedException e) {
+	    	errorMessage = e.getMessage();
+		}
+		assertEquals("Project already has PM", errorMessage);
+		
+	}
+	
+	@Test
+	public void testTogglePMClaimInputDataSetD() throws OperationNotAllowedException {
+		// Input Data
+		assertTrue(managementSystem.adminLogin("admi"));
+		Employee e1 = new Employee("mkr");
+		managementSystem.addEmployee(e1);
+		Employee e2 = new Employee("thr");
+		managementSystem.addEmployee(e2);
+		
+		Project p1 = projectHelper.getProject("pr1");
+		managementSystem.createProject(p1);
+		
+		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
+		managementSystem.addEmployeeToProject(p1.getProjectID(), e2.getId());
+		managementSystem.adminLogout();
+		
+		String input = "mkr";
+		
+		managementSystem.employeeLogin(e2.getId());
+		
+		// Expected Result
+		assertTrue(managementSystem.togglePMClaim(p1, input));
+		assertTrue(p1.getProjectManager().equals(e1));
+	}
+	
+	// 
 }
 	
