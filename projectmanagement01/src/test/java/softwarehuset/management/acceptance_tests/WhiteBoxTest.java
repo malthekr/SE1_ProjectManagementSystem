@@ -22,6 +22,7 @@ public class WhiteBoxTest {
 	// Remove Employee
 	@Test
 	public void testRemoveEmployeeInputDataSetA() throws OperationNotAllowedException {
+		// Input Data
 		assertTrue(managementSystem.adminLogin("admi"));	// Admin needs to be logged in for employees to be added to system
 		Employee e1 = new Employee("mkr");
 		Employee e2 = new Employee("nik");
@@ -30,6 +31,7 @@ public class WhiteBoxTest {
 		managementSystem.adminLogout();						// Logout for admin
 		assertFalse(managementSystem.adminLoggedIn());
 		
+		// Expected Result
 		try {
 			managementSystem.removeEmployee(e1);
 	    } catch (OperationNotAllowedException e) {
@@ -40,6 +42,7 @@ public class WhiteBoxTest {
 	
 	@Test
 	public void testRemoveEmployeeInputDataSetB() throws OperationNotAllowedException {
+		// Input Data
 		assertTrue(managementSystem.adminLogin("admi"));
 		Employee e1 = new Employee("mkr");
 		Employee e2 = new Employee("nik");
@@ -55,12 +58,14 @@ public class WhiteBoxTest {
 		
 		managementSystem.removeEmployee(e1);
 		
+		// Expected Result
 		assertFalse(managementSystem.containsEmployeeWithId(e1.getId()));
 		assertFalse(p1.getEmployeesAssignedToProject().contains(e1));
 	}
 	
 	@Test
 	public void testRemoveEmployeeInputDataSetC() throws OperationNotAllowedException {
+		// Input Data
 		assertTrue(managementSystem.adminLogin("admi"));
 		
 		Employee e1 = new Employee("mkr");
@@ -71,12 +76,14 @@ public class WhiteBoxTest {
 		
 		managementSystem.removeEmployee(e2);
 		
+		// Expected Result
 		assertTrue(e1.getProjects().isEmpty());
 		assertFalse(managementSystem.containsEmployeeWithId(e2.getId()));
 	}
 	
 	@Test
 	public void testRemoveEmployeeInputDataSetD() throws OperationNotAllowedException {
+		// Input Data
 		assertTrue(managementSystem.adminLogin("admi"));
 		
 		Employee e1 = new Employee("nik");
@@ -86,6 +93,7 @@ public class WhiteBoxTest {
 		
 		managementSystem.removeEmployee(e2);
 		
+		// Expected Result
 		assertFalse(managementSystem.containsEmployeeWithId(e2.getId()));
 	}
 	
