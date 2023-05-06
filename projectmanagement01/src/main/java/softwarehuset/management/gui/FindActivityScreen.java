@@ -47,7 +47,7 @@ public class FindActivityScreen implements Observer {
 	
 	private JButton btnDeleteActivity;
 	private JButton btnEditActivity;
-	
+	 
 	private JButton btnBack;
 	
 

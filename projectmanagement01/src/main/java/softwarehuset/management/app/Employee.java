@@ -32,7 +32,6 @@ public class Employee {
     public List<Project> getProjects(){
 		List<Project> projects = new ArrayList<>();
 		for (Project key : map.keySet()) {
-		    //System.out.println(key + " " + map.get(key));
 		    projects.add(key);
 		}
 		return projects;
@@ -89,12 +88,7 @@ public class Employee {
     public boolean isBusy(){
 		return getNumOfActivities() > 20 ? true : false;
 	}
-    /*
-    public boolean isPartOfActivity(Project project, Activity activity) {    	
-    	List<Activity> employeeActivities = map.get(project);
-    	return employeeActivities.contains(activity);    	
-    }
-    */
+  
     public List<Activity> listOfActivitiesInProject(Project project) {    	
     	List<Activity> employeeActivities = map.get(project);
     	return employeeActivities;   	
@@ -142,7 +136,7 @@ public class Employee {
 				}
 			}
 		}
-		//System.out.println(containsActivities);
+		
 		if(containsActivities){
 			b.append("<br><b>No active projects or activities assigned to this employee</b>");
 		}

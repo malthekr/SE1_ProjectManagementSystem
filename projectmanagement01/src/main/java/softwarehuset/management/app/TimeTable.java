@@ -13,7 +13,7 @@ public class TimeTable {
 		this.activity = activity;
 		this.employee = employee;
 		this.date = generateDate();
-		this.workHours = workHours;
+		this.workHours = workHours - workHours % 0.5;
 		
 	}
 	
@@ -46,12 +46,12 @@ public class TimeTable {
 	}
 	
 	public void editHours(double newHours) {
-		this.workHours = newHours;
+		this.workHours = newHours - newHours % 0.5;
 	}
 	
 	public Calendar generateDate(){
 		Calendar dateToday = new GregorianCalendar();
-		//Calendar endDate1 = new GregorianCalendar();
+		
 		return dateToday;
 	}
 }

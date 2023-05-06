@@ -201,10 +201,10 @@ public class FindProjectScreen implements Observer {
 						clear();
 						getStatus.setVisible(true);
 				}
-			}
+			} 
 		});
 		
-		getStatusReport.setBounds(270, 20, 117, 29);
+		getStatusReport.setBounds(270, 26, 117, 29);
 		panelFindProject.add(getStatusReport);
 
 		getStatus = new GetProjectStatusReport(ManagementSystem, this, parentparentWindow);

@@ -27,14 +27,7 @@ public class Project {
 		this.endDate = endDate;
 		this.projectID = idServer.generateID(startDate);
 	} 
-	/*
-	public Project(Double expectedHours, Calendar startDate, Calendar endDate) {
-		this.expectedHours = expectedHours;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.projectID = idServer.generateID(startDate);
-	}
-	*/
+	
 	// Override and assign the project manager for this project, even if already assigned
 	public void setProjectManager(Employee employee) { 
 		this.projectManager = employee;
@@ -79,7 +72,7 @@ public class Project {
 		}
 		
 		Activity activity = new Activity(projectID, description, startDate, endDate);
-		activities.add(activity);
+		addActivity(activity);
 	}
 	
 	public void removeActivity(Activity activity) throws OperationNotAllowedException {
@@ -223,6 +216,10 @@ public class Project {
 		return expectedHours;
 	}
 	
+	public List<TimeTable> getTimeTables(){
+		return this.timeTables;
+	}
+	
 	public List<TimeTable> getTimeTablesByEmployee(Employee employee) {
 		List<TimeTable> employeeTimeTables = timeTables.stream().filter(u -> u.getEmployee().equals(employee)).collect(Collectors.toList());
 		return employeeTimeTables;
@@ -234,7 +231,7 @@ public class Project {
 		return finalTimeTable;
 	}
 	
-	public void editTimeTable(Activity activity, Employee employee, Calendar date, int workHours) {
+	public void editTimeTable(Activity activity, Employee employee, Calendar date, double workHours) {
 		TimeTable timeTable = getTimeTablesByDateAndEmployee(employee, date);
 		timeTable.editActivity(activity);
 		timeTable.editEmployee(employee);
@@ -247,28 +244,16 @@ public class Project {
 		TimeTable timeTable = new TimeTable(activity, employee, hours);
 		timeTables.add(timeTable);
 	}
-	/*
-	public void generateStatusReport() {
-		double sumExpectedHours = 0;
-		double sumWorkedHours = 0; // Total worked hours on the project
-		for(Activity a : activities){
-			sumExpectedHours += a.getExpectedHours();
-			sumWorkedHours += a.getWorkedHours();
-		}	
-	}
-	*/
+	
 	public String getStatusReport() {
 		StringBuffer b = new StringBuffer();
 		b.append("<html>");
 		for(Activity a : activities) {
 			List<Employee> employeesWithHoursInActivity = getEmployeesFromTimeTable(a);
-			System.out.println(employeesWithHoursInActivity.size());
 			
 			String activityInfo = a.getDescription() + "(" + a.getWorkedHours() + "h ~ " + a.getExpectedHours() + "h)";
 			b.append(String.format("<b>%s</b><br>", activityInfo)); 
-			System.out.println(activityInfo);
 			
-			//for(Employee e : employeesAssignedToProject) {	
 			for(Employee e : employeesWithHoursInActivity) {
 				// If employee added hours to project he is not part of
 				
@@ -282,22 +267,17 @@ public class Project {
 							employeeInfo += " (not part of activity)";
 						}
 						
-						//System.out.print(employeeInfo);
-						
 						
 						double workedHoursSum = 0;
 						for(TimeTable t : getTimeTableForEmployeeAndActivity(e, a, timeTables)) {
 							workedHoursSum += t.getHoursWorked();
-							//System.out.println(" - " + t.getHoursWorked());
 						}
+						
 						String workedHours = ": " + workedHoursSum + "h";
-						//System.out.print(workedHours);
-						//System.out.println();
 						
 						String employeeWorkedHours = employeeInfo + workedHours;
 						b.append(String.format("%s <br>", employeeWorkedHours)); 
 						
-						//System.out.println(getTimeTableForEmployee(e).size());
 					}
 				}
 			}
@@ -306,15 +286,6 @@ public class Project {
 		b.append("</html>");
 		return b.toString();
 	}
-	
-//	private List<Activity> activityInTimeTable(List<TimeTable> timeTableInput){
-//		List<Activity> a = new ArrayList<>();
-//		for(TimeTable t : timeTableInput) {
-//			a.add(t.getActivity());
-//		}
-//		
-//		return a;
-//	}
 	
 	public List<Employee> getEmployeesFromTimeTable(Activity a){
 		List<Employee> es = new ArrayList<>(a.getEmployees());
@@ -326,7 +297,7 @@ public class Project {
 		return es;
 	}
 	
-	private List<TimeTable> getTimeTableForEmployeeAndActivity(Employee employee, Activity activity, List<TimeTable> timeTableInput){
+	public List<TimeTable> getTimeTableForEmployeeAndActivity(Employee employee, Activity activity, List<TimeTable> timeTableInput){
 		List<TimeTable> list = new ArrayList<>();
 		list = getTimeTableForEmployee(employee, timeTableInput);
 		list = getTimeTableForActivity(activity, list);
@@ -380,7 +351,7 @@ public class Project {
 		b.append("<html>");
 		b.append(String.format("<b>Name:</b>     %s<br>", name));
 		b.append(String.format("<b>Project Id:</b>    %s<br>", this.getProjectID()));
-		b.append(String.format("<b>PM:</b>     %s<br>", pmid));
+		b.append(String.format("<b>Project Manager:</b>     %s<br>", pmid));
 		b.append(String.format("<b>Employees:</b>     %s<br>", id));
 		b.append(String.format("<b>Start date (Week/Year):</b>     %s<br>", start));
 		b.append(String.format("<b>End date (Week/Year):</b>       %s<br>", end));

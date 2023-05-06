@@ -13,16 +13,6 @@ public class Activity {
     private double workedHours = 0;
     private Calendar startDate, endDate;
     
-    /*
-    public Activity(int projectId, String description, double expectedHours, Calendar startDate, Calendar endDate) {
-    	this.projectId = projectId;
-    	this.description = description;
-    	this.expectedHours = expectedHours;
-    	this.startDate = startDate;
-    	this.endDate = endDate;
-    }
-    */
-    
     public Activity(int projectId, String description, Calendar startDate, Calendar endDate) {
     	this.projectId = projectId;
     	this.description = description;
@@ -64,9 +54,6 @@ public class Activity {
         if (this.workedHours < 0) {
         	this.workedHours = 0;
         }
-    	
-    	// return;
-    	//throw new OperationNotAllowedException("Worked hours is measured in half hours worked");
     }
     
     public double getWorkedHours() {

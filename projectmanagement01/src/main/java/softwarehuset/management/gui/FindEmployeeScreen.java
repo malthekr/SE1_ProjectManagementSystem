@@ -1,5 +1,6 @@
 package softwarehuset.management.gui;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -49,7 +50,7 @@ public class FindEmployeeScreen implements Observer {
 	//private JButton btnEditActivity;
 	private JButton btnShow;
 	private JButton btnBack;
-	
+	 
 	private boolean b;
 
 	public FindEmployeeScreen(ManagementSystemApp ManagementSystem, EmployeeScreen parentWindow, MainScreen parentparentWindow) {
@@ -105,6 +106,8 @@ public class FindEmployeeScreen implements Observer {
 
 		            } else {
 		            	lblFindResultDetail.setText(listSearchResult.getSelectedValue().getStatusOfEmployee(b));
+		        
+		            	
 		            }
 		        }
 			}
@@ -116,18 +119,25 @@ public class FindEmployeeScreen implements Observer {
 		panelFindEmployee.add(listScrollPane);
 		
 		JPanel panelSearchResult = new JPanel();
+		//21, 270, 361, 175
 		panelSearchResult.setBounds(21, 270, 361, 175);
 		panelFindEmployee.add(panelSearchResult);
 		panelSearchResult.setBorder(BorderFactory.createTitledBorder(
                 "Time Table"));
 		panelSearchResult.setLayout(null);
 		
+		
 		lblFindResultDetail = new JLabel("");
 		lblFindResultDetail.setVerticalAlignment(SwingConstants.TOP);
 		lblFindResultDetail.setHorizontalAlignment(SwingConstants.LEFT);
 		lblFindResultDetail.setBounds(23, 19, 318, 137);
-		panelSearchResult.add(lblFindResultDetail);
+		panelSearchResult.add(lblFindResultDetail); 
 	
+		JScrollPane resScrollPane = new JScrollPane(lblFindResultDetail);
+		resScrollPane.setBounds(26, 283, 350, 158);
+		resScrollPane.getViewport().setBackground(panelFindEmployee.getBackground());
+		panelFindEmployee.add(resScrollPane);
+		
 		btnShow = new JButton("Show Active");
 		btnShow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
