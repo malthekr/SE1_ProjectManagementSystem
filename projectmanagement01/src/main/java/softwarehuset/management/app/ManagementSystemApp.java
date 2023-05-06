@@ -83,16 +83,20 @@ public class ManagementSystemApp extends Observable {
 	
 	// Removes employee from the system
 	public void removeEmployee(Employee employee) throws OperationNotAllowedException {
+		assert (employee != null) && (employee.getId() != null): "Precondition";
 		if(!adminLoggedIn()) {															// 1
 			throw new OperationNotAllowedException("Administrator login required");		// 2
 		}
 		for(Project p : projectRepository) {											// 3
+			assert p != null : "Precondition";
 			if(p.getEmployeesAssignedToProject().contains(employee)) {					// 4
 				p.removeEmployee(employee);												// 5
+				assert !p.getEmployeesAssignedToProject().contains(employee) : "Postcondition";
 			}
 		}
 		if(Employees.contains(employee)) {												// 6
 			Employees.remove(employee);													// 7
+			assert !Employees.contains(employee) : "Postcondition";
 		}
 	}
 	
@@ -131,25 +135,28 @@ public class ManagementSystemApp extends Observable {
 	}
 	
 	// adds employee to project
-	public void addEmployeeToProject(int ProjectId, String EmployeeId) throws OperationNotAllowedException {
-		Employee employee = FindEmployeeById(EmployeeId);
-		Project project = findProjectById(ProjectId);
+	public void addEmployeeToProject(int projectId, String employeeId) throws OperationNotAllowedException {
+		assert (employeeId != null) && ((String.valueOf(projectId).length() <= 5) == true) && (projectId > 0 == true) : "Precondition";
+		Employee employee = FindEmployeeById(employeeId);
+		Project project = findProjectById(projectId);
 		
 		if(employeeLogged() && project.hasProjectManager() && employeeLoggedInId.equals(project.getProjectManager())) {
 			project.addEmployee(employee);
+			assert project.getEmployeesAssignedToProject().contains(employee) == true : "Postcondition";
 			return;
 		} 
 		if (employeeLogged() && !project.hasProjectManager()){
 			project.addEmployee(employee);
+			assert project.getEmployeesAssignedToProject().contains(employee) == true : "Postcondition";
 			return;
 		}
 		if(adminLoggedIn()) {
 			project.addEmployee(employee);
+			assert project.getEmployeesAssignedToProject().contains(employee) == true : "Postcondition";
 			return;
 		}
 		//return false;
 		throw new OperationNotAllowedException("Project Manager login required");
-		
 	}
 	
 	// removes employee from project
@@ -295,20 +302,23 @@ public class ManagementSystemApp extends Observable {
 		}
 	}
 	
-	// Claim/unclaim projectmanager status
+	// Claim/unclaim project manager status
 	public boolean togglePMClaim(Project project, String id) throws OperationNotAllowedException {
+		assert (employeeLoggedIn == true) && (project != null) && (id != null) && (id.length() <= 4) && (id.length() > 0): "Precondition";
 		Employee employee = FindEmployeeById(id);							// 1
 		
 		if(employeeLoggedInId.equals(project.getProjectManager())) {		// 2
 			removePm(project.getProjectID());								// 3
+			assert project.getProjectManager() != employee : "Postcondition";
 			return false;													// 4
 		} 
 		
 		if (employeeLogged() && !project.hasProjectManager()){				// 5
 			promoteToPm(project.getProjectID(), employee.getId());			// 6
+			assert project.getProjectManager() == employee : "Postcondition";
 			return true;													// 7
 		}
-		
+		assert project.hasProjectManager() == true : "Postcondition";
 		throw new OperationNotAllowedException("Project already has PM");	// 8
 	}
 	
@@ -366,6 +376,7 @@ public class ManagementSystemApp extends Observable {
 	}
 	
 	public boolean checkAuth(Project project) throws OperationNotAllowedException {
+		assert (project != null): "Precondition";
 		if(employeeLoggedIn && project.hasProjectManager()) {															
 			if(!employeeLoggedInId.equals(project.getProjectManager())) { 												
 				// throws error if employee logged in is not PM
@@ -376,10 +387,9 @@ public class ManagementSystemApp extends Observable {
 		if (employeeLoggedIn && project.findEmployee(currentEmployee()) && !project.hasProjectManager()){				
 			return true; // returns true if project has no PM and employee (who is part of project) is logged in		
 		}
-		if(adminLoggedIn()) {																							
+		if(adminLoggedIn()) {
 			return true;																								
-		}
-		//return false;
+		}		
 		throw new OperationNotAllowedException("Project Manager login required");								
 	}
 	
