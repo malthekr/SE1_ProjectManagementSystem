@@ -304,13 +304,13 @@ public class Project {
 		}
 	}
 	
-	//To display on GUI what comes up when we search for a key word
+	// Display on GUI what comes up when we search for a key word
 	public String toString() {
 		String name = this.getProjectName().isBlank() ? "No project name yet" : this.getProjectName();
 		return "Project ID: " + String.valueOf(getProjectID()) + " - " + name;
 	}
 	
-	//Private method to get time tables for a certain employee
+	// Private method to get time tables for a certain employee
 	private List<TimeTable> getTimeTableForEmployee(Employee employee, List<TimeTable> timeTableInput){
 		List<TimeTable> timeTablesWithEmployee = new ArrayList<>();
 		
@@ -322,7 +322,7 @@ public class Project {
 		return timeTablesWithEmployee;
 	}
 	
-	//Private method to get time tables for a certain activity
+	// Private method to get time tables for a certain activity
 	private List<TimeTable> getTimeTableForActivity(Activity activity, List<TimeTable> timeTableInput){
 		List<TimeTable> timeTablesWithEmployee = new ArrayList<>();
 		

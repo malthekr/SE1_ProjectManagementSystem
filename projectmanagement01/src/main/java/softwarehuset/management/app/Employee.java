@@ -107,7 +107,7 @@ public class Employee {
 		return this.getName().contains(searchText) || this.getId().contains(searchText);
 	}
     
-    //To display on GUI what comes up when we search for a key word
+    // Display on GUI what comes up when we search for a key word
     public String toString() {
 		String name = this.getName().isBlank() ? "" : this.getName();
 		return "Employee ID: " + this.getId() + " - "+ name;

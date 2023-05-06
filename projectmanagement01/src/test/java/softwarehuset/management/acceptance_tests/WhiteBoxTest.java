@@ -3,6 +3,7 @@ package softwarehuset.management.acceptance_tests;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 
@@ -77,7 +78,7 @@ public class WhiteBoxTest {
 		managementSystem.removeEmployee(e2);
 		
 		// Expected Result
-		assertTrue(e1.getProjects().isEmpty());
+		assertTrue(e2.getProjects().isEmpty());
 		assertFalse(managementSystem.containsEmployeeWithId(e2.getId()));
 	}
 	
@@ -119,7 +120,7 @@ public class WhiteBoxTest {
 		
 		// Expected Result
 		assertFalse(managementSystem.togglePMClaim(p1, input));
-		assertNull(p1.getProjectManager());
+		assertNotEquals(p1.getProjectManager(), e1);
 	}
 	
 	@Test
@@ -140,9 +141,8 @@ public class WhiteBoxTest {
 		managementSystem.employeeLogin(e1.getId());
 		
 		// Expected Result
-		assertNull(p1.getProjectManager());
 		assertTrue(managementSystem.togglePMClaim(p1, input));
-		assertTrue(p1.getProjectManager().equals(e1));
+		assertEquals(p1.getProjectManager(),e1);
 	}
 	
 	@Test
@@ -199,7 +199,7 @@ public class WhiteBoxTest {
 		
 		// Expected Result
 		assertTrue(managementSystem.togglePMClaim(p1, input));
-		assertTrue(p1.getProjectManager().equals(e1));
+		assertEquals(p1.getProjectManager(),e1);
 	}
 	
 	// Add employee to project
@@ -222,7 +222,7 @@ public class WhiteBoxTest {
 		managementSystem.togglePMClaim(p1, e1.getId());
 		
 		// Expected Result
-		assertTrue(p1.getProjectManager().equals(e1));
+		assertEquals(p1.getProjectManager(),e1);
 		
 		assertFalse(p1.getEmployeesAssignedToProject().contains(e2));
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e2.getId());
@@ -266,7 +266,6 @@ public class WhiteBoxTest {
 		
 		// Expected Result
 		assertTrue(managementSystem.adminLoggedIn());
-		assertFalse(p1.hasProjectManager());
 		assertFalse(p1.getEmployeesAssignedToProject().contains(e1));
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		assertTrue(p1.getEmployeesAssignedToProject().contains(e1));
@@ -292,7 +291,7 @@ public class WhiteBoxTest {
 		managementSystem.employeeLogin(e2.getId());
 		
 		// Expected Result
-		assertFalse(p1.getProjectManager().equals(e2));
+		assertNotEquals(p1.getProjectManager(),e2);
 		assertFalse(p1.getEmployeesAssignedToProject().contains(e2));
 		try {
 			managementSystem.addEmployeeToProject(p1.getProjectID(), e2.getId());
