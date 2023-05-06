@@ -125,6 +125,36 @@ public class Project {
 		return list;
 	}
 	
+	// Edit project name
+	public void editProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+	
+	// Edit expected hours on project
+	public void editExpectedHours(Double expectedHours) {
+		this.expectedHours = 0 > expectedHours ? 0 : expectedHours - expectedHours % 0.5 ;
+	}
+	
+	// Edit start date of project
+	public void editStartDate(Calendar newStartDate) {
+		this.startDate = newStartDate;
+	}
+	
+	// Edit end date of project
+	public void editEndDate(Calendar newEndDate) {
+		this.endDate = newEndDate;
+	}
+	
+	// Set project as active (true)
+	public void beginProject(){
+		ongoingProject = true;
+	}
+	
+	// set project as inactive (false)
+	public void closeProject() {
+		ongoingProject = false;
+	}
+	
 	// Override and assign the project manager for this project, even if already assigned
 	public void setProjectManager(Employee employee) { 
 		this.projectManager = employee;
@@ -138,7 +168,6 @@ public class Project {
 	// Promote an employee part of this project to project manager
 	// Throws Exception if project manager is already assigned or employee is not part of project
 	public void promoteEmployee(String id) throws OperationNotAllowedException{
-		
 		if(projectManager != null) {
 			throw new OperationNotAllowedException("Project already has Project Manager");
 		}
@@ -146,7 +175,6 @@ public class Project {
 		for(Employee e : employeesAssignedToProject){
 			if(e.getId().equals(id) == true){
 				setProjectManager(e);
-				
 				return;
 			}
 		}
@@ -216,47 +244,6 @@ public class Project {
 		activities.remove(activity);
 	}
 	
-	
-	public void editProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-	
-	public void editExpectedHours(Double expectedHours) {
-		this.expectedHours = 0 > expectedHours ? 0 : expectedHours - expectedHours % 0.5 ;
-	}
-	
-	public void editStartDate(Calendar newStartDate) {
-		this.startDate = newStartDate;
-	}
-	
-	public void editEndDate(Calendar newEndDate) {
-		this.endDate = newEndDate;
-	}
-	
-	public void beginProject(){
-		ongoingProject = true;
-	}
-	
-	public void closeProject() {
-		ongoingProject = false;
-	}
-	
-	public void promoteEmployee(String id) throws OperationNotAllowedException{
-		
-		if(projectManager != null) {
-			throw new OperationNotAllowedException("Project already has Project Manager");
-		}
-		
-		for(Employee e : employeesAssignedToProject){
-			if(e.getId().equals(id) == true){
-				setProjectManager(e);
-				return;
-			}
-		}
-		
-		throw new OperationNotAllowedException("Employee is not part of the project");
-	}
-	
 	public boolean findEmployee(Employee employee) throws OperationNotAllowedException {
 		for(Employee e : employeesAssignedToProject){
 			if(e.equals(employee) == true){
@@ -266,6 +253,7 @@ public class Project {
 		return false;
 	}
 	
+	// Find a specific activity associated with this project by it's description
 	public Activity findActivityByDescription(String description) throws OperationNotAllowedException {
 		for(Activity activity : activities) {
 			if(activity.getDescription().equals(description)) {
@@ -275,6 +263,7 @@ public class Project {
 		throw new OperationNotAllowedException("Activity does not exist");
 	}
 	
+	// Add an employee to specific activity associated wit this project
 	public void addEmployeeToActivity(Employee employee, String description) throws OperationNotAllowedException{
 		Activity a = findActivityByDescription(description);
 		if(findEmployee(employee)){
@@ -282,6 +271,7 @@ public class Project {
 		}
 	}
 	
+	// Remove an employee from specific activity associated wit this project
 	public void removeEmployeeFromActivity(Employee employee, String description) throws OperationNotAllowedException{
 		Activity a = findActivityByDescription(description);
 		if(findEmployee(employee)){
