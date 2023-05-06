@@ -52,7 +52,6 @@ Scenario: Employee edits worked hours to an activity
     And employee "mkr" is part of project
     And add employee with ID "mkr" to activity in project
     When add 5.99 hours to activity "NewActivity20" in project
-    #Then 5.5 hours is added to activity "NewActivity20" in project
     Then worked 5.5 hours in activity "NewActivity20" in project
     When edit hour to 3.4 hours is added as worked hour to activity "NewActivity20" in project
     Then 3.0 hours is added as worked hour to activity "NewActivity20" in project 

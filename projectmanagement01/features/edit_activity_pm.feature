@@ -1,4 +1,4 @@
-Feature: Edit activity
+Feature: Edit activity as project manager
     Description: Edit activity for project
     Actor: Project Manager
 

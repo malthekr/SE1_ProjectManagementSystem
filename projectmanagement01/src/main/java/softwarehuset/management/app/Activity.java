@@ -96,6 +96,7 @@ public class Activity {
     	return description;
     }
     
+    //When searching with a key word these activities appear:
     public boolean match(String searchText) {
 		if(this.getEmployees() != null) {
 			boolean b = false;

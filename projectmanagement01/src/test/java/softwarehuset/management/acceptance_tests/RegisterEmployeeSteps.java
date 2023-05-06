@@ -15,7 +15,6 @@ import org.junit.Assert.*;
 
 public class RegisterEmployeeSteps {
 	private ManagementSystemApp managementSystemApp;
-	//private EmployeeHelper employeeHelper;
 	private ErrorMessageHolder errorMessageHolder;
 	
 	private Employee employee;
@@ -23,8 +22,6 @@ public class RegisterEmployeeSteps {
 	public RegisterEmployeeSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder) {
 		this.managementSystemApp = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
-		//this.employeeHelper = employeeHelper;
-//		this.employee = employee;
 	}
 	
 	@Given("there is no employee with ID {string}")

@@ -28,10 +28,27 @@ Scenario: Employee edits project name while not logged in
 		And there is a project with name "Management System"
 		When add project to system
     Then the project is added to the system with unique project number
-    Given there is an employee with ID "mkr"
-    And admin is logged out
+    Given admin is logged out
+    And there is an employee with ID "thr"
+    And "thr" is the project manager
+    And employee with ID "mkr" is logged in
+    And employee "mkr" is part of project
     When edits project name to "Alpha Management System"
-    Then the error message "Project Manager login required" is given    
+    Then the error message "Project Manager login required" is given   
+    
+Scenario: Project manager edits expected hours for the project
+    Given there is a project
+    And employee with ID "mkr" is logged in
+    And "mkr" is the project manager
+    When edit expected hours for project to 60.0
+    Then expected hours for project is 60.0 
+
+Scenario: Employee edits expected hours for the project
+    Given there is a project
+    And employee with ID "mkr" is logged in
+    And employee "mkr" is part of project
+    When edit expected hours for project to 60.0
+    Then expected hours for project is 60.0 
     
 Scenario: PM edits start date of project
     Given there is a project

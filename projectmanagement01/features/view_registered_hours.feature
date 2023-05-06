@@ -13,3 +13,4 @@ Scenario:
     And employee with ID "mkr" is logged in
     When view registered hours
     Then the system provides the registered hours
+   

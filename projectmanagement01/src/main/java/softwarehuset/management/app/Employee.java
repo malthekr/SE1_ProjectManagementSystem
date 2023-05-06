@@ -65,18 +65,6 @@ public class Employee {
 		List<Activity> a = map.get(project);
 		a.remove(activity);
 		activities = map.put(project, a);
-		
-		
-		
-    	/*activities = map.computeIfAbsent(project, y -> new ArrayList<>());
-    	
-    	if(activities.contains(activity)) {
-    		activities.remove(activity);
-    		return;
-    	}*/
-    	//map.get(project).remove(activity);
-    	
-    	//throw new OperationNotAllowedException("Employee is not part of this activity");
     }
 
     public int getNumOfActivities(){
@@ -102,6 +90,7 @@ public class Employee {
     	return a;
     }
     
+    //When searching with a key word these employees appear:
     public boolean match(String searchText) {
 		return this.getName().contains(searchText) || this.getId().contains(searchText);
 	}
