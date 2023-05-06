@@ -159,7 +159,6 @@ public class ManagementSystemApp extends Observable {
 		
 		if (checkAuth(project)) {
 			project.removeEmployee(employee);
-			return;
 		}
 	}
 	
@@ -202,7 +201,6 @@ public class ManagementSystemApp extends Observable {
 		
 		if (checkAuth(project)) {
 			project.promoteEmployee(Id);
-			return;
 		}
 	}
 	
@@ -211,7 +209,6 @@ public class ManagementSystemApp extends Observable {
 		
 		if (checkAuth(project)) {
 			project.removeProjectManager();
-			return;
 		}
 	}
 	
@@ -220,7 +217,6 @@ public class ManagementSystemApp extends Observable {
 		
 		if (checkAuth(project)) {
 			project.editProjectName(projectName);
-			return;
 		}
 	} 
 
@@ -230,9 +226,7 @@ public class ManagementSystemApp extends Observable {
 		if(checkAuth(project)) {
 			//if(project.getActivites().contains(description))
 			project.createActivity(description);
-			return;
 		}
-		
 	}
 	
 	public Activity findActivityByDescription(int projectId, String description) throws OperationNotAllowedException {
@@ -256,7 +250,6 @@ public class ManagementSystemApp extends Observable {
 		startDate = setDate(startDate, dd, mm, yyyy);
 		if (checkAuth(project)) {
 			activity.setStartDate(startDate);
-			return;
 		}
 	}
 	
@@ -268,7 +261,6 @@ public class ManagementSystemApp extends Observable {
 		endDate = setDate(endDate, dd, mm, yyyy);
 		if (checkAuth(project)) {
 			activity.setEndDate(endDate);
-			return;
 		}
 	}
 	
@@ -279,7 +271,6 @@ public class ManagementSystemApp extends Observable {
 		startDate = setDate(startDate, dd, mm, yyyy);
 		if (checkAuth(project)) {
 			project.editStartDate(startDate);
-			return;
 		}
 	}
 	
@@ -290,7 +281,6 @@ public class ManagementSystemApp extends Observable {
 		endDate = setDate(endDate, dd, mm, yyyy);
 		if (checkAuth(project)) {
 			project.editEndDate(endDate);
-			return;
 		}
 	}
 	
@@ -375,7 +365,7 @@ public class ManagementSystemApp extends Observable {
 		//throw new OperationNotAllowedException("addEmployeeToActivity error");
 	}
 	
-	private boolean checkAuth(Project project) throws OperationNotAllowedException {
+	public boolean checkAuth(Project project) throws OperationNotAllowedException {
 		if(employeeLoggedIn && project.hasProjectManager()) {															
 			if(!employeeLoggedInId.equals(project.getProjectManager())) { 												
 				// throws error if employee logged in is not PM

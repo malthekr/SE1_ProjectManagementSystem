@@ -12,23 +12,28 @@ public class Employee {
     private ConcurrentHashMap<Project, List<Activity>> map = new ConcurrentHashMap<>();
     private List<Activity> activities;
 	
+    // Constructor to create an employee with only empoylee id
 	public Employee(String id){
         this.id = id;
     }
 	
+	// Constructor to create an employee with name and empoylee id
     public Employee(String name, String id){
         this.name = name;
         this.id = id.toLowerCase();
     }
 
+    // Get employee name
     public String getName(){
         return name;
     }
     
+    // Get employee id
     public String getId(){
         return id;
     }
     
+    // Get list of projects employee is working on
     public List<Project> getProjects(){
 		List<Project> projects = new ArrayList<>();
 		for (Project key : map.keySet()) {
@@ -37,6 +42,35 @@ public class Employee {
 		return projects;
 	}
     
+    // Get list of activities employee is working on
+    public List<Activity> getActivities(){
+		List<Activity> a = new ArrayList<>();
+		for(Project key : map.keySet()){
+			a.addAll(map.get(key));
+		}
+    	return a;
+    }
+    
+    // Get number of activities employee is working on
+    public int getNumOfActivities(){
+    	int numbOfActivites = map.values().stream().flatMapToInt(list -> IntStream.of(list.size())).sum();
+    	
+        return numbOfActivites;
+    }
+    
+    // Get list of activities employee is working on in a specific project
+    public List<Activity> listOfActivitiesInProject(Project project) {    	
+    	List<Activity> employeeActivities = map.get(project);
+    	return employeeActivities;   	
+    }
+    
+    // Checks if employee is too busy to take on new activity
+    public boolean isBusy(){
+		return getNumOfActivities() > 20 ? true : false;
+	}
+    
+    // Add activity to list of activities employee is working on
+    // Throws exception - Employee has too many activities he is working on
     public void addActivity(Project project, Activity activity) throws OperationNotAllowedException {
 		if(isBusy()) {
     		throw new OperationNotAllowedException("Employee too busy");
@@ -48,7 +82,7 @@ public class Employee {
     		return;
     	}
     	
-    	throw new OperationNotAllowedException("Employee is not part of the project");
+    	//throw new OperationNotAllowedException("Employee is not part of the project");
     }
     
     // Add project/activity for employee (is not synced with project employee list or activity employee list)
@@ -61,47 +95,14 @@ public class Employee {
     	}
 	}
     
+    // Remove an activity from list of activities employee is working on
     public void removeActivity(Project project, Activity activity) throws OperationNotAllowedException {
 		List<Activity> a = map.get(project);
 		a.remove(activity);
 		activities = map.put(project, a);
-		
-		
-		
-    	/*activities = map.computeIfAbsent(project, y -> new ArrayList<>());
-    	
-    	if(activities.contains(activity)) {
-    		activities.remove(activity);
-    		return;
-    	}*/
-    	//map.get(project).remove(activity);
-    	
-    	//throw new OperationNotAllowedException("Employee is not part of this activity");
-    }
-
-    public int getNumOfActivities(){
-    	int numbOfActivites = map.values().stream().flatMapToInt(list -> IntStream.of(list.size())).sum();
-    	
-        return numbOfActivites;
     }
     
-    public boolean isBusy(){
-		return getNumOfActivities() > 20 ? true : false;
-	}
-  
-    public List<Activity> listOfActivitiesInProject(Project project) {    	
-    	List<Activity> employeeActivities = map.get(project);
-    	return employeeActivities;   	
-    }
-     
-    public List<Activity> getActivities(){
-		List<Activity> a = new ArrayList<>();
-		for(Project key : map.keySet()){
-			a.addAll(map.get(key));
-		}
-    	return a;
-    }
-    
+    //When searching with a key word these employees appear:
     public boolean match(String searchText) {
 		return this.getName().contains(searchText) || this.getId().contains(searchText);
 	}

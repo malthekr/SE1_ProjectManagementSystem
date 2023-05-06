@@ -1,4 +1,4 @@
-Feature: Edit activity
+Feature: Edit activity as employee
     Description: Edit activity for project
     Actor: Employee
     
