@@ -6,6 +6,9 @@ import static org.junit.Assert.assertNotNull;
 
 import softwarehuset.management.app.Employee;
 import softwarehuset.management.app.ManagementSystemApp;
+import softwarehuset.management.app.LoginSystem;
+import softwarehuset.management.app.EmployeeRepository;
+
 import softwarehuset.management.app.OperationNotAllowedException;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -16,6 +19,8 @@ public class LoginLogoutSteps {
 	private ManagementSystemApp managementSystem;
 	private String id;
 	private ErrorMessageHolder errorMessageHolder;
+	private LoginSystem loginSystem = managementSystem.getLoginSystem();
+	private EmployeeRepository employeeRepository = managementSystem.getEmployeeRepository();
 	
 	public LoginLogoutSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder) {
 		this.managementSystem = managementSystem;
@@ -24,7 +29,7 @@ public class LoginLogoutSteps {
 	
 	@Given("admin is not logged in")
 	public void thatTheAdministratorIsNotLoggedIn() {
-		assertFalse(managementSystem.adminLoggedIn());
+		assertFalse(loginSystem.adminLoggedIn());
 	}
 	
 	@Given("admin id is {string}")
@@ -33,56 +38,60 @@ public class LoginLogoutSteps {
 	}
 	
 	@Then("admin login succeeds")
-	public void admingLogin() {
-		assertTrue(managementSystem.adminLogin(id));
+	public void admingLogin() throws OperationNotAllowedException {
+		loginSystem.adminLogin(id);
+		assertTrue(loginSystem.adminLoggedIn());
 	}
 	
 	@Given("admin is logged in")
 	public void adminLoggedIn() {
-		assertTrue(managementSystem.adminLoggedIn());
+		assertTrue(loginSystem.adminLoggedIn());
 	}
 	
 	@When("admin logs out")
 	public void adminLogout() {
-		managementSystem.adminLogout();
+		loginSystem.adminLogout();
 	}
 	
 	@Then("admin login fails")
 	public void adminLoginFail() {
-		assertFalse(managementSystem.adminLogin(id));
+		assertFalse(loginSystem.adminLoggedIn());
 	}
 	
 	@Given("admin is already logged in")
-	public void thatTheAdminIsLoggedIn() {
-		assertTrue(managementSystem.adminLogin("admi"));
+	public void thatTheAdminIsLoggedIn() throws OperationNotAllowedException {
+		loginSystem.adminLogin("admi");
+		assertTrue(loginSystem.adminLoggedIn());
 	}
 	
 	@Given("employee with ID {string} is logged in")
-	public void employeeWithIDIsLoggedIn(String Id) throws OperationNotAllowedException{
-	    createEmployee(Id);
-	    assertTrue(managementSystem.employeeLogin(Id));
+	public void employeeWithIDIsLoggedIn(String id) throws OperationNotAllowedException{
+	    createEmployee(id);
+	    loginSystem.employeeLogin(id);
+	    assertTrue(loginSystem.employeeLoggedIn());
 	}
 	
 	@Given("employee with ID {string} exists")
 	public void employeeWithIDExists(String Id) throws OperationNotAllowedException{
 	    createEmployee(Id);
-	    assertNotNull(managementSystem.FindEmployeeById(Id));
+	    assertNotNull(employeeRepository.findEmployeeByID(Id));
 	}
 	
 	@Given("admin is logged out")
 	public void adminIsLoggedOut() {
-		assertFalse(managementSystem.adminLogout());
+		assertFalse(loginSystem.adminLogout());
 	}
 	
 	@Given("employee {string} is logged out")
 	public void employeeIsLoggedOut(String Id) {
-	    assertFalse(managementSystem.employeeLogout());
+		loginSystem.employeeLogOut();
+	    assertFalse(loginSystem.employeeLoggedIn());
 	}
 	
 	@When("{string} logs in")
 	public void logsIn(String employeeId) {
 		try {
-			managementSystem.employeeLogin(employeeId);
+			loginSystem.employeeLogin(employeeId);
 		} catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		}		
@@ -90,13 +99,13 @@ public class LoginLogoutSteps {
 	
 	@Then("employee is logged in")
 	public void isLoggedIn() {
-		assertTrue(managementSystem.employeeLogged());
+		assertTrue(loginSystem.employeeLoggedIn());
 	}
 	
 	private void createEmployee(String Id) throws OperationNotAllowedException {
-		managementSystem.adminLogin("admi");
+		loginSystem.adminLogin("admi");
 		Employee employee = new Employee(Id);
-		managementSystem.addEmployee(employee);
-		managementSystem.adminLogout();
+		employeeRepository.addEmployee(employee);
+		loginSystem.adminLogout();
 	}
 }

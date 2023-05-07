@@ -20,6 +20,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import softwarehuset.management.app.ManagementSystemApp;
+import softwarehuset.management.app.OperationNotAllowedException;
+
 //import softwarehuset.management.app.OperationNotAllowedException;
 //import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
@@ -72,7 +74,7 @@ public class AdministratorScreen implements Observer {
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				ManagementSystem.adminLogout();
+				ManagementSystem.getLoginSystem().adminLogout();
 				parentWindow.setVisible(true);
 			}
 		});
@@ -86,12 +88,12 @@ public class AdministratorScreen implements Observer {
 		passwordField = new JPasswordField();
 		passwordField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean loginOk = ManagementSystem.adminLogin(passwordField.getText());
-				passwordField.setText("");
-				if (loginOk) {
-					lblEnterPasswordStatus.setText("");
-				} else {
-					lblEnterPasswordStatus.setText("login failed");
+				try {
+					ManagementSystem.getLoginSystem().adminLogin(passwordField.getText());
+					//boolean loginOk = ManagementSystem.getLoginSystem().adminLoggedIn();
+					passwordField.setText("");
+				} catch (OperationNotAllowedException p) {
+				lblEnterPasswordStatus.setText("login failed");	
 				}
 			}
 		});
@@ -105,7 +107,7 @@ public class AdministratorScreen implements Observer {
 		btnLogout = new JButton("Logout");
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ManagementSystem.adminLogout();
+				ManagementSystem.getLoginSystem().adminLogout();
 			}
 		});
 		btnLogout.setEnabled(false);
@@ -131,7 +133,7 @@ public class AdministratorScreen implements Observer {
 	
 		disableButtons();
 		displayLoginStatus();
-		ManagementSystem.addObserver(this);
+		ManagementSystem.getLoginSystem().addObserver(this);
 		createProject = new CreateProject(ManagementSystem, this, parentWindow);
 		RegisterEmployeeScreen = new RegisterEmployeeScreen(ManagementSystem, this, parentWindow);
 	}
@@ -169,7 +171,7 @@ public class AdministratorScreen implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		boolean loggedIn = ManagementSystem.adminLoggedIn();
+		boolean loggedIn = ManagementSystem.getLoginSystem().adminLoggedIn();
 		if (loggedIn) {
 			enableButtons();
 			passwordField.setEnabled(false);
@@ -182,7 +184,7 @@ public class AdministratorScreen implements Observer {
 	}
 
 	protected void displayLoginStatus() {
-		boolean loggedIn = ManagementSystem.adminLoggedIn();
+		boolean loggedIn = ManagementSystem.getLoginSystem().adminLoggedIn();
 		if (loggedIn) {
 			lblLoginStatus.setText("Admin logged in");
 		} else {

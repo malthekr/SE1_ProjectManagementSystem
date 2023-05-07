@@ -35,6 +35,7 @@ public class CreateActivityScreen implements Observer {
 	private MainScreen parentparentWindow; 
 	private EmployeeScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
+	private Project project;
 	private JPanel panelCreateActivityFunctions;
 	
 	private JLabel EnterEmployeeStatus = new JLabel("");
@@ -158,7 +159,7 @@ public class CreateActivityScreen implements Observer {
 				}
 				
 				try {
-					ManagementSystem.createActivity(pjId, descriptionField.getText());
+					management.createActivity(pjId, descriptionField.getText());
 				} catch (OperationNotAllowedException l) {
 					EnterEmployeeStatus.setText(l.getMessage());
 					return;
