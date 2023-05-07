@@ -104,7 +104,11 @@ public class Employee {
     
     //When searching with a key word these employees appear:
     public boolean match(String searchText) {
-		return this.getName().contains(searchText) || this.getId().contains(searchText);
+		if(this.getName() != null){
+			return this.getName().contains(searchText) || this.getId().contains(searchText);
+		} else {
+			return this.getId().contains(searchText);
+		}
 	}
     
     // Display on GUI what comes up when we search for a key word

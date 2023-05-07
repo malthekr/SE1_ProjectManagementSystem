@@ -74,13 +74,14 @@ public class SearchSteps {
 
 	@Then("activities named {string} and {string} appears")
 	public void activitiesNamedAndAppears(String activityName1, String activityName2) throws OperationNotAllowedException {
+//		System.out.print(activities.size()+", ");
 		Project a = managementSystem.getProjectRepository().findProjectByID(activities.get(0).getProjectId());
 		Project b = managementSystem.getProjectRepository().findProjectByID(activities.get(1).getProjectId());
 		
 		Activity c = a.findActivityByDescription(activities.get(0).getDescription());
 		Activity d = b.findActivityByDescription(activities.get(0).getDescription());
 		
-		 assertTrue(c.toString().equals(activities.get(0).toString()) &&  d.toString().equals(activities.get(1).toString()));;
+		assertTrue(c.toString().equals(activities.get(0).toString()) &&  d.toString().equals(activities.get(1).toString()));;
 	}
 	
 	@When("Employee searches for {string} employees")

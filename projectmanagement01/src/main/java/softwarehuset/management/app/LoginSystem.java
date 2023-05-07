@@ -62,9 +62,15 @@ public class LoginSystem extends Observable {
 		return adminLoggedIn;
 	}	
 	
+	public void checkAdminLoggedIn() throws OperationNotAllowedException {
+		if(!adminLoggedIn) {
+			throw new OperationNotAllowedException("Admin login required");
+		}
+	}
+	
 	public void checkEmployeeLoggedIn() throws OperationNotAllowedException {
 		if(!employeeLoggedIn) {
-			throw new OperationNotAllowedException("Employee not logged in");
+			throw new OperationNotAllowedException("Employee login required");
 		}
 	}
 	

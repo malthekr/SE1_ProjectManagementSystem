@@ -24,10 +24,21 @@ import org.junit.jupiter.api.AfterEach;
 
 public class WhiteBoxTest {
 	private ManagementSystemApp managementSystem = new ManagementSystemApp();
+//	private ManagementSystemApp managementSystem;
 	private String errorMessage;
 	private ProjectHelper projectHelper = new ProjectHelper();
 	private LoginSystem loginSystem = managementSystem.getLoginSystem();
 	private EmployeeRepository employeeRepository = managementSystem.getEmployeeRepository();
+	
+//	private ProjectHelper projectHelper;
+//	private LoginSystem loginSystem;
+//	private EmployeeRepository employeeRepository;
+//	
+//	public WhiteBoxTest(ManagementSystemApp managementSystem, ProjectHelper projectHelper) {
+//		this.managementSystem = managementSystem;
+//		loginSystem = managementSystem.getLoginSystem();
+//		employeeRepository = managementSystem.getEmployeeRepository();
+//	}
 	
 	// Remove Employee
 	@Test
@@ -100,6 +111,7 @@ public class WhiteBoxTest {
 		Employee e2 = new Employee("mkr");
 		
 		employeeRepository.addEmployee(e1);
+		employeeRepository.addEmployee(e2);
 		
 		managementSystem.removeEmployee(e2);
 		
@@ -120,19 +132,19 @@ public class WhiteBoxTest {
 		
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		
-//		managementSystem.promoteToPm(p1.getProjectID(), e1.getId());
-		p1.setProjectManager(e1);
-		loginSystem.adminLogout();
-		
+//		p1.promoteEmployee(e1)
+		managementSystem.promoteToPm(p1.getProjectID(), e1.getId());
+		loginSystem.adminLogout();		
 		
 		String input = "mkr";
 	
 		loginSystem.employeeLogin(e1.getId());
 		
 		// Expected Result
-		assertFalse(managementSystem.togglePMClaim(p1, input));
-		assertNotEquals(p1.getProjectManager(), e1);
-	}
+		managementSystem.togglePMClaim(p1, input);
+		
+		assertFalse(p1.hasProjectManager());
+		assertNull(p1.getProjectManager());	}
 	
 	@Test
 	public void testTogglePMClaimInputDataSetB() throws OperationNotAllowedException {
@@ -152,7 +164,6 @@ public class WhiteBoxTest {
 		loginSystem.employeeLogin(e1.getId());
 		
 		// Expected Result
-		
 		assertTrue(managementSystem.togglePMClaim(p1, input));
 		assertEquals(p1.getProjectManager(),e1);
 	}
@@ -172,8 +183,8 @@ public class WhiteBoxTest {
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e2.getId());
 		
-		//managementSystem.promoteToPm(p1.getProjectID(), e2.getId());		// "thr" is project manager
-		p1.setProjectManager(e2);
+		managementSystem.promoteToPm(p1.getProjectID(), e2.getId());		// "thr" is project manager
+//		p1.setProjectManager(e2);
 		loginSystem.adminLogout();
 		
 		String input = "mkr";
@@ -351,7 +362,11 @@ public class WhiteBoxTest {
 		
 		Project p1 = projectHelper.getProject("proj1");
 		managementSystem.createProject(p1);
-		p1.setProjectManager(e1);
+		
+		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
+				
+		managementSystem.promoteToPm(p1.getProjectID(), e1.getId());
+		
 		loginSystem.adminLogout();
 		
 		loginSystem.employeeLogin(e1.getId());
@@ -393,9 +408,11 @@ public class WhiteBoxTest {
 		managementSystem.createProject(p1);
 		
 		// Expected Result
+//		System.out.println(loginSystem.employeeLoggedIn() + " emplyoee");
+//		System.out.println(loginSystem.adminLoggedIn() + " admin");
 		assertTrue(loginSystem.adminLoggedIn());
+//		System.out.println("checkAuth " + managementSystem.checkAuth(p1));
 		assertTrue(managementSystem.checkAuth(p1));
-		
 	}
 	
 	@Test
@@ -411,7 +428,8 @@ public class WhiteBoxTest {
 		Project p1 = projectHelper.getProject("proj1");
 		managementSystem.createProject(p1);
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
-		p1.setProjectManager(e1);
+		managementSystem.promoteToPm(p1.getProjectID(), e1.getId());
+//		p1.setProjectManager(e1);
 		
 		loginSystem.adminLogout();
 		

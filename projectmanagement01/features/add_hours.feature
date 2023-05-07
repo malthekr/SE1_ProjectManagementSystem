@@ -15,7 +15,7 @@ Scenario: Employee adds worked hours to an activity but is not logged in
     And employee with ID "mkr" is logged in
     And employee "mkr" is part of project
     And there is an activity "act1" in project
-    And employee "mkr" is logged out
+    And employee is logged out
     When add 5.99 hours to activity "act1" in project
     Then the error message "Employee login required" is given
     

@@ -19,12 +19,16 @@ public class LoginLogoutSteps {
 	private ManagementSystemApp managementSystem;
 	private String id;
 	private ErrorMessageHolder errorMessageHolder;
-	private LoginSystem loginSystem = managementSystem.getLoginSystem();
-	private EmployeeRepository employeeRepository = managementSystem.getEmployeeRepository();
+	private LoginSystem loginSystem;
+	private EmployeeRepository employeeRepository;
 	
 	public LoginLogoutSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder) {
 		this.managementSystem = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
+		this.loginSystem = managementSystem.getLoginSystem();
+		this.employeeRepository = managementSystem.getEmployeeRepository();
+		
+		loginSystem.setEmployeeRepository(employeeRepository);
 	}
 	
 	@Given("admin is not logged in")
@@ -82,8 +86,8 @@ public class LoginLogoutSteps {
 		assertFalse(loginSystem.adminLogout());
 	}
 	
-	@Given("employee {string} is logged out")
-	public void employeeIsLoggedOut(String Id) {
+	@Given("employee is logged out")
+	public void employeeIsLoggedOut() {
 		loginSystem.employeeLogOut();
 	    assertFalse(loginSystem.employeeLoggedIn());
 	}
