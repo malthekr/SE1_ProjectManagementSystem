@@ -12,8 +12,9 @@ import javax.swing.JTextField;
 import softwarehuset.management.app.Activity;
 import softwarehuset.management.app.ManagementSystemApp;
 import softwarehuset.management.app.OperationNotAllowedException;
+import softwarehuset.management.app.Project;
 
-public class EditActivityScreen {
+public class EditActivityScreen<Employee> {
 	private MainScreen parentparentparentWindow; 
 	private EmployeeScreen parentparentWindow;
 	private FindActivityScreen parentWindow;
@@ -114,8 +115,8 @@ public class EditActivityScreen {
 				try {
 					String input = userInput.getText();
 					ManagementSystem.addEmployeeToActivity(
-						ManagementSystem.FindEmployeeById(input), 
-						ManagementSystem.findProjectById(activity.getProjectId()), 
+						ManagementSystem.getEmployeeRepository().findEmployeeByID(input), 
+						ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId()), 
 						activity.getDescription());
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully added employee to activity");
@@ -131,10 +132,16 @@ public class EditActivityScreen {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String input = userInput.getText();
+					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
+					Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(input);
+					ManagementSystem.checkAuth(project);
+					activity.removeEmployee(employee);
+					/*
 					ManagementSystem.removeEmployeeFromActivity(
-							ManagementSystem.FindEmployeeById(input), 
-							ManagementSystem.findProjectById(activity.getProjectId()), 
+					ManagementSystem.getEmployeeRepository().findEmployeeByID(input),  
+					ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId()), 
 							activity.getDescription());
+					*/
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully removed employee to activity");
 				} catch (OperationNotAllowedException p) {
@@ -147,10 +154,21 @@ public class EditActivityScreen {
 		joinActivity.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ManagementSystem.addEmployeeToActivity(
-						ManagementSystem.currentEmployee(), 
-						ManagementSystem.findProjectById(activity.getProjectId()), 
+					String input = userInput.getText();
+					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
+					Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(input);
+					ManagementSystem.checkAuth(project);
+					activity.addEmployee(employee);
+					/*
+					//activity.removeEmployee(employee);
+					activity.ad(
+						String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
+						Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
+						//ManagementSystem.currentEmployee(), 
+						ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
+						//ManagementSystem.findProjectByID(activity.getProjectId()), 
 						activity.getDescription());
+						*/
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully joined activity");
 				} catch (OperationNotAllowedException p) {
@@ -165,7 +183,7 @@ public class EditActivityScreen {
 				try {
 						ManagementSystem.removeEmployeeFromActivity(
 						ManagementSystem.currentEmployee(), 
-						ManagementSystem.findProjectById(activity.getProjectId()), 
+						ManagementSystem.findProjectByID(activity.getProjectId()), 
 						activity.getDescription());
 						userInput.setText("");
 						EnterErrorMessage.setText("Successfully left activity");

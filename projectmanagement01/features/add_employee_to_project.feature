@@ -39,7 +39,7 @@ Scenario: Employee is added to the project but no one is logged in
     Given there is a project
     And employee with ID "mkr" is logged in
     And there is an employee with ID "thr"
-    And employee "mkr" is logged out
+    And employee is logged out
     When add employee with ID "thr" to project
     Then the error message "Project Manager login required" is given
     

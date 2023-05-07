@@ -31,17 +31,15 @@ Scenario: add employee to activity but not part of project
 	And add employee with ID "mkr" to activity in project
 	Then the error message "Employee not part of project" is given
   
-Scenario: Remove employee to activity
-	Given admin is already logged in
-	And register an employee with Name "niklas" and employee ID "nik"
-	When there is a project with name "Management System"
-	And add project to system
+Scenario: Remove employee from activity
+	Given there is a project
+	And employee with ID "nik" is logged in
 	And "nik" is the project manager
 	And add employee with ID "nik" to activity in project
 	When remove "nik" from activity
 	Then "nik" is removed from activity
 
-Scenario: Remove employee to activity
+Scenario: Remove employee that is not part of activity from activity
 	Given admin is already logged in
 	And register an employee with Name "niklas" and employee ID "nik"
 	And register an employee with Name "malthe" and employee ID "mkr"

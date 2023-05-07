@@ -19,7 +19,6 @@ public class ProjectRepository{
 		if(checkIfProjectExists(project)){
 			throw new OperationNotAllowedException("Project already exists");
 		}
-		
 		projectRepository.add(project);
 	}
 	
@@ -40,10 +39,11 @@ public class ProjectRepository{
 		return project;
 	}
 	
-	// boolean return if employee exists in employee repository
+	// boolean return if project exists in project repository
 	public boolean checkIfProjectExists(Project project) {
-		return projectRepository.stream().anyMatch(e -> project.equals(project));
+		return projectRepository.stream().filter(u -> u.getProjectID() == project.getProjectID()).findAny().orElse(null) != null ? true : false ;
 	}
+	
 	
 	// Search for all projects in project repository by key word
 	public List<Project> searchProject(String searchText) {

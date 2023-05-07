@@ -17,7 +17,7 @@ public class Project {
 	private List<TimeTable> timeTables = new ArrayList<>();
 	private IDServer idServer = new IDServer();
 	private Employee projectManager;
-		
+	private boolean hasProjectManager;	
 	private int projectID;
 	
 	public Project(String projectName, Double expectedHours, Calendar startDate, Calendar endDate) {
@@ -35,7 +35,7 @@ public class Project {
 	
 	// Check if project manager assigned
 	public boolean hasProjectManager() {
-		return projectManager != null ? true : false;
+		return hasProjectManager;
 	}
 	
 	// Get project manager
@@ -125,7 +125,7 @@ public class Project {
 	}
 	
 	// Edit project name
-	public void editProjectName(String projectName) {
+	public void editProjectName(String projectName){
 		this.projectName = projectName;
 	}
 	
@@ -145,29 +145,31 @@ public class Project {
 	}
 	
 	// Set project as active (true)
-	public void beginProject(){
+	public void beginProject() {
 		ongoingProject = true;
 	}
 	
 	// set project as inactive (false)
-	public void closeProject() {
+	public void closeProject()  {
 		ongoingProject = false;
 	}
 	
 	// Override and assign the project manager for this project, even if already assigned
 	public void setProjectManager(Employee employee) { 
 		this.projectManager = employee;
+		this.hasProjectManager = true;
 	}
 	
 	// Remove current project manager
 	public void removeProjectManager(){
 		this.projectManager = null;
+		this.hasProjectManager = false;
 	}
 	
 	// Promote an employee part of this project to project manager
 	// Throws Exception if project manager is already assigned or employee is not part of project
 	public void promoteEmployee(String id) throws OperationNotAllowedException{
-		if(projectManager != null) {
+		if(this.hasProjectManager) {
 			throw new OperationNotAllowedException("Project already has Project Manager");
 		}
 		
@@ -212,23 +214,24 @@ public class Project {
 	
 	// Create an activity for project 
 	// Throws exception if activity is unnamed or if another activity in this project is named the same
-	public void createActivity(String employeeId, String description) throws OperationNotAllowedException {
-		Employee e = findEmployeeById(employeeId);
+	public void createActivity(String description) throws OperationNotAllowedException {
+		//Employee e = findEmployeeById(employeeId);
+		//String employeeId, 
+		//checkAuth(e);
 		
-		checkAuth(e);
-		
-		if(description == "") {
+		if(description.equals("")) {
 			throw new OperationNotAllowedException("Activities must have a name");
 		}
 		
-		Activity a = activities.stream().filter(u -> u.getDescription() == description).findAny().orElse(null);
+		Activity a = activities.stream().filter(u -> u.getDescription().equals(description)).findAny().orElse(null);
+		
 		
 		if(a != null){
 			throw new OperationNotAllowedException("Activities must have a unique name");
 		}
-		
+
 		Activity activity = new Activity(projectID, description, startDate, endDate);
-		addActivity(employeeId, activity);
+		addActivity(activity);
 		//for(Activity a : activities){
 		//	if(a.getDescription().equals(description)) {
 		//		throw new OperationNotAllowedException("Activities must have a unique name");
@@ -237,10 +240,10 @@ public class Project {
 	}
 	
 	// Add activity - Throws Exception if activity is already part of project
-	public void addActivity(String employeeId, Activity activity) throws OperationNotAllowedException { 
-		Employee e = findEmployeeById(employeeId);
+	public void addActivity(Activity activity) throws OperationNotAllowedException { 
+		//Employee e = findEmployeeById(employeeId);
 		
-		checkAuth(e);
+		//checkAuth(e);
 		
 		if(!activities.contains(activity)){
 			activities.add(activity);
@@ -272,12 +275,12 @@ public class Project {
 	
 	// Find a specific activity associated with this project by it's description
 	public Activity findActivityByDescription(String description) throws OperationNotAllowedException {
-		for(Activity activity : activities) {
-			if(activity.getDescription().equals(description)) {
-				return activity;
-			}
+		Activity activity = activities.stream().filter(u -> u.getDescription().equals(description)).findAny().orElse(null);
+	
+		if(activity == null){
+			throw new OperationNotAllowedException("Activity does not exist");
 		}
-		throw new OperationNotAllowedException("Activity does not exist");
+		return activity;
 	}
 	
 	// Add an employee to specific activity associated wit this project
@@ -326,8 +329,10 @@ public class Project {
 	
 	//When searching with a key word these projects appear:
 	public boolean match(String searchText) {
-		if(this.hasProjectManager()) {
+		if(this.hasProjectManager && projectManager.getName() != null) {
 			return projectName.contains(searchText) || projectManager.getName().contains(searchText) || projectManager.getId().contains(searchText.toLowerCase());
+		} else if (this.hasProjectManager) {
+			return projectName.contains(searchText) || projectManager.getId().contains(searchText.toLowerCase());
 		} else {
 			return projectName.contains(searchText);
 		}
@@ -340,12 +345,12 @@ public class Project {
 	}
 	
 	private void checkAuth(Employee e) throws OperationNotAllowedException {
-		if(e.equals(null)){
+		if(e == null){
 			throw new OperationNotAllowedException("Employee is not part of project");
 		}
 		
 		if(hasProjectManager() && !e.equals(projectManager)){
-			throw new OperationNotAllowedException("Project manager action required");
+			throw new OperationNotAllowedException("Project Manager login required");
 		}
 	}
 	

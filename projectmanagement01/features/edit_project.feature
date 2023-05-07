@@ -3,9 +3,9 @@ Feature: Edit project
     Actor: Project Manager and Employee
     
 Scenario: Project manager edits project name
-		Given admin is already logged in
-		And there is a project with name "Management System"
-		When add project to system
+	Given admin is already logged in
+	And there is a project with name "Management System"
+	When add project to system
     Then the project is added to the system with unique project number
     Given employee with ID "mkr" is logged in
     And  admin is logged out
@@ -14,19 +14,19 @@ Scenario: Project manager edits project name
     Then the project name is "Alpha Management System"
     
 Scenario: Employee edits project name
-		Given admin is already logged in
-		And there is a project with name "Management System"
-		When add project to system
+	Given admin is already logged in
+	And there is a project with name "Management System"
+	When add project to system
     Then the project is added to the system with unique project number
-		Given employee with ID "mkr" is logged in
-		And  admin is logged out
+	Given employee with ID "mkr" is logged in
+	And  admin is logged out
     When edits project name to "Alpha Management System"
     Then the error message "Project Manager login required" is given
 
 Scenario: Employee edits project name while not logged in
-		Given admin is already logged in
-		And there is a project with name "Management System"
-		When add project to system
+	Given admin is already logged in
+	And there is a project with name "Management System"
+	When add project to system
     Then the project is added to the system with unique project number
     Given admin is logged out
     And there is an employee with ID "thr"

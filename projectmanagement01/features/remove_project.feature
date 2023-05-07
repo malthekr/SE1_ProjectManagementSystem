@@ -17,7 +17,7 @@ Scenario: Remove project as employee
 	And admin logs out
   	Given employee with ID "mkr" is logged in
     When remove project from system
-	Then the error message "Requirement not met" is given
+	Then the error message "Admin or project manager login required" is given
 	
 Scenario: Remove project as project manager
 	Given admin is already logged in
