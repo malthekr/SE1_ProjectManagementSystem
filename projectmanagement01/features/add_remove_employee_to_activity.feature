@@ -39,7 +39,3 @@ Scenario: Remove employee that is not part of activity from activity
 	And add employee with ID "nik" to activity in project
 	When remove "mkr" from activity
 	Then the error message "Employee not part of project" is given
-
-	
-  
-  

@@ -36,4 +36,3 @@ Scenario: Employee login but not registered
 		And admin is logged out
 		When "mpr" logs in
 		Then the error message "Employee ID does not exist" is given
-
