@@ -1,11 +1,9 @@
 package softwarehuset.management.app;
 
 import java.util.ArrayList;
-import java.util.Observable;
 import java.util.stream.Collectors;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class ManagementSystemApp {
@@ -33,21 +31,26 @@ public class ManagementSystemApp {
 		return employeeRepository;
 	}
 	
-	public PrintDetails getPrintDetails(){
+	public PrintDetails getPrintDetails() {
 		PrintDetails printDetails = new PrintDetails();
 		return printDetails;
 	}
 	
+	// Remove employee from system [Design by contract]
 	public void removeEmployee(Employee employee) throws OperationNotAllowedException{
-		if(!getLoginSystem().adminLoggedIn()){											// 1
-			throw new OperationNotAllowedException("Administrator login required");		// 2
+		assert (employee != null) && (employee.getId() != null) : "Precondition";
+		if(!getLoginSystem().adminLoggedIn()){
+			throw new OperationNotAllowedException("Administrator login required");	
 		}
-		for(Project p : getProjectRepository().getProjectRepository()) {				// 3
-			if(p.getEmployeesAssignedToProject().contains(employee)) {					// 4
-				p.removeEmployee(employee);												// 5
+		for(Project p : getProjectRepository().getProjectRepository()) {				
+			assert (p != null) : "Postcondition";
+			if(p.getEmployeesAssignedToProject().contains(employee)) {					
+				p.removeEmployee(employee);												
+				assert !p.getEmployeesAssignedToProject().contains(employee) : "Postcondition";
 			}
 		}
-		getEmployeeRepository().removeEmployee(employee);								// 6
+		getEmployeeRepository().removeEmployee(employee);								
+		assert !getEmployeeRepository().checkIfEmployeeExists(employee.getId()) : "Postcondition";
 	}
 	
 	// Add project to project repository
@@ -77,7 +80,7 @@ public class ManagementSystemApp {
 		projectRepository.removeProject(project);
 	}
 	
-	// Add employee to project
+	// Add employee to project [Design by contract]
 	public void addEmployeeToProject(int projectId, String employeeId) throws OperationNotAllowedException {
 		assert (employeeId != null) && ((String.valueOf(projectId).length() <= 5) == true) && (projectId > 0 == true) : "Precondition";
 		Employee employee = employeeRepository.findEmployeeByID(employeeId);
@@ -102,7 +105,7 @@ public class ManagementSystemApp {
 		throw new OperationNotAllowedException("Project Manager login required");
 	}
 	
-	// Remove employee from project
+	// Remove employee from project 
 	public void removeEmployeeWithIdFromProject(int ProjectId, String EmployeeId) throws OperationNotAllowedException {
 		Employee employee = employeeRepository.findEmployeeByID(EmployeeId);
 		Project project = projectRepository.findProjectByID(ProjectId);
@@ -166,9 +169,8 @@ public class ManagementSystemApp {
 		}
 	}
 	
-	// Claim/unclaim project manager status
+	// Claim/unclaim project manager status [Design by contract]
 	public boolean togglePMClaim(Project project, String id) throws OperationNotAllowedException {
-		//Project project = projectRepository.findProjectByID(projectId);
 		assert (loginSystem.employeeLoggedIn() == true) && (project != null) && (id != null) && (id.length() <= 4) && (id.length() > 0): "Precondition";
 		Employee employee = employeeRepository.findEmployeeByID(id);							
 		
@@ -269,7 +271,7 @@ public class ManagementSystemApp {
 		Project project2 = new Project("ManagementSystemApp", 200.9, startDate, endDate2);
 		Project project3 = new Project("Venner i Software Eng. 1", 1000.231, startDate, endDate2);
 		Project project4 = new Project("Home Improvement", 20.3, startDate, endDate3);
-		Project project5 = new Project("Activity", 30.6, startDate, endDate3);
+		Project project5 = new Project("Employee wellness program", 30.6, startDate, endDate3);
 		
 		project1.beginProject();
 		project2.beginProject();
@@ -289,7 +291,6 @@ public class ManagementSystemApp {
 			project.beginProject();
 			if(i < 7) {
 				addEmployeeToActivity(employee2, project, "test run");
-				Activity activity = project.getActivites().stream().filter(u -> u.getDescription().equals("test run")).findAny().orElse(null);				
 			}
 		}
 		
@@ -355,7 +356,7 @@ public class ManagementSystemApp {
 		project2.createActivity("Activity");
 		project2.createActivity("Features");
 		project2.createActivity("TimeTable");
-		project2.createActivity("OperationNotAllowedException");
+		project2.createActivity("Repositories");
 		project2.createActivity("Employee");
 		
 		addEmployeeToActivity(employee1, project2, "ManagementSystemApp");
@@ -370,8 +371,8 @@ public class ManagementSystemApp {
 		addEmployeeToActivity(employee1, project2, "Features");
 		addEmployeeToActivity(employee2, project2, "Features");
 		addEmployeeToActivity(employee7, project2, "TimeTable");
-		addEmployeeToActivity(employee2, project2, "OperationNotAllowedException");
-		addEmployeeToActivity(employee3, project2, "OperationNotAllowedException");
+		addEmployeeToActivity(employee2, project2, "Repositories");
+		addEmployeeToActivity(employee3, project2, "Repositories");
 		addEmployeeToActivity(employee1, project2, "Employee");
 		addEmployeeToActivity(employee7, project2, "Employee");
 		
@@ -381,8 +382,8 @@ public class ManagementSystemApp {
 		project4.createActivity("gulv"); 
 		project4.createActivity("flytte");
 		
-		project5.createActivity("i brug");
-		project5.createActivity("kommer snart");
+		project5.createActivity("Develop employee wellness program guidelines");
+		project5.createActivity("implement wellness activities");
 		
 		addEmployeeToActivity(employee1, project3, "Øl");
 		addEmployeeToActivity(employee2, project3, "Øl");
@@ -403,9 +404,9 @@ public class ManagementSystemApp {
 		addEmployeeToActivity(employee5, project4, "flytte");
 		
 		
-		addEmployeeToActivity(employee1, project5, "i brug");
-		addEmployeeToActivity(employee8, project5, "i brug");
-		addEmployeeToActivity(employee1, project5, "kommer snart");
+		addEmployeeToActivity(employee1, project5, "Develop employee wellness program guidelines");
+		addEmployeeToActivity(employee8, project5, "Develop employee wellness program guidelines");
+		addEmployeeToActivity(employee1, project5, "implement wellness activities");
 		
 		loginSystem.adminLogout();
 	}

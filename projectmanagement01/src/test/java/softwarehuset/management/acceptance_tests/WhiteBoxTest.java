@@ -17,10 +17,6 @@ import softwarehuset.management.app.EmployeeRepository;
 import softwarehuset.management.app.OperationNotAllowedException;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-
 
 public class WhiteBoxTest {
 	private ManagementSystemApp managementSystem = new ManagementSystemApp();
@@ -123,7 +119,6 @@ public class WhiteBoxTest {
 		
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		
-		managementSystem.checkAuth(p1);
 		p1.promoteEmployee(e1.getId());
 
 		loginSystem.adminLogout();		
@@ -175,7 +170,6 @@ public class WhiteBoxTest {
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e2.getId());
 		
-		managementSystem.checkAuth(p1);
 		p1.promoteEmployee(e2.getId());										// "thr" is project manager
 		
 		loginSystem.adminLogout();
@@ -358,7 +352,7 @@ public class WhiteBoxTest {
 		
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		
-		managementSystem.checkAuth(p1);
+		//managementSystem.checkAuth(p1);
 		p1.promoteEmployee(e1.getId());	
 		
 		loginSystem.adminLogout();
@@ -421,7 +415,7 @@ public class WhiteBoxTest {
 		managementSystem.createProject(p1);
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		
-		managementSystem.checkAuth(p1);
+		//managementSystem.checkAuth(p1);
 		p1.promoteEmployee(e1.getId());
 		
 		loginSystem.adminLogout();

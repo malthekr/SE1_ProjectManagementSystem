@@ -54,7 +54,7 @@ public class FindActivityScreen implements Observer {
 	public FindActivityScreen(ManagementSystemApp ManagementSystem, EmployeeScreen parentWindow, MainScreen parentparentWindow, EditActivityScreen editActivity) {
 		this.ManagementSystem = ManagementSystem;
 		this.parentparentWindow = parentparentWindow;
-		this.parentWindow = parentWindow;
+		this.parentWindow = parentWindow; 
 		this.editActivity = editActivity;
 		initialize();
 	}
@@ -105,7 +105,7 @@ public class FindActivityScreen implements Observer {
 
 		            } else {
 		            	//lblFindResultDetail.setText(listSearchResult.getSelectedValue().printDetail());
-		            	lblFindResultDetail.setText(ManagementSystem.getPrintDetails().activityDetail(listSearchResult.getSelectedValue()));
+		            	lblFindResultDetail.setText(ManagementSystem.getPrintDetails().activityDetail(listSearchResult.getSelectedValue())); 
 		            }
 		        }
 			}

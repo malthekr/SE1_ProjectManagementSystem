@@ -5,8 +5,7 @@ import java.util.List;
 
 public class PrintDetails {
 	
-	public PrintDetails(){
-		
+	public PrintDetails(){	
 	}
 	
 	// Print project details on GUI
@@ -161,9 +160,7 @@ public class PrintDetails {
             name += ", ";
         }
         return name;
-    }
-	
-	
+    } 
 	
 	// Print employees working on project
 	private String getProjectEmployeesAsString(Project project){
@@ -174,7 +171,7 @@ public class PrintDetails {
 	        name += e.getId();
 	        if (i++ == project.getEmployeesAssignedToProject().size() - 1){ break;} 
 	        name += ", ";
-	        }
-	        return name;
-	    }
+        }
+        return name;
+	   }
 }
