@@ -103,10 +103,16 @@ public class FindProjectScreen implements Observer {
 			public void valueChanged(ListSelectionEvent e) {
 				
 				if(listSearchResult.getSelectedValue() != null){
-					if(ManagementSystem.currentEmployee().equals(listSearchResult.getSelectedValue().getProjectManager()) || !listSearchResult.getSelectedValue().hasProjectManager()) {
+					try{
+					String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
+					Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
+					if(employee.equals(listSearchResult.getSelectedValue().getProjectManager()) || !listSearchResult.getSelectedValue().hasProjectManager()) {
 						getStatusReport.setEnabled(true);
 					} else {
 						getStatusReport.setEnabled(false);
+					}
+					} catch (OperationNotAllowedException p){
+						EnterEmployeeStatus.setText(p.getMessage());
 					}
 				}
 				
@@ -118,7 +124,7 @@ public class FindProjectScreen implements Observer {
 
 		            } else {
 		            	//lblFindResultDetail.setText(listSearchResult.getSelectedValue().printDetail());
-		            	lblFindResultDetail.setText(ManagementSystem.projectDetails(listSearchResult.getSelectedValue()));
+		            	lblFindResultDetail.setText(ManagementSystem.getPrintDetails().projectDetails(listSearchResult.getSelectedValue()));
 		            			//listSearchResult.getSelectedValue().printDetail());
 		            }
 		        }
@@ -229,7 +235,7 @@ public class FindProjectScreen implements Observer {
 	protected void searchProject() {
 		searchResults.clear();
 		
-		ManagementSystem.searchProject(searchField.getText())
+		ManagementSystem.getProjectRepository().searchProject(searchField.getText())
 		.forEach((m) -> {searchResults.addElement(m);});
 	}
 	

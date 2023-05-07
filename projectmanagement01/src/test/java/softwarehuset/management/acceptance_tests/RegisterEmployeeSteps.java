@@ -7,40 +7,42 @@ import org.junit.jupiter.api.Test;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import softwarehuset.management.app.Employee;
-import softwarehuset.management.app.ManagementSystemApp;
-import softwarehuset.management.app.OperationNotAllowedException;
+import softwarehuset.management.app.*;
 import org.junit.Assert.*;
 
 
 public class RegisterEmployeeSteps {
 	private ManagementSystemApp managementSystemApp;
 	private ErrorMessageHolder errorMessageHolder;
+	private LoginSystem loginSystem;
+	private EmployeeRepository employeeRepository;
 	
 	private Employee employee;
 	 
 	public RegisterEmployeeSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder) {
 		this.managementSystemApp = managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
+		this.loginSystem = managementSystem.getLoginSystem();
+		this.employeeRepository = managementSystem.getEmployeeRepository();
 	}
 	
 	@Given("there is no employee with ID {string}")
 	public void thereIsNoEmployeeWithID(String id) throws OperationNotAllowedException {
-		assertFalse(managementSystemApp.containsEmployeeWithId(id));	
+		assertFalse(employeeRepository.checkIfEmployeeExists(id));	
 	}
 	
 	@Given("there is an employee with ID {string}")
 	public void thereIsAnEmployeeWithID(String id) throws OperationNotAllowedException {
 		employee = new Employee(id);
-		if (managementSystemApp.adminLoggedIn()) {
+		if (loginSystem.adminLoggedIn()) {
 			addEmployee(employee);
 		}
 		else {
-			managementSystemApp.adminLogin("admi");
+			loginSystem.adminLogin("admi");
 			addEmployee(employee);
-			managementSystemApp.adminLogout();
+			loginSystem.adminLogout();
 		}
-		assertTrue(managementSystemApp.containsEmployeeWithId(id));	
+		assertTrue(employeeRepository.checkIfEmployeeExists(id));	
 	}
 	
 	@When("register an employee with Name {string} and employee ID {string}")
@@ -51,7 +53,7 @@ public class RegisterEmployeeSteps {
 	
 	@Then("the person is a registered employee of the system with ID {string}")
 	public void thePersonIsAnRegisteredEmployeeOfTheSystemWithId(String id){
-		assertTrue(managementSystemApp.containsEmployeeWithId(id));	
+		assertTrue(employeeRepository.checkIfEmployeeExists(id));	
 	}
 	
 	@Then("the error message {string} is given")
@@ -62,7 +64,7 @@ public class RegisterEmployeeSteps {
 	@When("unregister the employee with ID {string}")
 	public void unregisterTheEmployeeWithID(String id) {
 		try {
-			employee = managementSystemApp.FindEmployeeById(id);
+			employee = employeeRepository.findEmployeeByID(id);
 		    managementSystemApp.removeEmployee(employee);
 	    } catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
@@ -71,12 +73,13 @@ public class RegisterEmployeeSteps {
 	
 	@Then("the employee is unregistered from the system")
 	public void theEmployeeIsUnregisteredFromTheSystem() {
-	    assertFalse(managementSystemApp.containsEmployeeWithId(employee.getId()));	
+	    assertFalse(employeeRepository.checkIfEmployeeExists(employee.getId()));	
+	    
 	}
 
 	private void addEmployee(Employee employee){
 		try {
-			managementSystemApp.addEmployee(employee);
+			employeeRepository.addEmployee(employee);
 		} catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		}

@@ -116,6 +116,6 @@ public class GetProjectStatusReport implements Observer {
 		this.project = project;
 		String borderText = "Status report of " + project.getProjectID() + ", " + project.getProjectName() + ", " + project.getWorkedHours() + "h ~ " + project.getExpectedHours() + "h";
 		panelGetStatusReport.setBorder(BorderFactory.createTitledBorder(borderText));
-		labelStatusReport.setText(managementSystem.getStatReportOfProject(project));
+		labelStatusReport.setText(managementSystem.getPrintDetails().getStatusReport(project));
 	}
 }

@@ -12,12 +12,12 @@ public class Project {
 	
 	private Boolean ongoingProject = false;
 	
-	private List<Employee> employeesAssignedToProject = new ArrayList<>();
+	private List<Employee> employees = new ArrayList<>();
 	private List<Activity> activities = new ArrayList<>();
 	private List<TimeTable> timeTables = new ArrayList<>();
 	private IDServer idServer = new IDServer();
 	private Employee projectManager;
-	
+		
 	private int projectID;
 	
 	public Project(String projectName, Double expectedHours, Calendar startDate, Calendar endDate) {
@@ -65,7 +65,7 @@ public class Project {
 	
 	// Get employees working on this project
 	public List<Employee> getEmployeesAssignedToProject(){
-		return employeesAssignedToProject;
+		return employees;
 	}
 	
 	// Get activities in this project
@@ -85,8 +85,7 @@ public class Project {
 			sumWorkedHours += a.getWorkedHours();
 		}
 		return sumWorkedHours;
-	}
-			
+	}		
 	
 	// Get time tables associated with this project
 	public List<TimeTable> getTimeTables(){
@@ -172,7 +171,7 @@ public class Project {
 			throw new OperationNotAllowedException("Project already has Project Manager");
 		}
 		
-		for(Employee e : employeesAssignedToProject){
+		for(Employee e : employees){
 			if(e.getId().equals(id) == true){
 				setProjectManager(e);
 				return;
@@ -184,8 +183,8 @@ public class Project {
 	
 	// Add employee - Throws Exception if employee is already part of project
 	public void addEmployee(Employee employee) throws OperationNotAllowedException { 
-		if(!employeesAssignedToProject.contains(employee)){
-			employeesAssignedToProject.add(employee);
+		if(!employees.contains(employee)){
+			employees.add(employee);
 		} else {
 			throw new OperationNotAllowedException("Employee already part of project");
 		}
@@ -193,8 +192,8 @@ public class Project {
 	
 	// Remove employee - Throws Exception if employee is not part of project
 	public void removeEmployee(Employee employee) throws OperationNotAllowedException {
-		if(employeesAssignedToProject.contains(employee)){
-			employeesAssignedToProject.remove(employee);
+		if(employees.contains(employee)){
+			employees.remove(employee);
 			if(projectManager == employee) {
 				removeProjectManager();
 			}
@@ -213,22 +212,36 @@ public class Project {
 	
 	// Create an activity for project 
 	// Throws exception if activity is unnamed or if another activity in this project is named the same
-	public void createActivity(String description) throws OperationNotAllowedException {
+	public void createActivity(String employeeId, String description) throws OperationNotAllowedException {
+		Employee e = findEmployeeById(employeeId);
+		
+		checkAuth(e);
+		
 		if(description == "") {
 			throw new OperationNotAllowedException("Activities must have a name");
 		}
-		for(Activity a : activities){
-			if(a.getDescription().equals(description)) {
-				throw new OperationNotAllowedException("Activities must have a unique name");
-			}
+		
+		Activity a = activities.stream().filter(u -> u.getDescription() == description).findAny().orElse(null);
+		
+		if(a != null){
+			throw new OperationNotAllowedException("Activities must have a unique name");
 		}
 		
 		Activity activity = new Activity(projectID, description, startDate, endDate);
-		addActivity(activity);
+		addActivity(employeeId, activity);
+		//for(Activity a : activities){
+		//	if(a.getDescription().equals(description)) {
+		//		throw new OperationNotAllowedException("Activities must have a unique name");
+		//	}
+		//}
 	}
 	
 	// Add activity - Throws Exception if activity is already part of project
-	public void addActivity(Activity activity) throws OperationNotAllowedException { 
+	public void addActivity(String employeeId, Activity activity) throws OperationNotAllowedException { 
+		Employee e = findEmployeeById(employeeId);
+		
+		checkAuth(e);
+		
 		if(!activities.contains(activity)){
 			activities.add(activity);
 		} else {
@@ -237,7 +250,11 @@ public class Project {
 	}
 	
 	// Remove activity - Throws Exception if activity is not part of project
-	public void removeActivity(Activity activity) throws OperationNotAllowedException {
+	public void removeActivity(String employeeId, Activity activity) throws OperationNotAllowedException {
+		Employee e = findEmployeeById(employeeId);
+		
+		checkAuth(e);
+		
 		if(!activities.contains(activity)) {
 			throw new OperationNotAllowedException("activity is not part of project");
 		}
@@ -245,7 +262,7 @@ public class Project {
 	}
 	
 	public boolean findEmployee(Employee employee) throws OperationNotAllowedException {
-		for(Employee e : employeesAssignedToProject){
+		for(Employee e : employees){
 			if(e.equals(employee) == true){
 				return true;
 			}
@@ -295,6 +312,18 @@ public class Project {
 		timeTables.add(timeTable);
 	}
 	
+	// Removes all activities from project
+	public void clean() throws OperationNotAllowedException {
+		for(Activity activity : activities){
+			for(Employee employee : employees){
+				activity.removeEmployee(employee);
+				}
+		}
+		activities.clear();
+		employees.clear();
+	}
+	
+	
 	//When searching with a key word these projects appear:
 	public boolean match(String searchText) {
 		if(this.hasProjectManager()) {
@@ -308,6 +337,20 @@ public class Project {
 	public String toString() {
 		String name = this.getProjectName().isBlank() ? "No project name yet" : this.getProjectName();
 		return "Project ID: " + String.valueOf(getProjectID()) + " - " + name;
+	}
+	
+	private void checkAuth(Employee e) throws OperationNotAllowedException {
+		if(e.equals(null)){
+			throw new OperationNotAllowedException("Employee is not part of project");
+		}
+		
+		if(hasProjectManager() && !e.equals(projectManager)){
+			throw new OperationNotAllowedException("Project manager action required");
+		}
+	}
+	
+	private Employee findEmployeeById(String id){
+		return employees.stream().filter(u -> u.getId().equals(id)).findAny().orElse(null);
 	}
 	
 	// Private method to get time tables for a certain employee
@@ -333,4 +376,5 @@ public class Project {
 		}
 		return timeTablesWithEmployee;
 	}
+	
 }

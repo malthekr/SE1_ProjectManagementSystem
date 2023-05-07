@@ -111,7 +111,7 @@ public class RegisterEmployeeScreen implements Observer {
 					return;
 				}
 				
-				if(checkIfEmployeeExists(idField.getText())) {
+				if(ManagementSystem.getEmployeeRepository().checkIfEmployeeExists(idField.getText())) {
 					EnterEmployeeStatus.setText("Employee id \"" + idField.getText() +"\" is already in system");
 					return;
 				}
@@ -149,7 +149,7 @@ public class RegisterEmployeeScreen implements Observer {
 					return;
 				}
 				
-				if(!checkIfEmployeeExists(idField.getText())) {
+				if(!ManagementSystem.getEmployeeRepository().checkIfEmployeeExists(idField.getText())) {
 					EnterEmployeeStatus.setText("Employee id \"" + idField.getText() +"\" is not in the system");
 					return;
 				}
@@ -183,7 +183,7 @@ public class RegisterEmployeeScreen implements Observer {
 		btnBack.setBounds(21, 28, 74, 29);
 		panelRegisterEmployeeFunctions.add(btnBack);
 		
-		ManagementSystem.addObserver(this);
+		//ManagementSystem.addObserver(this);
 	}
 	
 	public void setVisible(boolean visible) {
@@ -201,17 +201,18 @@ public class RegisterEmployeeScreen implements Observer {
 		idField.setText("");
 	}
 	
-	private boolean checkIfEmployeeExists(String id) {
-		return ManagementSystem.containsEmployeeWithId(id);
+	private boolean checkIfEmployeeExists(String id) throws OperationNotAllowedException {
+		Employee e = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
+		return e == null ? true : false;
 	}
 	
 	private void addEmployee(String name, String id) throws OperationNotAllowedException {
 		Employee employee = new Employee(name, id);
-		ManagementSystem.addEmployee(employee);
+		ManagementSystem.getEmployeeRepository().addEmployee(employee);
 	}
 	
 	private void removeEmployee(String id) throws OperationNotAllowedException {
-		Employee employee = ManagementSystem.FindEmployeeById(id);
-		ManagementSystem.removeEmployee(employee);
+		Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
+		ManagementSystem.getEmployeeRepository().removeEmployee(employee);
 	}
 }
