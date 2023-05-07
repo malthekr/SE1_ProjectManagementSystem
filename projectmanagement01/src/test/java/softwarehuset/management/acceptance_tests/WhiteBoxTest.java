@@ -24,21 +24,12 @@ import org.junit.jupiter.api.AfterEach;
 
 public class WhiteBoxTest {
 	private ManagementSystemApp managementSystem = new ManagementSystemApp();
-//	private ManagementSystemApp managementSystem;
+
 	private String errorMessage;
 	private ProjectHelper projectHelper = new ProjectHelper();
 	private LoginSystem loginSystem = managementSystem.getLoginSystem();
 	private EmployeeRepository employeeRepository = managementSystem.getEmployeeRepository();
 	
-//	private ProjectHelper projectHelper;
-//	private LoginSystem loginSystem;
-//	private EmployeeRepository employeeRepository;
-//	
-//	public WhiteBoxTest(ManagementSystemApp managementSystem, ProjectHelper projectHelper) {
-//		this.managementSystem = managementSystem;
-//		loginSystem = managementSystem.getLoginSystem();
-//		employeeRepository = managementSystem.getEmployeeRepository();
-//	}
 	
 	// Remove Employee
 	@Test
@@ -132,8 +123,9 @@ public class WhiteBoxTest {
 		
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		
-//		p1.promoteEmployee(e1)
-		managementSystem.promoteToPm(p1.getProjectID(), e1.getId());
+		managementSystem.checkAuth(p1);
+		p1.promoteEmployee(e1.getId());
+
 		loginSystem.adminLogout();		
 		
 		String input = "mkr";
@@ -183,8 +175,9 @@ public class WhiteBoxTest {
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e2.getId());
 		
-		managementSystem.promoteToPm(p1.getProjectID(), e2.getId());		// "thr" is project manager
-//		p1.setProjectManager(e2);
+		managementSystem.checkAuth(p1);
+		p1.promoteEmployee(e2.getId());										// "thr" is project manager
+		
 		loginSystem.adminLogout();
 		
 		String input = "mkr";
@@ -364,8 +357,9 @@ public class WhiteBoxTest {
 		managementSystem.createProject(p1);
 		
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
-				
-		managementSystem.promoteToPm(p1.getProjectID(), e1.getId());
+		
+		managementSystem.checkAuth(p1);
+		p1.promoteEmployee(e1.getId());	
 		
 		loginSystem.adminLogout();
 		
@@ -408,10 +402,8 @@ public class WhiteBoxTest {
 		managementSystem.createProject(p1);
 		
 		// Expected Result
-//		System.out.println(loginSystem.employeeLoggedIn() + " emplyoee");
-//		System.out.println(loginSystem.adminLoggedIn() + " admin");
 		assertTrue(loginSystem.adminLoggedIn());
-//		System.out.println("checkAuth " + managementSystem.checkAuth(p1));
+
 		assertTrue(managementSystem.checkAuth(p1));
 	}
 	
@@ -428,8 +420,9 @@ public class WhiteBoxTest {
 		Project p1 = projectHelper.getProject("proj1");
 		managementSystem.createProject(p1);
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
-		managementSystem.promoteToPm(p1.getProjectID(), e1.getId());
-//		p1.setProjectManager(e1);
+		
+		managementSystem.checkAuth(p1);
+		p1.promoteEmployee(e1.getId());
 		
 		loginSystem.adminLogout();
 		

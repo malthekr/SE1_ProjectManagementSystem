@@ -256,11 +256,11 @@ public class CreateProject implements Observer {
 		Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
 	
 		if(project.findEmployee(employee)){
-			ManagementSystem.promoteToPm(projectId, id);
+			project.promoteEmployee(id);
 			return;
 		} 
 		
 		ManagementSystem.addEmployeeToProject(projectId, id);
-		ManagementSystem.promoteToPm(projectId, id);
+		project.promoteEmployee(id);
 	}
 }

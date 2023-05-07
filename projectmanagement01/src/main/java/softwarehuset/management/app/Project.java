@@ -109,10 +109,11 @@ public class Project {
 		return employeeTimeTables;
 	}
 		
-	// Get time tables at specific date associated with an employee working on this project
-	public TimeTable getTimeTablesByDateAndEmployee(Employee employee, Calendar date) {
+	// 
+	public List<TimeTable> getNumberOfTimeTablesByDateAndEmployee(Employee employee, Calendar date) {
 		List<TimeTable> employeeTimeTables = timeTables.stream().filter(u -> u.getEmployee().equals(employee)).collect(Collectors.toList());
-		TimeTable finalTimeTable = employeeTimeTables.stream().filter(u -> u.getDate().equals(date)).findAny().orElse(null);
+		List<TimeTable> finalTimeTable = employeeTimeTables.stream().filter(u -> u.getDate().get(Calendar.WEEK_OF_YEAR) == date.get(Calendar.WEEK_OF_YEAR)).collect(Collectors.toList());
+		
 		return finalTimeTable;
 	}
 	
@@ -215,9 +216,6 @@ public class Project {
 	// Create an activity for project 
 	// Throws exception if activity is unnamed or if another activity in this project is named the same
 	public void createActivity(String description) throws OperationNotAllowedException {
-		//Employee e = findEmployeeById(employeeId);
-		//String employeeId, 
-		//checkAuth(e);
 		
 		if(description.equals("")) {
 			throw new OperationNotAllowedException("Activities must have a name");
@@ -232,18 +230,10 @@ public class Project {
 
 		Activity activity = new Activity(projectID, description, startDate, endDate);
 		addActivity(activity);
-		//for(Activity a : activities){
-		//	if(a.getDescription().equals(description)) {
-		//		throw new OperationNotAllowedException("Activities must have a unique name");
-		//	}
-		//}
 	}
 	
 	// Add activity - Throws Exception if activity is already part of project
 	public void addActivity(Activity activity) throws OperationNotAllowedException { 
-		//Employee e = findEmployeeById(employeeId);
-		
-		//checkAuth(e);
 		
 		if(!activities.contains(activity)){
 			activities.add(activity);
@@ -297,15 +287,6 @@ public class Project {
 		if(findEmployee(employee)){
 			a.removeEmployee(employee);
 		}
-	}
-	
-	// Edit a specific time table that an employee has made in an activity with this project
-	public void editTimeTable(Activity activity, Employee employee, Calendar date, double workHours) {
-		TimeTable timeTable = getTimeTablesByDateAndEmployee(employee, date);
-		timeTable.editActivity(activity);
-		timeTable.editEmployee(employee);
-		timeTable.editDate(date);
-		timeTable.editHours(workHours);
 	}
 	
 	// Add worked hours to an activity
