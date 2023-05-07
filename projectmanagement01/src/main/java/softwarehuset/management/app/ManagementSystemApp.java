@@ -286,9 +286,7 @@ public class ManagementSystemApp {
 			project.beginProject();
 			if(i < 7) {
 				addEmployeeToActivity(employee2, project, "test run");
-				Activity activity = project.getActivites().stream().filter(u -> u.getDescription().equals("test run")).findAny().orElse(null);
-//				addHourToActivity(activity, 1.0);
-				
+				Activity activity = project.getActivites().stream().filter(u -> u.getDescription().equals("test run")).findAny().orElse(null);				
 			}
 		}
 		

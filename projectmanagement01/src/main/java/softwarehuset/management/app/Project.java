@@ -2,6 +2,7 @@ package softwarehuset.management.app;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +18,7 @@ public class Project {
 	private List<TimeTable> timeTables = new ArrayList<>();
 	private IDServer idServer = new IDServer();
 	private Employee projectManager;
-	private boolean hasProjectManager;	
+	private boolean hasProjectManager;
 	private int projectID;
 	
 	public Project(String projectName, Double expectedHours, Calendar startDate, Calendar endDate) {
@@ -26,7 +27,19 @@ public class Project {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.projectID = idServer.generateID(startDate);
+		addBaseActivities();
 	} 
+	
+	private void addBaseActivities() {
+		Calendar dates = new GregorianCalendar();
+		
+		Activity vacation = new Activity(this.getProjectID(), "Vacation", dates, dates);
+		Activity sickdays = new Activity(this.getProjectID(), "Sickdays", dates, dates);
+		Activity courses = new Activity(this.getProjectID(), "Courses", dates, dates);
+		activities.add(vacation);
+		activities.add(sickdays);
+		activities.add(courses);
+	}
 	
 	// Get project name
 	public String getProjectName() {

@@ -186,7 +186,6 @@ public class EditActivityScreen<Employee> {
 		leaveActivity.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					
 					String input = userInput.getText();
 					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
 					String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
@@ -199,7 +198,7 @@ public class EditActivityScreen<Employee> {
 						activity.getDescription());
 					
 					
-					activity.removeEmployee(ManagementSystem.getEmployeeRepository().findEmployeeByID(id));
+					//activity.removeEmployee(ManagementSystem.getEmployeeRepository().findEmployeeByID(id));
 					
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully left activity");
