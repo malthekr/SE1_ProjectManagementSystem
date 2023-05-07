@@ -116,10 +116,16 @@ public class EditActivityScreen<Employee> {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String input = userInput.getText();
+					
+					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
+					
+					ManagementSystem.checkAuth(project);
+					
 					ManagementSystem.addEmployeeToActivity(
-						ManagementSystem.getEmployeeRepository().findEmployeeByID(input), 
-						ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId()), 
+						ManagementSystem.getEmployeeRepository().findEmployeeByID(input),
+						project,
 						activity.getDescription());
+					
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully added employee to activity");
 				} catch (OperationNotAllowedException p) {
@@ -137,7 +143,11 @@ public class EditActivityScreen<Employee> {
 					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
 					
 					ManagementSystem.checkAuth(project);
-					activity.removeEmployee(ManagementSystem.getEmployeeRepository().findEmployeeByID(input));
+					
+					ManagementSystem.removeEmployeeFromActivity(
+						ManagementSystem.getEmployeeRepository().findEmployeeByID(input),
+						project,
+						activity.getDescription());
 					
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully removed employee to activity");
@@ -154,8 +164,15 @@ public class EditActivityScreen<Employee> {
 					String input = userInput.getText();
 					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
 					String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
+					
 					ManagementSystem.checkAuth(project);
-					activity.addEmployee(ManagementSystem.getEmployeeRepository().findEmployeeByID(id));
+					
+					ManagementSystem.addEmployeeToActivity(
+						 ManagementSystem.getEmployeeRepository().findEmployeeByID(id),
+						 project,
+						 activity.getDescription()
+					);
+					
 					
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully joined activity");
@@ -169,13 +186,19 @@ public class EditActivityScreen<Employee> {
 		leaveActivity.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					
 					String input = userInput.getText();
 					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
 					String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
-					//Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
+					
 					ManagementSystem.checkAuth(project);
-					activity.removeEmployee(ManagementSystem.getEmployeeRepository().findEmployeeByID(id));
+					
+					ManagementSystem.removeEmployeeFromActivity(
+						ManagementSystem.getEmployeeRepository().findEmployeeByID(id),
+						project,
+						activity.getDescription());
+					
+					
+					//activity.removeEmployee(ManagementSystem.getEmployeeRepository().findEmployeeByID(id));
 					
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully left activity");
@@ -193,9 +216,19 @@ public class EditActivityScreen<Employee> {
 					EnterErrorMessage.setText("Please enter a number");
 					return;
 				}
-				activity.addWorkedHours(stringToDouble(input));
+				
+				try{
+				
+				ManagementSystem.addHourToActivity(activity, stringToDouble(input));
+				
+				
 				userInput.setText("");
 				EnterErrorMessage.setText("Successfully changed worked hours");
+				} catch (OperationNotAllowedException p) {
+					EnterErrorMessage.setText(p.getMessage());
+					return;
+				}
+				
 			}
 		});
 		
@@ -211,9 +244,11 @@ public class EditActivityScreen<Employee> {
 				
 				try {
 					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
+					
 					ManagementSystem.checkAuth(project);
-					//ManagementSystem.editExpectedHoursActivity(activity, stringToDouble(input));
+					
 					activity.setExpectedHours(stringToDouble(input));
+			
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully changed expected hours"); 
 				} catch (OperationNotAllowedException p) {
@@ -234,8 +269,11 @@ public class EditActivityScreen<Employee> {
 						return;
 					}
 					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
+					
 					ManagementSystem.checkAuth(project);
+					
 					activity.setDescrption(input);
+					
 					EnterErrorMessage.setText("Successfully changed description for activity"); 
 				}  catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
@@ -261,11 +299,7 @@ public class EditActivityScreen<Employee> {
 				int dd = Integer.parseInt(date[0]);
 				int mm = Integer.parseInt(date[1]) - 1 ;
 				int yyyy = Integer.parseInt(date[2]);
-				
-//					ManagementSystem.UpdateStartDate(
-//							dd, mm, yyyy, 
-//							activity.getProjectId(), 
-//							activity.getDescription());
+
 				Calendar cal = createDate(dd,mm,yyyy);
 				activity.setStartDate(cal);
 				
@@ -294,11 +328,6 @@ public class EditActivityScreen<Employee> {
 				int mm = Integer.parseInt(date[1]) - 1;
 				int yyyy = Integer.parseInt(date[2]);
 				
-//					ManagementSystem.UpdateEndDate(
-//							dd, mm, yyyy, 
-//							activity.getProjectId(), 
-//							activity.getDescription());
-				
 				Calendar cal = createDate(dd,mm,yyyy);
 				activity.setEndDate(cal);
 				
@@ -309,23 +338,6 @@ public class EditActivityScreen<Employee> {
 				}
 			}
 		});
-		
-		
-		
-/*		// View hours report (USE LATER)
-		editStartDate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					String input = userInput.getText();
-					ManagementSystem.getStatus(activity);
-					
-					EnterErrorMessage.setText("Successfully changed description for activity"); 
-				}  catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
-					return;
-				}
-			}
-		});*/
 	}
 		
 	public void setVisible(boolean visible) {

@@ -14,10 +14,12 @@ public class PrintDetails {
 		String name = project.getProjectName().isBlank() ? "No project name yet" : project.getProjectName();
 		String pmid = !project.hasProjectManager() ? "No PM assigned yet" : project.getProjectManager().getId();
 		String id = project.getEmployeesAssignedToProject() == null ? "No employees assigned yet" : getProjectEmployeesAsString(project);
+		
 		//Format start date as: Week/Year.
 		int week = project.getStartDate().get(Calendar.WEEK_OF_YEAR);
 		int year =  project.getStartDate().get(Calendar.YEAR);
 		String start = week + "/" + year;
+		
 		//Format end date as: Week/Year
 		int week1 = project.getEndDate().get(Calendar.WEEK_OF_YEAR);
 		int year1 =  project.getEndDate().get(Calendar.YEAR);
