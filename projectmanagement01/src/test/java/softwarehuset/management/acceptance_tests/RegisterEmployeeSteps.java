@@ -46,9 +46,15 @@ public class RegisterEmployeeSteps {
 	}
 	
 	@When("register an employee with Name {string} and employee ID {string}")
-	public void registerAnEmployeeWithNameAndEmployeeID(String name, String id) throws OperationNotAllowedException{
-		employee = new Employee(name, id);
-		addEmployee(employee);
+	public void registerAnEmployeeWithNameAndEmployeeID(String name, String id) {
+		try {
+			loginSystem.checkAdminLoggedIn();
+			employee = new Employee(name, id);
+			addEmployee(employee);
+		} catch (OperationNotAllowedException e) {
+			errorMessageHolder.setErrorMessage(e.getMessage());
+		}
+		
 	}
 	
 	@Then("the person is a registered employee of the system with ID {string}")

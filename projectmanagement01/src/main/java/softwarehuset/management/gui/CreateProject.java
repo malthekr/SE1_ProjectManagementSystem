@@ -139,14 +139,17 @@ public class CreateProject implements Observer {
 				}
 				
 				try {
+					ManagementSystem.getLoginSystem().checkAdminLoggedIn();
 					Project project = createProject();
 					
 					if(employee != null) {
-						addEmployee(project.getProjectID(), employee.getId());
+						project.addEmployee(employee);
+						//addEmployee(project.getProjectID(), employee.getId());
 					}
 					
 					if(PM != null) {
-						addPM(project.getProjectID(), PM.getId());
+						project.promoteEmployee(PM.getId());
+						//addPM(project.getProjectID(), PM.getId());
 					}
 					
 				} catch (OperationNotAllowedException p) {
@@ -175,7 +178,7 @@ public class CreateProject implements Observer {
 		btnBack.setBounds(21, 28, 74, 29);
 		panelCreateFunctions.add(btnBack);
 		
-		ManagementSystem.addObserver(this);
+		//ManagementSystem.addObserver(this);
 	}
 	
 	public void setVisible(boolean visible) {
@@ -227,7 +230,7 @@ public class CreateProject implements Observer {
 	
 	private Employee findEmp(String str) {
 	  try {
-		return ManagementSystem.FindEmployeeById(str);
+		return ManagementSystem.getEmployeeRepository().findEmployeeByID(str);
 	} catch (OperationNotAllowedException e) {
 		return null;
 	}
@@ -249,7 +252,10 @@ public class CreateProject implements Observer {
 	}
 	
 	private void addPM(int projectId, String id) throws OperationNotAllowedException {
-		if(ManagementSystem.checkIfEmployeeIsPartOfProject(projectId, id)){
+		Project project = ManagementSystem.getProjectRepository().findProjectByID(projectId);
+		Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
+	
+		if(project.findEmployee(employee)){
 			ManagementSystem.promoteToPm(projectId, id);
 			return;
 		} 

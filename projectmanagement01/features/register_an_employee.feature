@@ -17,7 +17,7 @@ Scenario: Register an employee with an already existing employee ID
 Scenario: Register employee with no administrator logged in
 	Given admin is not logged in
 	When register an employee with Name "Malthe K. Reuber" and employee ID "mkr"
-	Then the error message "Administrator login required" is given
+	Then the error message "Admin login required" is given
 	
 Scenario: Register employee with too long ID
 	Given admin is already logged in

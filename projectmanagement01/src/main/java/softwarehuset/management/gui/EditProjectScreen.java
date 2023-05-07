@@ -2,6 +2,8 @@ package softwarehuset.management.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Observable;
 
 import javax.swing.BorderFactory;
@@ -12,6 +14,7 @@ import javax.swing.JTextField;
 
 import softwarehuset.management.app.Activity;
 import softwarehuset.management.app.ManagementSystemApp;
+import softwarehuset.management.app.Employee;
 import softwarehuset.management.app.OperationNotAllowedException;
 import softwarehuset.management.app.Project;
 
@@ -141,7 +144,7 @@ public class EditProjectScreen {
 				try {
 					String input = userInput.getText();
 					
-					if(ManagementSystem.togglePMClaim(project, ManagementSystem.currentEmployee().getId())){
+					if(ManagementSystem.togglePMClaim(project, ManagementSystem.getLoginSystem().getCurrentLoggedID())){
 						claimPM.setText("Unclaim project manager");
 						EnterErrorMessage.setText("Successfully claimed project manager");
 					} else {
@@ -193,7 +196,7 @@ public class EditProjectScreen {
 				try {
 					ManagementSystem.addEmployeeToProject(
 						project.getProjectID(), 
-						ManagementSystem.currentEmployee().getId());
+						ManagementSystem.getLoginSystem().getCurrentLoggedID());
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully joined project");
 				} catch (OperationNotAllowedException p) {
@@ -208,7 +211,7 @@ public class EditProjectScreen {
 				try {
 					ManagementSystem.removeEmployeeWithIdFromProject(
 						project.getProjectID(),
-						ManagementSystem.currentEmployee().getId());
+						ManagementSystem.getLoginSystem().getCurrentLoggedID());
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully left project");
 				} catch (OperationNotAllowedException p) {
@@ -226,7 +229,8 @@ public class EditProjectScreen {
 					return;
 				}
 				try {
-					ManagementSystem.UpdateExpectedHours(project.getProjectID(), stringToDouble(input));
+					Project project = 
+					ManagementSystem.updateExpectedHours(project.getProjectID(), stringToDouble(input));
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully changed expected hours"); 
 				} catch (OperationNotAllowedException p) {
@@ -294,7 +298,11 @@ public class EditProjectScreen {
 					int mm = Integer.parseInt(date[1]) - 1;
 					int yyyy = Integer.parseInt(date[2]);
 					
-					ManagementSystem.UpdateEndDateProject(dd, mm, yyyy,project.getProjectID());
+//					Project project = ManagementSystem.getProjectRepository().findProjectByID(project.getProjectID());
+					Calendar cal = createDate(dd,mm,yyyy);
+					project.editEndDate(cal);
+					
+					//ManagementSystem.updateEndDateProject(dd, mm, yyyy,project.getProjectID());
 					
 					EnterErrorMessage.setText("Successfully changed end date for project"); 
 				}  catch (OperationNotAllowedException p) {
@@ -303,8 +311,6 @@ public class EditProjectScreen {
 				}
 			}
 		});
-		
-		
 		
 /*		// View hours report (USE LATER)
 		editStartDate.addActionListener(new ActionListener() {
@@ -372,8 +378,16 @@ public class EditProjectScreen {
 	
 	public void setProject(Project project) {
 		if(project != null) {
-			String name = !ManagementSystem.currentEmployee().equals(project.getProjectManager()) ? "Claim project manager" : "Unclaim project manager";
-			claimPM.setText(name);
+			String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
+			Employee employee;
+			try {
+				employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
+				String name = !employee.equals(project.getProjectManager()) ? "Claim project manager" : "Unclaim project manager";
+				claimPM.setText(name);
+			} catch (OperationNotAllowedException p) {
+				EnterErrorMessage.setText(p.getMessage());
+			}
+			
 		}
 		this.project = project;
 	}
@@ -394,5 +408,13 @@ public class EditProjectScreen {
 		} catch (Exception e) {
 			return 0;
 		}
+	}
+	
+	private Calendar createDate(int dd, int mm, int yyyy) {
+		Calendar calendar = new GregorianCalendar();;
+		calendar.set(Calendar.YEAR, yyyy);
+		calendar.set(Calendar.MONTH, mm);
+		calendar.set(Calendar.DAY_OF_MONTH, dd);
+		return calendar;
 	}
 }

@@ -115,10 +115,14 @@ public class Activity {
 			boolean b = false;
 			
 			for(Employee a : getEmployees()) { 
-				b = a.getId().equals(searchText) || a.getName().equals(searchText) ? true : b;
+                if(a.getName() != null){
+					b = a.getId().contains(searchText) || a.getName().contains(searchText) ? true : b;
+				} else {
+                    b = a.getId().contains(searchText) ? true : b;
+                }
 			}
 			
-			return String.valueOf(getProjectId()).contains(searchText) || description.contains(searchText) || getEmployees().contains(searchText) || b;
+			return String.valueOf(getProjectId()).contains(searchText) || description.contains(searchText) || b;
 		} else {
 			return description.contains(searchText);
 		}

@@ -19,7 +19,7 @@ Scenario: Creates project but admin is logged out
     And create project
     And admin is logged out
     When add project to system
-    Then the error message "Administrator login required" is given
+    Then the error message "Admin login required" is given
     
 Scenario: Create multiple projects
     Given admin is already logged in

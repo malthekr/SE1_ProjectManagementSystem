@@ -29,7 +29,7 @@ Scenario: Regular employee logged out and tries to edit expected hours of projec
     Given there is a project
     And employee with ID "mkr" is logged in
     And add employee with ID "mkr" to project
-    And employee "mkr" is logged out
+    And employee is logged out
     When set expected project hours to 100.0
     Then the error message "Project Manager login required" is given
  

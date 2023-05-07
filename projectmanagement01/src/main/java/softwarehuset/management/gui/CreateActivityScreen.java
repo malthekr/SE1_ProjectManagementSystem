@@ -159,7 +159,10 @@ public class CreateActivityScreen implements Observer {
 				}
 				
 				try {
-					management.createActivity(pjId, descriptionField.getText());
+					Project project = ManagementSystem.getProjectRepository().findProjectByID(pjId);
+					ManagementSystem.checkAuth(project);
+					project.createActivity(descriptionField.getText());
+					
 				} catch (OperationNotAllowedException l) {
 					EnterEmployeeStatus.setText(l.getMessage());
 					return;
@@ -167,10 +170,14 @@ public class CreateActivityScreen implements Observer {
 				
 				try {
 					if(!idField.getText().equals("")) {
-						ManagementSystem.addEmployeeToActivity(ManagementSystem.FindEmployeeById(idField.getText()), ManagementSystem.findProjectById(pjId), descriptionField.getText());
+						Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(idField.getText());
+						Project project = ManagementSystem.getProjectRepository().findProjectByID(pjId);
+						
+						ManagementSystem.addEmployeeToActivity(employee, project, descriptionField.getText());
 					}
-					ManagementSystem.findActivityByDescription(pjId, descriptionField.getText()).setExpectedHours(numberDouble(expField.getText()));
-					ManagementSystem.findActivityByDescription(pjId, descriptionField.getText()).addWorkedHours(numberDouble(workedField.getText()));
+					Project project = ManagementSystem.getProjectRepository().findProjectByID(pjId);
+					project.findActivityByDescription(descriptionField.getText()).setExpectedHours(numberDouble(expField.getText()));
+					project.findActivityByDescription(descriptionField.getText()).addWorkedHours(numberDouble(workedField.getText()));
 				} catch (OperationNotAllowedException p) {
 					EnterEmployeeStatus.setText(p.getMessage());
 					return;
@@ -197,7 +204,7 @@ public class CreateActivityScreen implements Observer {
 		btnBack.setBounds(21, 28, 74, 29);
 		panelCreateActivityFunctions.add(btnBack);
 		
-		ManagementSystem.addObserver(this);
+		//ManagementSystem.addObserver(this);
 	}
 	
 	public void setVisible(boolean visible) {
@@ -255,16 +262,7 @@ public class CreateActivityScreen implements Observer {
 	}
 	
 	private boolean checkIfEmployeeExists(String id) {
-		return ManagementSystem.containsEmployeeWithId(id);
-	}
-	
-	private void addEmployee(String name, String id) throws OperationNotAllowedException {
-		Employee employee = new Employee(name, id);
-		ManagementSystem.addEmployee(employee);
-	}
-	
-	private void removeEmployee(String id) throws OperationNotAllowedException {
-		Employee employee = ManagementSystem.FindEmployeeById(id);
-		ManagementSystem.removeEmployee(employee);
+		boolean b = ManagementSystem.getEmployeeRepository().checkIfEmployeeExists(id);
+		return b;
 	}
 }

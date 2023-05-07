@@ -18,8 +18,13 @@ public class EmployeeRepository {
 	// Add an employee to repository
 	public void addEmployee(Employee employee) throws OperationNotAllowedException {
 		if(checkIfEmployeeExists(employee.getId())) {
-			throw new OperationNotAllowedException("Employee ID already exists");
+			throw new OperationNotAllowedException("Employee ID already taken");
 		} 
+		
+		if(employee.getId().length() > 4 || employee.getId().length() < 1){
+			throw new OperationNotAllowedException("Employee ID is too long");
+		}
+		
 		employeeRepository.add(employee);
 	}
 	
@@ -41,7 +46,7 @@ public class EmployeeRepository {
 		Employee employee = employeeRepository.stream().filter(u -> u.getId().equals(id)).findAny().orElse(null);
 		
 		if(employee == null){
-			throw new OperationNotAllowedException("Employee does not exist");
+			throw new OperationNotAllowedException("Employee ID does not exist");
 		}
 		
 		return employee;
