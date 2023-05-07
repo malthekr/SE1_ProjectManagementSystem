@@ -581,7 +581,7 @@ public class ProjectSteps {
 	*/
 	@When("request employee activity of {string}")
 	public List<Activity> requestEmployeeActivityOfAnotherEmployee(String id) {	
-		try {
+		try { 
 			Employee employee = employeeRepository.findEmployeeByID(loginSystem.getCurrentLoggedID());
 			Employee anotherEmployee = employeeRepository.findEmployeeByID(id);
 			assertNotEquals(employee, anotherEmployee);

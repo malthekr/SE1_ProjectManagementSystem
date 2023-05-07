@@ -194,9 +194,12 @@ public class ManagementSystemApp {
 	public List<Activity> searchActivity(String searchText) {
 		List<Activity> activites =  new ArrayList<>();
 	
-		for(Project p : projectRepository.getProjectRepository()) {			
+		for(Project p : projectRepository.getProjectRepository()) {	
+			
+			String name = p.getProjectName() == null ? 	"" : p.getProjectName().toLowerCase();	
+			
 			activites.addAll(p.getActivites().stream()
-			.filter(b -> b.match(searchText))
+			.filter(b -> b.match(searchText) || searchText.toLowerCase().contains(name))
 			.collect(Collectors.toList()));
 		}
 		return activites;

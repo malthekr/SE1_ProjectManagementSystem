@@ -48,7 +48,7 @@ public class Employee {
     public List<Activity> getActivities(){
 		List<Activity> a = new ArrayList<>();
 		for(Project key : map.keySet()){
-			a.addAll(map.get(key));
+			a.addAll(map.get(key)); 
 		}
     	return a;
     }

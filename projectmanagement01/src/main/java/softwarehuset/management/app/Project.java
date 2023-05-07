@@ -323,12 +323,14 @@ public class Project {
 	
 	//When searching with a key word these projects appear:
 	public boolean match(String searchText) {
+		String SearchText = searchText.toLowerCase();
+		
 		if(this.hasProjectManager && projectManager.getName() != null) {
-			return projectName.contains(searchText) || projectManager.getName().contains(searchText) || projectManager.getId().contains(searchText.toLowerCase());
+			return projectName.toLowerCase().contains(SearchText) || projectManager.getName().toLowerCase().contains(SearchText) || projectManager.getId().toLowerCase().contains(SearchText);
 		} else if (this.hasProjectManager) {
-			return projectName.contains(searchText) || projectManager.getId().contains(searchText.toLowerCase());
+			return projectName.toLowerCase().contains(SearchText) || projectManager.getId().toLowerCase().contains(SearchText.toLowerCase());
 		} else {
-			return projectName.contains(searchText);
+			return projectName.toLowerCase().contains(SearchText);
 		}
 	}
 	
