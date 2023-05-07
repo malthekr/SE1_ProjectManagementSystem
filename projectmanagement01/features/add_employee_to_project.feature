@@ -1,5 +1,5 @@
 Feature: Add employee to project
-    Description: A project manager adds an employees to project
+    Description: A project manager adds an employee to project
     Actor: Project Manager
     
 Scenario: Employee is added to the project by project manager
@@ -27,7 +27,7 @@ Scenario: Employee that does not exist is added to the project:
     And there is no employee with ID "thr"
     When add employee with ID "thr" to project
     Then the error message "Employee ID does not exist" is given
-
+		
 Scenario: Employee is added to the project by employee
     Given there is a project
     And employee with ID "mkr" is logged in
