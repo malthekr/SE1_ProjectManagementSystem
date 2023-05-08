@@ -143,13 +143,13 @@ public class CreateProject implements Observer {
 					Project project = createProject();
 					
 					if(employee != null) {
-						project.addEmployee(employee);
-						//addEmployee(project.getProjectID(), employee.getId());
+						addEmployee(project.getProjectID(), employee.getId());
+						//project.addEmployee(employee);
 					}
 					
 					if(PM != null) {
-						project.promoteEmployee(PM.getId());
-						//addPM(project.getProjectID(), PM.getId());
+						addPM(project.getProjectID(), PM.getId());
+						//project.promoteEmployee(PM.getId());
 					}
 					
 				} catch (OperationNotAllowedException p) {
