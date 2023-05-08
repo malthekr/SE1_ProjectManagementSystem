@@ -68,13 +68,19 @@ public class Activity {
      }
      
      // [THOR] Set start date of activity
-     public void setStartDate(Calendar startDate) {
-     	this.startDate = startDate;
+     public void setStartDate(Calendar newStartDate) throws OperationNotAllowedException {
+    	 if(newStartDate.compareTo(this.endDate) > 0) {
+ 			throw new OperationNotAllowedException("Start date is after end date");
+ 		}
+ 		this.startDate = newStartDate;
      }
      
      // [THOR] Set end date of activity
-     public void setEndDate(Calendar endDate) {
-     	this.endDate = endDate;
+     public void setEndDate(Calendar newEndDate) throws OperationNotAllowedException {
+    	 if(newEndDate.compareTo(this.startDate) < 0) {
+ 			throw new OperationNotAllowedException("End date is before start date");
+ 		}
+     	this.endDate = newEndDate;
      }
      
      // [THOR] Add worked hours to activity
