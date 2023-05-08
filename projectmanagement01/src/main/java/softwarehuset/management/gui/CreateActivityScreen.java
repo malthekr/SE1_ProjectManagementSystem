@@ -27,8 +27,6 @@ import softwarehuset.management.app.ManagementSystemApp;
 import softwarehuset.management.app.OperationNotAllowedException;
 import softwarehuset.management.app.Project;
 
-//import softwarehuset.management.app.OperationNotAllowedException;
-//import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
 
 public class CreateActivityScreen {
