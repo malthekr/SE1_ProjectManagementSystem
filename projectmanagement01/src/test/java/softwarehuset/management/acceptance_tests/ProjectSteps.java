@@ -23,13 +23,11 @@ public class ProjectSteps {
 	
 	private Project project;
 	private ProjectHelper projectHelper;
-	private EmployeeHelper employeeHelper;
 	
-	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, ProjectHelper projectHelper, EmployeeHelper employeeHelper) {
+	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, ProjectHelper projectHelper) {
 		this.managementSystem =  managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
 		this.projectHelper = projectHelper;
-		this.employeeHelper = employeeHelper;
 		connect();
 	}
 	
