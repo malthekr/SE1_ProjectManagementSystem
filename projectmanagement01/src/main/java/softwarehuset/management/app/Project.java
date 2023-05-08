@@ -320,9 +320,10 @@ public class Project {
 	// [NIKLAS] Removes all activities from project
 	public void clean() throws OperationNotAllowedException {
 		for(Activity activity : activities){
-			for(Employee employee : employees){
-				activity.removeEmployee(employee);
-				}
+			for(Employee e : employees) {
+				e.removeActivity(this, activity);
+			}
+			activity.getEmployees().clear();
 		}
 		activities.clear();
 		employees.clear();

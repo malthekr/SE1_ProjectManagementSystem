@@ -221,7 +221,7 @@ public class ManagementSystemApp {
 		}
 		
 		if(loginSystem.employeeLoggedIn() && project.hasProjectManager()) {															
-			if(!currentEmployee.equals(project.getProjectManager())) { 												
+			if(!currentEmployee.getId().equals(project.getProjectManager().getId())) { 												
 				// throws error if employee logged in is not PM
 				throw new OperationNotAllowedException("Project Manager login required");							
 			}
