@@ -30,7 +30,7 @@ import softwarehuset.management.app.Project;
 //import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
 
-public class CreateProject implements Observer {
+public class CreateProject {
 	private MainScreen parentparentWindow; 
 	private AdministratorScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
@@ -50,6 +50,7 @@ public class CreateProject implements Observer {
 	private JLabel pm;
 	private JTextField pmField;
 	
+	//private JLabel lblEnterPasswordStatus = new JLabel("");
 	private JButton btnBack;
 	private JButton btnCreateProject;
 	
@@ -138,14 +139,17 @@ public class CreateProject implements Observer {
 				}
 				
 				try {
+					ManagementSystem.getLoginSystem().checkAdminLoggedIn();
 					Project project = createProject();
 					
 					if(employee != null) {
 						addEmployee(project.getProjectID(), employee.getId());
+						//project.addEmployee(employee);
 					}
 					
 					if(PM != null) {
 						addPM(project.getProjectID(), PM.getId());
+						//project.promoteEmployee(PM.getId());
 					}
 					
 				} catch (OperationNotAllowedException p) {
@@ -173,29 +177,14 @@ public class CreateProject implements Observer {
 		});
 		btnBack.setBounds(21, 28, 74, 29);
 		panelCreateFunctions.add(btnBack);
+		
+		//ManagementSystem.addObserver(this);
 	}
 	
 	public void setVisible(boolean visible) {
 		panelCreateFunctions.setVisible(visible);
 	}
 	
-	
-	@Override
-	public void update(Observable o, Object arg) {
-		//boolean loggedIn = ManagementSystem.adminLoggedIn();
-		//enableButtons();
-		/*
-		if (loggedIn) {
-			enableButtons();
-			passwordField.setEnabled(false);
-			
-		} else {
-			disableButtons();
-			passwordField.setEnabled(true);
-		}
-		*/
-		//displayLoginStatus();
-	}
 	private void clear() {
 		EnterEmployeeStatus.setText("");
 		nameField.setText("");
@@ -224,7 +213,7 @@ public class CreateProject implements Observer {
 	
 	private Employee findEmp(String str) {
 	  try {
-		return ManagementSystem.FindEmployeeById(str);
+		return ManagementSystem.getEmployeeRepository().findEmployeeByID(str);
 	} catch (OperationNotAllowedException e) {
 		return null;
 	}
@@ -246,12 +235,15 @@ public class CreateProject implements Observer {
 	}
 	
 	private void addPM(int projectId, String id) throws OperationNotAllowedException {
-		if(ManagementSystem.checkIfEmployeeIsPartOfProject(projectId, id)){
-			ManagementSystem.promoteToPm(projectId, id);
+		Project project = ManagementSystem.getProjectRepository().findProjectByID(projectId);
+		Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
+	
+		if(project.findEmployee(employee)){
+			project.promoteEmployee(id);
 			return;
 		} 
 		
 		ManagementSystem.addEmployeeToProject(projectId, id);
-		ManagementSystem.promoteToPm(projectId, id);
+		project.promoteEmployee(id);
 	}
 }

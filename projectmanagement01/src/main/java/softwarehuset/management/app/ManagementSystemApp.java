@@ -1,403 +1,168 @@
 package softwarehuset.management.app;
 
 import java.util.ArrayList;
-import java.util.Observable;
 import java.util.stream.Collectors;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class ManagementSystemApp extends Observable {
-	private boolean adminLoggedIn = false;
-	private boolean employeeLoggedIn = false;
-	private Employee employeeLoggedInId;
-	private List<Project> projectRepository = new ArrayList<>();
-	private List<Employee> Employees = new ArrayList<>();
-
-	// Admin logs in with password "admi"
-	public boolean adminLogin(String id) {
-		adminLoggedIn = id.equals("admi");
-		setChanged(); 
-		notifyObservers();
-		return adminLoggedIn;
-	}
-    
-	// Admin logs out
-	public boolean adminLogout() {
-		adminLoggedIn = false;
-		setChanged();
-		notifyObservers();
-		return adminLoggedIn;
-	}
-	
-	// Return true if admin is logged in
-	public boolean adminLoggedIn() {
-		return adminLoggedIn;
-	}
+public class ManagementSystemApp {
 		
+	private ProjectRepository projectRepository;
+	private EmployeeRepository employeeRepository;
+	private LoginSystem loginSystem;
 	
-	// Check if admin is logged in
-	// Throw OperationNotAllowedException if admin is logged out
-	public void checkAdminLoggedIn() throws OperationNotAllowedException {
-		if (!adminLoggedIn) {
-			throw new OperationNotAllowedException("Administrator login required");
-		}
+	public ManagementSystemApp() {
+		this.projectRepository = new ProjectRepository();
+		this.employeeRepository = new EmployeeRepository();
+		this.loginSystem = new LoginSystem();
+		loginSystem.setEmployeeRepository(employeeRepository);		
 	}
 	
-	// Employee logs in with his id
-	// Throws OperationNotAllowedException if employee is not registered in system
-	public boolean employeeLogin(String id) throws OperationNotAllowedException {
-		if(!containsEmployeeWithId(id)) {
-			throw new OperationNotAllowedException("Employee ID does not exist");
-		}
-		employeeLoggedIn = true;
-		employeeLoggedInId = FindEmployeeById(id);
-		setChanged();
-		notifyObservers();
-		return employeeLoggedIn;
-	}
-    
-	// Current employee logs out 
-	public boolean employeeLogout() {
-		employeeLoggedInId = null;
-		employeeLoggedIn = false;
-		setChanged();
-		notifyObservers();
-		return employeeLoggedIn;
+	// [MALTHE]
+	public LoginSystem getLoginSystem(){
+		return loginSystem;
 	}
 	
-	// Return true if employee is logged in
-	public boolean employeeLogged() {
-		return employeeLoggedIn;
+	// [MALTHE]
+	public ProjectRepository getProjectRepository(){
+		return projectRepository;
 	}
 	
-	// Return employee that is logged in
-	public Employee currentEmployee() {
-		return employeeLoggedInId;
+	// [MALTHE]
+	public EmployeeRepository getEmployeeRepository() {
+		return employeeRepository;
 	}
 	
-	// Check if employee is logged in
-	// Throws OperationNotAllowedException if he is logged out
-	public void checkEmployeeLoggedIn() throws OperationNotAllowedException {
-		if (!employeeLoggedIn) {
-			throw new OperationNotAllowedException("Employee login required");
-		}
+	// [MALTHE]
+	public PrintDetails getPrintDetails() {
+		PrintDetails printDetails = new PrintDetails();
+		return printDetails;
 	}
 	
-	// Adds employee to the system
-	public void addEmployee(Employee employee) throws OperationNotAllowedException {
-		if (!adminLoggedIn) {
-			throw new OperationNotAllowedException("Administrator login required");
+	// [HANS] Remove employee from system [Design by contract]
+	public void removeEmployee(Employee employee) throws OperationNotAllowedException{
+		assert (employee != null) && (employee.getId() != null) : "Precondition";
+		if(!getLoginSystem().adminLoggedIn()){
+			throw new OperationNotAllowedException("Administrator login required");	
 		}
-		
-		if(containsEmployeeWithId(employee.getId())){
-			throw new OperationNotAllowedException("Employee ID already taken");
-		}
-		
-		if(employee.getId().length() > 4){
-			throw new OperationNotAllowedException("Employee ID is too long");
-		}
-		
-		Employees.add(employee);
-	}
-	
-	// Removes employee from the system
-	public void removeEmployee(Employee employee) throws OperationNotAllowedException {
-		if(!adminLoggedIn()) {															// 1
-			throw new OperationNotAllowedException("Administrator login required");		// 2
-		}
-		for(Project p : projectRepository) {											// 3
-			if(p.getEmployeesAssignedToProject().contains(employee)) {					// 4
-				p.removeEmployee(employee);												// 5
+		for(Project p : getProjectRepository().getProjectRepository()) {				
+			assert (p != null) : "Postcondition";
+			if(p.getEmployeesAssignedToProject().contains(employee)) {					
+				p.removeEmployee(employee);												
+				assert !p.getEmployeesAssignedToProject().contains(employee) : "Postcondition";
 			}
 		}
-		if(Employees.contains(employee)) {												// 6
-			Employees.remove(employee);													// 7
-		}
+		getEmployeeRepository().removeEmployee(employee);								
+		assert !getEmployeeRepository().checkIfEmployeeExists(employee.getId()) : "Postcondition";
 	}
 	
-	// Find employee in system by employee id
-	public Employee FindEmployeeById(String id) throws OperationNotAllowedException{
-		Employee employee = Employees.stream().filter(u -> u.getId().equals(id)).findAny().orElse(null);
-		
-		if(employee == null){
-			throw new OperationNotAllowedException("Employee ID does not exist");
-		}
-		return employee;
-	}
-	
-	// Check if employee is in system by id
-	public boolean containsEmployeeWithId(String id){
-		for(Employee e : Employees){
-			if(e.getId().equals(id)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	// Get project repository in system
-	public List<Project> getProjectList(){
-		return this.projectRepository;
-	}
-		
-	// Create a project
+	// [MALTHE] Add project to project repository
 	public void createProject(Project project) throws OperationNotAllowedException {
-		checkAdminLoggedIn();
-		projectRepository.add(project);
+		if(!loginSystem.adminLoggedIn()) {
+			throw new OperationNotAllowedException("Admin login required");
+		}
+		projectRepository.addProject(project);
 	}
 	
-	// Remove project from repository
+	// [MALTHE] Remove project from project repository
 	public void removeProject(Project project) throws OperationNotAllowedException {
-		List<Employee> empl = project.getEmployeesAssignedToProject();
-			
-		if(adminLoggedIn() || currentEmployee().equals(project.getProjectManager())) {
-			for(Employee e : empl){
-				for(Activity a : e.getActivities())
-					e.removeActivity(project, a);
-			}	
-			projectRepository.remove(project);
-			return;
+		Employee employee = employeeRepository.findEmployeeByID(loginSystem.getCurrentLoggedID());
+		
+		boolean flagA = loginSystem.adminLoggedIn();
+		boolean flagB = false;
+		
+		if(project.hasProjectManager()){
+		 	flagB = employee.equals(project.getProjectManager());
 		}
-		throw new OperationNotAllowedException("Requirement not met");	
+		
+		if(!flagA && !flagB) {
+			throw new OperationNotAllowedException("Admin or project manager login required");
+		}
+	
+		project.clean(); //Cleans activities from project
+		projectRepository.removeProject(project);
 	}
 	
-	// Find project by id in repository
-	public Project findProjectById(int id) throws OperationNotAllowedException{
-		Project project = projectRepository.stream().filter(u -> u.getProjectID() == (id)).findAny().orElse(null);
-		if(project == null) {
-			throw new OperationNotAllowedException("Project Id does not exist");
-		}
-		return project;
-	}
-	
-	// Check if a project has a unique project id
-	public boolean checkIfUniqueProjectId(int Id) {
-		int num = 0;
-		for(Project i : projectRepository) {
-			if(i.getProjectID() == Id) { 
-				num++;
-			}
-		}
-		return (num == 1);
-	} 
-
-	// Edit a projects name
-	public void editProjectName(int projectId, String projectName) throws OperationNotAllowedException {
-		Project project = findProjectById(projectId);
+	// [HANS] Add employee to project [Design by contract]
+	public void addEmployeeToProject(int projectId, String employeeId) throws OperationNotAllowedException {
+		assert (employeeId != null) && ((String.valueOf(projectId).length() <= 5) == true) && (projectId > 0 == true) : "Precondition";
+		Employee employee = employeeRepository.findEmployeeByID(employeeId);
+		Project project = projectRepository.findProjectByID(projectId);
 		
-		if (checkAuth(project)) {
-			project.editProjectName(projectName);
-		}
-	} 
-	
-	// add employee to project
-	public void addEmployeeToProject(int ProjectId, String EmployeeId) throws OperationNotAllowedException {
-		Employee employee = FindEmployeeById(EmployeeId);
-		Project project = findProjectById(ProjectId);
-		
-		if(employeeLogged() && project.hasProjectManager() && employeeLoggedInId.equals(project.getProjectManager())) {
+		if(loginSystem.employeeLoggedIn() && project.hasProjectManager() && loginSystem.getCurrentLoggedID().equals(project.getProjectManager().getId())) {
 			project.addEmployee(employee);
+			assert project.getEmployeesAssignedToProject().contains(employee) == true : "Postcondition";
 			return;
 		} 
-		if (employeeLogged() && !project.hasProjectManager()){
+		if (loginSystem.employeeLoggedIn() && !project.hasProjectManager()){
 			project.addEmployee(employee);
+			assert project.getEmployeesAssignedToProject().contains(employee) == true : "Postcondition";
 			return;
 		}
-		if(adminLoggedIn()) {
+		if(loginSystem.adminLoggedIn()) {
 			project.addEmployee(employee);
+			assert project.getEmployeesAssignedToProject().contains(employee) == true : "Postcondition";
 			return;
 		}
 		//return false;
 		throw new OperationNotAllowedException("Project Manager login required");
-		
 	}
 	
-	// Remove employee from project
+	// [HANS] Remove employee from project 
 	public void removeEmployeeWithIdFromProject(int ProjectId, String EmployeeId) throws OperationNotAllowedException {
-		Employee employee = FindEmployeeById(EmployeeId);
-		Project project = findProjectById(ProjectId);
+		Employee employee = employeeRepository.findEmployeeByID(EmployeeId);
+		Project project = projectRepository.findProjectByID(ProjectId);
 			
 		if (checkAuth(project)) {
 			project.removeEmployee(employee);
 		}
 	}
 	
-	// Check if employee is part of a specific project
-	public boolean checkIfEmployeeIsPartOfProject(int ProjectId, String EmployeeId) throws OperationNotAllowedException {
-		Project project = findProjectById(ProjectId);
-		for(Employee i : project.getEmployeesAssignedToProject()) {
-			if(i.getId().equals(EmployeeId)) { return true; }
-		}
-		return false;
-	}
-	
-	// Check if a specific project has a project manager
-	public boolean checkIfProjectHasPM(int ProjectId) throws OperationNotAllowedException {
-		Project project = findProjectById(ProjectId);
-		return project.hasProjectManager();
-	}
-
-	// Promote an employee that is part of a project to project manager
-	public void promoteToPm(int projectId, String Id) throws OperationNotAllowedException {
-		Project project = findProjectById(projectId);
-		Employee employee = FindEmployeeById(Id);
-		
-		if (checkAuth(project)) {
-			project.promoteEmployee(Id);
-		}
-	}
-	
-	// Demote a project manager down to employee of a project
-	public void removePm(int projectId) throws OperationNotAllowedException {
-		Project project = findProjectById(projectId);
-		
-		if (checkAuth(project)) {
-			project.removeProjectManager();
-		}
-	}
-	
-	// Create an activity
-	public void createActivity(int projectId, String description) throws OperationNotAllowedException {
-		Project project = findProjectById(projectId);
-		
-		if(checkAuth(project)) {
-			project.createActivity(description);
-		}
-	}
-	
-	// Removes activity from project and employees
-	public void removeActivity(Activity activity) throws OperationNotAllowedException {
-		Project project = findProjectById(activity.getProjectId());
-		List<Employee> e = activity.getEmployees();
-			
-		if(checkAuth(project)) {	
-			for(Employee em : e) {
-				em.removeActivity(project, activity);
-			}
-			project.removeActivity(activity);
-		}
-	}
-	
-	// Find a specific activity by it's description in an specific project
-	public Activity findActivityByDescription(int projectId, String description) throws OperationNotAllowedException {
-		Project project = findProjectById(projectId);
-		return project.findActivityByDescription(description);
-	}
-	
-	// Find activity by description1 and edit to activity description2
-	public void setActivityDescrption(Project project, String description1, String description2) throws OperationNotAllowedException {
-		if(checkAuth(project)) {
-			project.findActivityByDescription(description1).setDescrption(description2);
-		}
-	}
-
-	// Edit an activities description
-	public void editProjectActivityDescription(Activity activity, String description) throws OperationNotAllowedException{
-		Project project = findProjectById(activity.getProjectId());
-		if(checkAuth(project)){
-			activity.setDescrption(description);
-		}
-	}
-	
-	// Add worked hour to activity
+	// [THOR] Add worked hour to activity
 	public void addHourToActivity(Activity activity, double hours) throws OperationNotAllowedException {
-		Project project = findProjectById(activity.getProjectId());
-	
-		checkEmployeeLoggedIn();
+		loginSystem.checkEmployeeLoggedIn();
 		
-		currentEmployee().addProjectActivity(project, activity);
-		project.addHoursToActivity(activity, currentEmployee(), hours);		
+		Project project = projectRepository.findProjectByID(activity.getProjectId());
+		Employee currentEmployee = employeeRepository.findEmployeeByID(loginSystem.getCurrentLoggedID());
+		
+		currentEmployee.addProjectActivity(project, activity);
+		project.addHoursToActivity(activity, currentEmployee, hours);		
 	}
 	
-	// Edit expected hours of an activity
-	public void editExpectedHoursActivity(Activity activity, Double hours) throws OperationNotAllowedException {
-		Project project = findProjectById(activity.getProjectId());
-		if(checkAuth(project)){
-			activity.setExpectedHours(hours);
-		}
-	}
-
-	// Edit expected hours of an ectivity
-	public void UpdateExpectedHours(int projectId, double hours) throws OperationNotAllowedException {
-		Project project = findProjectById(projectId);
-		
-		if(checkAuth(project)) {
-			project.editExpectedHours(hours);
-		}
-	}
-
-	// Add employee to activity in project
-	public void addEmployeeToActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{
+	// [HANS] Add employee to activity in project
+	public void addEmployeeToActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{		
 		if(checkAuth(project)) {
 			if(project.findEmployee(employee)) {
 				// Adds employee to project employee list
-				project.addEmployeeToActivity(employee, description);
-					
+				Activity a = project.findActivityByDescription(description);	
 				// Adds activity to employee project-activity list
-				employee.addActivity(project, project.findActivityByDescription(description));
+				employee.addActivity(project, a);
+				
+				project.addEmployeeToActivity(employee, description);
+				
 				return;
 			}
 			throw new OperationNotAllowedException("Employee not part of project");
 		}
 	}
-		
-	// Remove employee from activity in project
+	
+	// [HANS] Remove employee from activity in project
 	public void removeEmployeeFromActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{
 		if(checkAuth(project)) {
 			if(project.findEmployee(employee)) {
 				// Removes employee to project employee list
 				project.removeEmployeeFromActivity(employee, description);
+				
+				// Remove activity from employee project-activity list
+				//employee.removeActivity(project, project.findActivityByDescription(description));
 				return;
 			}
 			throw new OperationNotAllowedException("Employee not part of project");
 		}
 	}
 	
-	// Update start date a project
-	public void UpdateStartDateProject(int dd, int mm, int yyyy, int projectId) throws OperationNotAllowedException{
-		Project project = findProjectById(projectId);
-		Calendar startDate = project.getStartDate();
-		startDate = setDate(startDate, dd, mm, yyyy);
-		if (checkAuth(project)) {
-			project.editStartDate(startDate);
-		}
-	}
-		
-	// Update end date a project
-	public void UpdateEndDateProject(int dd, int mm, int yyyy, int projectId) throws OperationNotAllowedException {
-		Project project = findProjectById(projectId);
-		Calendar endDate = project.getEndDate();
-		endDate = setDate(endDate, dd, mm, yyyy);
-		if (checkAuth(project)) {
-			project.editEndDate(endDate);
-		}
-	}	
-	
-	// Update start date for activity in project
-	public void UpdateStartDate(int dd, int mm, int yyyy, int projectId, String description) throws OperationNotAllowedException{
-		Activity activity = findActivityByDescription(projectId, description);
-		Project project = findProjectById(projectId);
-		Calendar startDate = activity.getStartDate();
-		startDate = setDate(startDate, dd, mm, yyyy);
-		if (checkAuth(project)) {
-			activity.setStartDate(startDate);
-		}
-	}
-	
-	// Update end date for activity in project
-	public void UpdateEndDate(int dd, int mm, int yyyy, int projectId, String description) throws OperationNotAllowedException{
-		Activity activity = findActivityByDescription(projectId, description);
-		Project project = findProjectById(projectId);
-		Calendar endDate = activity.getEndDate();
-		endDate = setDate(endDate, dd, mm, yyyy);
-		if (checkAuth(project)) {
-			activity.setEndDate(endDate);
-		}
-	}
-	
-	// Toggle the project status - ON/OFF
+	// [MALTHE] Toggle the project status - ON/OFF
 	public void toggleProjectOngoing(Project project) throws OperationNotAllowedException {		
 		if(checkAuth(project)){							
 			if (project.getOngoingProject()){			
@@ -408,131 +173,73 @@ public class ManagementSystemApp extends Observable {
 		}
 	}
 	
-	// Claim/unclaim projectmanager status
+	// [MALTHE] Claim/unclaim project manager status [Design by contract]
 	public boolean togglePMClaim(Project project, String id) throws OperationNotAllowedException {
-		Employee employee = FindEmployeeById(id);							// 1
+		assert (loginSystem.employeeLoggedIn() == true) && (project != null) && (id != null) && (id.length() <= 4) && (id.length() > 0): "Precondition";
+		Employee employee = employeeRepository.findEmployeeByID(id);							
 		
-		if(employeeLoggedInId.equals(project.getProjectManager())) {		// 2
-			removePm(project.getProjectID());								// 3
-			return false;													// 4
+		if(project.hasProjectManager() && loginSystem.getCurrentLoggedID().equals(project.getProjectManager().getId())) {	
+			project.removeProjectManager();
+			assert project.getProjectManager() != employee : "Postcondition";
+			return false;			
 		} 
 		
-		if (employeeLogged() && !project.hasProjectManager()){				// 5
-			promoteToPm(project.getProjectID(), employee.getId());			// 6
-			return true;													// 7
+		if (loginSystem.employeeLoggedIn() && !project.hasProjectManager()){
+			project.promoteEmployee(id);	
+			Employee e = project.getProjectManager();
+			assert e.getId().equals(id) : "Postcondition";
+			
+			return true;													
 		}
 		
-		throw new OperationNotAllowedException("Project already has PM");	// 8
+		assert project.hasProjectManager() == true : "Postcondition";
+		throw new OperationNotAllowedException("Project already has PM");	
 	}
 	
-	// Create a specific date as dd-mm-yyyy
-	public Calendar setDate(Calendar date, int dd, int mm, int yyyy) {
-		date.set(Calendar.YEAR, yyyy);
-		date.set(Calendar.MONTH, mm);
-		date.set(Calendar.DAY_OF_MONTH, dd);
-		return date;
-	}
-	
-	// Get list of activities from an employee
-	public List<Activity> getActivities(int projectId, Employee anotherEmployee) throws OperationNotAllowedException{
-		Project project = findProjectById(projectId);
-		
-		if(checkAuth(project)){
-			return anotherEmployee.listOfActivitiesInProject(project);
-		}
-		return null;
-	}
-	
-	// Edit a specific time table
-	public void editActivityTimeTable(Activity activity, Calendar date, double workHours) throws OperationNotAllowedException {
-		Project project = findProjectById(activity.getProjectId());
-		project.editTimeTable(activity, currentEmployee(), date, workHours);
-	}
-	
-	// Get list of time tables of the current employee logged in
-	public List<TimeTable> getActivityTimeTableCurrentEmployee(Activity activity) throws OperationNotAllowedException {
-		checkEmployeeLoggedIn();
-		Project project = findProjectById(activity.getProjectId());
-		List<TimeTable> employeeActivityTimeTable = project.getTimeTableForEmployeeAndActivity(currentEmployee(), activity, project.getTimeTables());
-		
-		return employeeActivityTimeTable;
-	}
-	
-	// Print in GUI details of a specific project
-	public String projectDetails(Project project) {
-			return PrintDetails.projectDetails(project);
-	}
-	
-	// Print in GUI details of a specific activity
-	public String activityDetails(Activity activity) {
-		return PrintDetails.activityDetail(activity);
-	}
-	
-	// Print in GUI status of a specific employee
-	public String getStatusOfEmployee(Employee employee, boolean active) {
-		return PrintDetails.getStatusOfEmployee(employee, active);
-	}
-	
-	// Get and print status report of a specific project in GUI
-	public String getStatReportOfProject(Project project) throws OperationNotAllowedException {
-		if(checkAuth(project)){
-			return PrintDetails.getStatusReport(project);
-		}
-		return null;
-	}
-	 
-	// Search for all projects in project repository by key word
-	public List<Project> searchProject(String searchText) {
-		return projectRepository.stream()
-				.filter(b -> b.match(searchText))
-				.collect(Collectors.toList());
-	}
-		
-	// Search for all activities in system by key word
+	// [THOR] Search for all activities in system by key word
 	public List<Activity> searchActivity(String searchText) {
 		List<Activity> activites =  new ArrayList<>();
 	
-			for(Project p : projectRepository) {
-				activites.addAll(p.getActivites().stream()
-				.filter(b -> b.match(searchText))
-				.collect(Collectors.toList()));
-			}
+		for(Project p : projectRepository.getProjectRepository()) {	
 			
-		setChanged(); 
-		notifyObservers();
+			String name = p.getProjectName() == null ? 	"" : p.getProjectName().toLowerCase();	
+			
+			activites.addAll(p.getActivites().stream()
+			.filter(b -> b.match(searchText) || searchText.toLowerCase().contains(name))
+			.collect(Collectors.toList()));
+		}
 		return activites;
 	}
-		
-	// Search for all employees in system by key word
-	public List<Employee> searchEmployee(String searchText) {
-		return Employees.stream()
-				.filter(b -> b.match(searchText))
-				.collect(Collectors.toList());
-	}
 	
-	// Check authentication of the current employee logged in
+	// [NIKLAS] Check authentication of the current employee logged in
 	public boolean checkAuth(Project project) throws OperationNotAllowedException {
-		if(employeeLoggedIn && project.hasProjectManager()) {															
-			if(!employeeLoggedInId.equals(project.getProjectManager())) { 												
+		assert (project != null): "Precondition";
+		Employee currentEmployee = null;
+		
+		if(loginSystem.employeeLoggedIn()) {
+			currentEmployee = employeeRepository.findEmployeeByID(loginSystem.getCurrentLoggedID());
+		}
+		
+		if(loginSystem.employeeLoggedIn() && project.hasProjectManager()) {															
+			if(!currentEmployee.getId().equals(project.getProjectManager().getId())) { 												
 				// throws error if employee logged in is not PM
 				throw new OperationNotAllowedException("Project Manager login required");							
 			}
 			return true; // returns true PM is logged in																
 		} 
-		if (employeeLoggedIn && project.findEmployee(currentEmployee()) && !project.hasProjectManager()){				
+		if (loginSystem.employeeLoggedIn() && project.findEmployee(currentEmployee) && !project.hasProjectManager()){				
 			return true; // returns true if project has no PM and employee (who is part of project) is logged in		
 		}
-		if(adminLoggedIn()) {																							
+		if(loginSystem.adminLoggedIn()) {
 			return true;																								
-		}
-		//return false;
+		}		
 		throw new OperationNotAllowedException("Project Manager login required");								
 	}
 	
 	// Example data to test the program with
-	public void exampleData() throws OperationNotAllowedException {
-	/*	
-		adminLogin("admi");
+	public void exampleData() throws OperationNotAllowedException {	
+		/*
+		loginSystem.adminLogin("admi");
 		
 		Employee employee1 = new Employee("Malthe", "mkr");
 		Employee employee2 = new Employee("Niklas", "nik");
@@ -545,13 +252,13 @@ public class ManagementSystemApp extends Observable {
 		Employee employee9 = new Employee("professor", "dtu");
 		
 		
-		addEmployee(employee1);
-		addEmployee(employee2);
-		addEmployee(employee3);
-		addEmployee(employee4);
-		addEmployee(employee5);
-		addEmployee(employee6);
-		addEmployee(employee7);
+		employeeRepository.addEmployee(employee1);
+		employeeRepository.addEmployee(employee2);
+		employeeRepository.addEmployee(employee3);
+		employeeRepository.addEmployee(employee4);
+		employeeRepository.addEmployee(employee5);
+		employeeRepository.addEmployee(employee6);
+		employeeRepository.addEmployee(employee7);
 		
 		Calendar calendar = new GregorianCalendar();
 		Calendar startDate = new GregorianCalendar(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
@@ -569,7 +276,28 @@ public class ManagementSystemApp extends Observable {
 		Project project2 = new Project("ManagementSystemApp", 200.9, startDate, endDate2);
 		Project project3 = new Project("Venner i Software Eng. 1", 1000.231, startDate, endDate2);
 		Project project4 = new Project("Home Improvement", 20.3, startDate, endDate3);
-		Project project5 = new Project("Activity", 30.6, startDate, endDate3);
+		Project project5 = new Project("Employee wellness program", 30.6, startDate, endDate3);
+		
+		project1.beginProject();
+		project2.beginProject();
+		project3.beginProject();
+		project4.beginProject();
+		project5.beginProject();
+		
+		
+		for(int i = 1; i < 500; i++){
+			String name = "Project" + " " + i;
+			double j = i + 0.4;
+			Project project = new Project(name, j, startDate, endDate2);
+			createProject(project);
+			project.addEmployee(employee1);
+			project.addEmployee(employee2);
+			project.createActivity("test run");
+			project.beginProject();
+			if(i < 7) {
+				addEmployeeToActivity(employee2, project, "test run");
+			}
+		}
 		
 		createProject(project1);
 		createProject(project2);
@@ -594,8 +322,8 @@ public class ManagementSystemApp extends Observable {
 		project3.addEmployee(employee4);
 		project3.addEmployee(employee7);
 		project3.addEmployee(employee8);
-		
-		
+	
+	
 		project4.addEmployee(employee2);
 		project4.addEmployee(employee4);
 		project4.addEmployee(employee5);
@@ -633,7 +361,7 @@ public class ManagementSystemApp extends Observable {
 		project2.createActivity("Activity");
 		project2.createActivity("Features");
 		project2.createActivity("TimeTable");
-		project2.createActivity("OperationNotAllowedException");
+		project2.createActivity("Repositories");
 		project2.createActivity("Employee");
 		
 		addEmployeeToActivity(employee1, project2, "ManagementSystemApp");
@@ -648,8 +376,8 @@ public class ManagementSystemApp extends Observable {
 		addEmployeeToActivity(employee1, project2, "Features");
 		addEmployeeToActivity(employee2, project2, "Features");
 		addEmployeeToActivity(employee7, project2, "TimeTable");
-		addEmployeeToActivity(employee2, project2, "OperationNotAllowedException");
-		addEmployeeToActivity(employee3, project2, "OperationNotAllowedException");
+		addEmployeeToActivity(employee2, project2, "Repositories");
+		addEmployeeToActivity(employee3, project2, "Repositories");
 		addEmployeeToActivity(employee1, project2, "Employee");
 		addEmployeeToActivity(employee7, project2, "Employee");
 		
@@ -659,8 +387,8 @@ public class ManagementSystemApp extends Observable {
 		project4.createActivity("gulv"); 
 		project4.createActivity("flytte");
 		
-		project5.createActivity("i brug");
-		project5.createActivity("kommer snart");
+		project5.createActivity("Develop employee wellness program guidelines");
+		project5.createActivity("implement wellness activities");
 		
 		addEmployeeToActivity(employee1, project3, "Øl");
 		addEmployeeToActivity(employee2, project3, "Øl");
@@ -681,12 +409,13 @@ public class ManagementSystemApp extends Observable {
 		addEmployeeToActivity(employee5, project4, "flytte");
 		
 		
-		addEmployeeToActivity(employee1, project5, "i brug");
-		addEmployeeToActivity(employee8, project5, "i brug");
-		addEmployeeToActivity(employee1, project5, "kommer snart");
+		addEmployeeToActivity(employee1, project5, "Develop employee wellness program guidelines");
+		addEmployeeToActivity(employee8, project5, "Develop employee wellness program guidelines");
+		addEmployeeToActivity(employee1, project5, "implement wellness activities");
 		
-		adminLogout();
-	*/	
+		loginSystem.adminLogout();
+	
+	*/
 	}
 }
 

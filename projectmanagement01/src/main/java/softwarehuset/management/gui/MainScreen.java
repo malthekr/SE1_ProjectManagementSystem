@@ -31,7 +31,6 @@ public class MainScreen {
 	private JPanel panelMenu;
 	private JButton btnAdministratorFunctions;
 	private JButton btnBorrowMedia;
-	//private JButton btnRetunMedia;
 	
 	/**
 	 * Launch the application.

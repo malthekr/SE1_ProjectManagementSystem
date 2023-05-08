@@ -2,6 +2,8 @@ package softwarehuset.management.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Observable;
 
 import javax.swing.BorderFactory;
@@ -12,6 +14,7 @@ import javax.swing.JTextField;
 
 import softwarehuset.management.app.Activity;
 import softwarehuset.management.app.ManagementSystemApp;
+import softwarehuset.management.app.Employee;
 import softwarehuset.management.app.OperationNotAllowedException;
 import softwarehuset.management.app.Project;
 
@@ -33,6 +36,7 @@ public class EditProjectScreen {
 	private JButton removeEmployeeFromActivity;
 	private JButton joinProject;
 	private JButton leaveProject;
+	private JButton setProjectToActiv;
 	private JButton editExpectedHours;
 	private JButton editNameOfProject;
 	private JButton editStartDate;
@@ -92,6 +96,7 @@ public class EditProjectScreen {
 		panelEditProject.add(removeEmployeeFromActivity);
 		panelEditProject.add(joinProject);
 		panelEditProject.add(leaveProject);
+		//panelEditProject.add(setProjectToActiv);
 		panelEditProject.add(editExpectedHours);
 		panelEditProject.add(editNameOfProject);
 		panelEditProject.add(editStartDate);
@@ -107,6 +112,7 @@ public class EditProjectScreen {
 		removeEmployeeFromActivity = addButton("Remove employee from project");
 		joinProject = addButton("Join project");
 		leaveProject = addButton("Leave project");
+		//setProjectToActiv = addButton("toggle ongoing");
 		editExpectedHours = addButton("Edit expected hours");
 		editNameOfProject = addButton("Edit project name");
 		editStartDate = addButton("Edit start date");
@@ -138,13 +144,17 @@ public class EditProjectScreen {
 				try {
 					String input = userInput.getText();
 					
-					if(ManagementSystem.togglePMClaim(project, ManagementSystem.currentEmployee().getId())){
+					if(ManagementSystem.togglePMClaim(project, ManagementSystem.getLoginSystem().getCurrentLoggedID())){
 						claimPM.setText("Unclaim project manager");
 						EnterErrorMessage.setText("Successfully claimed project manager");
 					} else {
 						claimPM.setText("Claim project manager");
 						EnterErrorMessage.setText("Successfully unclaimed project manager");
 					}
+					
+					//ManagementSystem.promoteToPm(activity.getProjectId(), input);
+					
+					//userInput.setText("");
 					
 				} catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
@@ -186,7 +196,7 @@ public class EditProjectScreen {
 				try {
 					ManagementSystem.addEmployeeToProject(
 						project.getProjectID(), 
-						ManagementSystem.currentEmployee().getId());
+						ManagementSystem.getLoginSystem().getCurrentLoggedID());
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully joined project");
 				} catch (OperationNotAllowedException p) {
@@ -201,7 +211,7 @@ public class EditProjectScreen {
 				try {
 					ManagementSystem.removeEmployeeWithIdFromProject(
 						project.getProjectID(),
-						ManagementSystem.currentEmployee().getId());
+						ManagementSystem.getLoginSystem().getCurrentLoggedID());
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully left project");
 				} catch (OperationNotAllowedException p) {
@@ -218,7 +228,7 @@ public class EditProjectScreen {
 					EnterErrorMessage.setText("Please enter a number");
 					return;
 				}
-				
+				//ManagementSystem.updateExpectedHours(project.getProjectID(), stringToDouble(input));
 				project.editExpectedHours(stringToDouble(input));
 				userInput.setText("");
 				EnterErrorMessage.setText("Successfully changed expected hours");
@@ -228,19 +238,12 @@ public class EditProjectScreen {
 		// Edit name of project
 		editNameOfProject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					String input = userInput.getText();
-					if(input.isEmpty()) {
-						EnterErrorMessage.setText("Please enter new project name");
-						return;
-					}
-					ManagementSystem.editProjectName(project.getProjectID(), input);
-					EnterErrorMessage.setText("Successfully changed project name"); 
-				}  catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
+				String input = userInput.getText();
+				if(input.isEmpty()) {
+					EnterErrorMessage.setText("Please enter new project name");
 					return;
 				}
-	
+				//ManagementSystem.editProjectName(project.getProjectID(), input);
 				project.editProjectName(input);
 				EnterErrorMessage.setText("Successfully changed project name");
 			}
@@ -249,48 +252,9 @@ public class EditProjectScreen {
 		// Edit start date
 		editStartDate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					String input = userInput.getText();
-					if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
-						EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
-						return;
-					}
-					String[] date = input.split("-");
-					
-					int dd = Integer.parseInt(date[0]);
-					int mm = Integer.parseInt(date[1]) - 1;
-					int yyyy = Integer.parseInt(date[2]);
-					
-					ManagementSystem.UpdateStartDateProject(dd, mm, yyyy,project.getProjectID());
-					
-					EnterErrorMessage.setText("Successfully changed start date for project"); 
-				}  catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
-					return;
-				}
-			}
-		});
-		
-		// Edit end date
-		editEndDate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					String input = userInput.getText();
-					if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
-						EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
-						return;
-					}
-					String[] date = input.split("-");
-					
-					int dd = Integer.parseInt(date[0]);
-					int mm = Integer.parseInt(date[1]) - 1;
-					int yyyy = Integer.parseInt(date[2]);
-					
-					ManagementSystem.UpdateEndDateProject(dd, mm, yyyy,project.getProjectID());
-					
-					EnterErrorMessage.setText("Successfully changed end date for project"); 
-				}  catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
+				String input = userInput.getText();
+				if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
+					EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
 					return;
 				}
 				String[] date = input.split("-");
@@ -298,7 +262,34 @@ public class EditProjectScreen {
 				int dd = Integer.parseInt(date[0]);
 				int mm = Integer.parseInt(date[1]) - 1;
 				int yyyy = Integer.parseInt(date[2]);
-			
+				
+				//ManagementSystem.UpdateStartDateProject(dd, mm, yyyy,project.getProjectID());
+				
+				Calendar cal = createDate(dd,mm,yyyy);
+				try {
+					project.editStartDate(cal);
+					EnterErrorMessage.setText("Successfully changed start date for project");
+				} catch (OperationNotAllowedException e1) {
+					EnterErrorMessage.setText(e1.getMessage());
+				}
+			}
+		});
+		
+		// Edit end date
+		editEndDate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String input = userInput.getText();
+				if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
+					EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
+					return;
+				}
+				String[] date = input.split("-");
+				
+				int dd = Integer.parseInt(date[0]);
+				int mm = Integer.parseInt(date[1]) - 1;
+				int yyyy = Integer.parseInt(date[2]);
+				
+//					Project project = ManagementSystem.getProjectRepository().findProjectByID(project.getProjectID());
 				Calendar cal = createDate(dd,mm,yyyy);
 				try {
 					project.editEndDate(cal);
@@ -306,10 +297,52 @@ public class EditProjectScreen {
 				} catch (OperationNotAllowedException e1) {
 					EnterErrorMessage.setText(e1.getMessage());
 				}
+				
+				//ManagementSystem.updateEndDateProject(dd, mm, yyyy,project.getProjectID());
+				
 			}
 		});
+		
+/*		// View hours report (USE LATER)
+		editStartDate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String input = userInput.getText();
+					ManagementSystem.getStatus(activity);
+					
+					EnterErrorMessage.setText("Successfully changed description for activity"); 
+				}  catch (OperationNotAllowedException p) {
+					EnterErrorMessage.setText(p.getMessage());
+					return;
+				}
+			}
+		});*/
+	}
+	/*
+	private void setEnableButtons(boolean enabled) {
+		claimPM.enable(false);
+		//btnFindActivity.setEnabled(enabled);
+		//btnLogout.setEnabled(enabled);
+		//btnCreateActivity.setEnabled(enabled);
+		//btnFindActivity.setEnabled(enabled);
+		//btnJoinProject.setEnabled(enabled);
+		//btnFindEmployee.setEnabled(enabled);
+		//btnUnregisterEmployee.setEnabled(enabled);
+		//btnPayFine.setEnabled(enabled);
 	}
 		
+	@Override
+	public void update(Observable o, Object arg) {
+		boolean loggedIn = ManagementSystem.currentEmployee().equals(project.getProjectManager());
+		
+		if (loggedIn) {
+			setEnableButtons(loggedIn);
+			
+		} else {
+			setEnableButtons(loggedIn);
+		}
+	}
+	*/
 	public void setVisible(boolean visible) {
 		panelEditProject.setVisible(visible);
 	}
@@ -336,8 +369,16 @@ public class EditProjectScreen {
 	
 	public void setProject(Project project) {
 		if(project != null) {
-			String name = !ManagementSystem.currentEmployee().equals(project.getProjectManager()) ? "Claim project manager" : "Unclaim project manager";
-			claimPM.setText(name);
+			String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
+			Employee employee;
+			try {
+				employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
+				String name = !employee.equals(project.getProjectManager()) ? "Claim project manager" : "Unclaim project manager";
+				claimPM.setText(name);
+			} catch (OperationNotAllowedException p) {
+				EnterErrorMessage.setText(p.getMessage());
+			}
+			
 		}
 		this.project = project;
 	}
@@ -358,5 +399,13 @@ public class EditProjectScreen {
 		} catch (Exception e) {
 			return 0;
 		}
+	}
+	
+	private Calendar createDate(int dd, int mm, int yyyy) {
+		Calendar calendar = new GregorianCalendar();;
+		calendar.set(Calendar.YEAR, yyyy);
+		calendar.set(Calendar.MONTH, mm);
+		calendar.set(Calendar.DAY_OF_MONTH, dd);
+		return calendar;
 	}
 }

@@ -20,6 +20,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import softwarehuset.management.app.ManagementSystemApp;
+import softwarehuset.management.app.OperationNotAllowedException;
+
 //import softwarehuset.management.app.OperationNotAllowedException;
 //import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
@@ -38,9 +40,9 @@ public class AdministratorScreen implements Observer {
 	private JLabel lblEnterPasswordStatus = new JLabel("");
 	private JLabel lblLoginStatus;
 	private JButton btnLogout;
-	//private JButton btnPayFine;
+	
 	private JButton btnRegisterEmployee;
-	//private JButton btnUnregisterEmployee;
+	
 
 	public AdministratorScreen(ManagementSystemApp ManagementSystem, MainScreen parentWindow, CreateProject createProject, RegisterEmployeeScreen RegisterEmployeeScreen) {
 		this.ManagementSystem = ManagementSystem;
@@ -71,8 +73,9 @@ public class AdministratorScreen implements Observer {
 		btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				lblEnterPasswordStatus.setText("");
 				setVisible(false);
-				ManagementSystem.adminLogout();
+				ManagementSystem.getLoginSystem().adminLogout();
 				parentWindow.setVisible(true);
 			}
 		});
@@ -86,12 +89,11 @@ public class AdministratorScreen implements Observer {
 		passwordField = new JPasswordField();
 		passwordField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean loginOk = ManagementSystem.adminLogin(passwordField.getText());
-				passwordField.setText("");
-				if (loginOk) {
-					lblEnterPasswordStatus.setText("");
-				} else {
-					lblEnterPasswordStatus.setText("login failed");
+				try {
+					ManagementSystem.getLoginSystem().adminLogin(passwordField.getText());
+					passwordField.setText("");
+				} catch (OperationNotAllowedException p) {
+				lblEnterPasswordStatus.setText("login failed");	
 				}
 			}
 		});
@@ -105,7 +107,8 @@ public class AdministratorScreen implements Observer {
 		btnLogout = new JButton("Logout");
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ManagementSystem.adminLogout();
+				ManagementSystem.getLoginSystem().adminLogout();
+				lblEnterPasswordStatus.setText("");
 			}
 		});
 		btnLogout.setEnabled(false);
@@ -131,7 +134,7 @@ public class AdministratorScreen implements Observer {
 	
 		disableButtons();
 		displayLoginStatus();
-		ManagementSystem.addObserver(this);
+		ManagementSystem.getLoginSystem().addObserver(this);
 		createProject = new CreateProject(ManagementSystem, this, parentWindow);
 		RegisterEmployeeScreen = new RegisterEmployeeScreen(ManagementSystem, this, parentWindow);
 	}
@@ -148,8 +151,6 @@ public class AdministratorScreen implements Observer {
 		btnAddProject.setEnabled(enabled);
 		btnLogout.setEnabled(enabled);
 		btnRegisterEmployee.setEnabled(enabled);
-		//btnUnregisterEmployee.setEnabled(enabled);
-		//btnPayFine.setEnabled(enabled);
 	}
 
 	public void setVisible(boolean visible) {
@@ -169,7 +170,7 @@ public class AdministratorScreen implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		boolean loggedIn = ManagementSystem.adminLoggedIn();
+		boolean loggedIn = ManagementSystem.getLoginSystem().adminLoggedIn();
 		if (loggedIn) {
 			enableButtons();
 			passwordField.setEnabled(false);
@@ -182,9 +183,10 @@ public class AdministratorScreen implements Observer {
 	}
 
 	protected void displayLoginStatus() {
-		boolean loggedIn = ManagementSystem.adminLoggedIn();
+		boolean loggedIn = ManagementSystem.getLoginSystem().adminLoggedIn();
 		if (loggedIn) {
 			lblLoginStatus.setText("Admin logged in");
+			lblEnterPasswordStatus.setText("");
 		} else {
 			lblLoginStatus.setText("Admin logged off");
 		}

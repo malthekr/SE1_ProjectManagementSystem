@@ -25,9 +25,12 @@ import softwarehuset.management.app.Employee;
 import softwarehuset.management.app.ManagementSystemApp;
 import softwarehuset.management.app.OperationNotAllowedException;
 import softwarehuset.management.app.Project;
+
+//import softwarehuset.management.app.OperationNotAllowedException;
+//import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
 
-public class RegisterEmployeeScreen {
+public class RegisterEmployeeScreen implements Observer {
 	private MainScreen parentparentWindow; 
 	private AdministratorScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
@@ -38,8 +41,11 @@ public class RegisterEmployeeScreen {
 	private JLabel nameOfEmployee;
 	private JTextField employeeField;
 	
+	private JLabel importantText;
+	
 	private JLabel employeeId;
 	private JTextField idField;
+	
 	private JButton btnBack;
 	private JButton btnRegisterEmployee;
 	private JButton btnUnRegisterEmployee;
@@ -71,7 +77,7 @@ public class RegisterEmployeeScreen {
 		panelRegisterEmployeeFunctions.add(employeeField);
 		
 		//Employee id:
-		employeeId = new JLabel("Employee id:");
+		employeeId = new JLabel("*Employee id:");
 		employeeId.setBounds(10, 100, 140, 16);
 		
 		idField = new JTextField();
@@ -100,7 +106,7 @@ public class RegisterEmployeeScreen {
 					return;
 				}
 				
-				if(checkIfEmployeeExists(idField.getText())) {
+				if(ManagementSystem.getEmployeeRepository().checkIfEmployeeExists(idField.getText())) {
 					EnterEmployeeStatus.setText("Employee id \"" + idField.getText() +"\" is already in system");
 					return;
 				}
@@ -116,7 +122,7 @@ public class RegisterEmployeeScreen {
 				parentWindow.setVisibleInside(true);
 			}
 		});
-		
+		 
 		btnRegisterEmployee.setBounds(40, 400, 160, 29);
 		panelRegisterEmployeeFunctions.add(btnRegisterEmployee);
 		
@@ -138,7 +144,7 @@ public class RegisterEmployeeScreen {
 					return;
 				}
 				
-				if(!checkIfEmployeeExists(idField.getText())) {
+				if(!ManagementSystem.getEmployeeRepository().checkIfEmployeeExists(idField.getText())) {
 					EnterEmployeeStatus.setText("Employee id \"" + idField.getText() +"\" is not in the system");
 					return;
 				}
@@ -171,29 +177,37 @@ public class RegisterEmployeeScreen {
 		});
 		btnBack.setBounds(21, 28, 74, 29);
 		panelRegisterEmployeeFunctions.add(btnBack);
+		
+		//ManagementSystem.addObserver(this);
 	}
 	
 	public void setVisible(boolean visible) {
 		panelRegisterEmployeeFunctions.setVisible(visible);
 	}
-
+	
+	
+	@Override
+	public void update(Observable o, Object arg) {
+		
+	}
 	private void clear() {
 		EnterEmployeeStatus.setText("");
 		employeeField.setText("");
 		idField.setText("");
 	}
 	
-	private boolean checkIfEmployeeExists(String id) {
-		return ManagementSystem.containsEmployeeWithId(id);
+	private boolean checkIfEmployeeExists(String id) throws OperationNotAllowedException {
+		Employee e = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
+		return e == null ? true : false;
 	}
 	
 	private void addEmployee(String name, String id) throws OperationNotAllowedException {
 		Employee employee = new Employee(name, id);
-		ManagementSystem.addEmployee(employee);
+		ManagementSystem.getEmployeeRepository().addEmployee(employee);
 	}
 	
 	private void removeEmployee(String id) throws OperationNotAllowedException {
-		Employee employee = ManagementSystem.FindEmployeeById(id);
+		Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
 		ManagementSystem.removeEmployee(employee);
 	}
 }

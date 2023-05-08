@@ -103,10 +103,16 @@ public class FindProjectScreen {
 			public void valueChanged(ListSelectionEvent e) {
 				
 				if(listSearchResult.getSelectedValue() != null){
-					if(ManagementSystem.currentEmployee().equals(listSearchResult.getSelectedValue().getProjectManager()) || !listSearchResult.getSelectedValue().hasProjectManager()) {
+					try{
+					String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
+					Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
+					if(employee.equals(listSearchResult.getSelectedValue().getProjectManager()) || !listSearchResult.getSelectedValue().hasProjectManager()) {
 						getStatusReport.setEnabled(true);
 					} else {
 						getStatusReport.setEnabled(false);
+					}
+					} catch (OperationNotAllowedException p){
+						EnterEmployeeStatus.setText(p.getMessage());
 					}
 				}
 				
@@ -117,9 +123,7 @@ public class FindProjectScreen {
 		            	lblFindResultDetail.setText("");
 
 		            } else {
-		            	//lblFindResultDetail.setText(listSearchResult.getSelectedValue().printDetail());
-		            	lblFindResultDetail.setText(ManagementSystem.projectDetails(listSearchResult.getSelectedValue()));
-		            			//listSearchResult.getSelectedValue().printDetail());
+		            	lblFindResultDetail.setText(ManagementSystem.getPrintDetails().projectDetails(listSearchResult.getSelectedValue()));
 		            }
 		        }
 			}
@@ -224,7 +228,7 @@ public class FindProjectScreen {
 	protected void searchProject() {
 		searchResults.clear();
 		
-		ManagementSystem.searchProject(searchField.getText())
+		ManagementSystem.getProjectRepository().searchProject(searchField.getText())
 		.forEach((m) -> {searchResults.addElement(m);});
 	}
 	

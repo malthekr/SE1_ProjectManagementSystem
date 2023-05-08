@@ -23,7 +23,6 @@ import javax.swing.event.ListSelectionListener;
 
 import softwarehuset.management.app.Activity;
 import softwarehuset.management.app.Employee;
-import softwarehuset.management.app.LoginSystem;
 import softwarehuset.management.app.ManagementSystemApp;
 import softwarehuset.management.app.OperationNotAllowedException;
 import softwarehuset.management.app.Project;
@@ -32,10 +31,11 @@ import softwarehuset.management.app.Project;
 //import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
 
-public class CreateActivityScreen {
+public class CreateActivityScreen implements Observer {
 	private MainScreen parentparentWindow; 
 	private EmployeeScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
+	private Project project;
 	private JPanel panelCreateActivityFunctions;
 	
 	private JLabel EnterEmployeeStatus = new JLabel("");
@@ -77,7 +77,7 @@ public class CreateActivityScreen {
 		panelCreateActivityFunctions.add(EnterEmployeeStatus);
 		
 		//Project id:
-		projectId = new JLabel("Project id:");
+		projectId = new JLabel("*Project id:");
 		projectId.setBounds(10, 75, 140, 16);
 				
 		projectIdField = new JTextField();
@@ -160,10 +160,7 @@ public class CreateActivityScreen {
 				
 				try {
 					Project project = ManagementSystem.getProjectRepository().findProjectByID(pjId);
-					Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(ManagementSystem.getLoginSystem().getCurrentLoggedID());
-					
 					ManagementSystem.checkAuth(project);
-					
 					project.createActivity(descriptionField.getText());
 					
 				} catch (OperationNotAllowedException l) {
@@ -173,10 +170,14 @@ public class CreateActivityScreen {
 				
 				try {
 					if(!idField.getText().equals("")) {
-						ManagementSystem.addEmployeeToActivity(ManagementSystem.FindEmployeeById(idField.getText()), ManagementSystem.findProjectById(pjId), descriptionField.getText());
+						Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(idField.getText());
+						Project project = ManagementSystem.getProjectRepository().findProjectByID(pjId);
+						
+						ManagementSystem.addEmployeeToActivity(employee, project, descriptionField.getText());
 					}
-					ManagementSystem.findActivityByDescription(pjId, descriptionField.getText()).setExpectedHours(numberDouble(expField.getText()));
-					ManagementSystem.findActivityByDescription(pjId, descriptionField.getText()).addWorkedHours(numberDouble(workedField.getText()));
+					Project project = ManagementSystem.getProjectRepository().findProjectByID(pjId);
+					project.findActivityByDescription(descriptionField.getText()).setExpectedHours(numberDouble(expField.getText()));
+					project.findActivityByDescription(descriptionField.getText()).addWorkedHours(numberDouble(workedField.getText()));
 				} catch (OperationNotAllowedException p) {
 					EnterEmployeeStatus.setText(p.getMessage());
 					return;
@@ -202,14 +203,17 @@ public class CreateActivityScreen {
 		});
 		btnBack.setBounds(21, 28, 74, 29);
 		panelCreateActivityFunctions.add(btnBack);
-		
-		ManagementSystem.addObserver(this);
 	}
 	
 	public void setVisible(boolean visible) {
 		panelCreateActivityFunctions.setVisible(visible);
 	}
 	
+	
+	@Override
+	public void update(Observable o, Object arg) {
+	
+	}
 	private void clear() {
 		EnterEmployeeStatus.setText("");
 		projectIdField.setText("");
@@ -256,16 +260,7 @@ public class CreateActivityScreen {
 	}
 	
 	private boolean checkIfEmployeeExists(String id) {
-		return ManagementSystem.containsEmployeeWithId(id);
-	}
-	
-	private void addEmployee(String name, String id) throws OperationNotAllowedException {
-		Employee employee = new Employee(name, id);
-		ManagementSystem.addEmployee(employee);
-	}
-	
-	private void removeEmployee(String id) throws OperationNotAllowedException {
-		Employee employee = ManagementSystem.FindEmployeeById(id);
-		ManagementSystem.removeEmployee(employee);
+		boolean b = ManagementSystem.getEmployeeRepository().checkIfEmployeeExists(id);
+		return b;
 	}
 }

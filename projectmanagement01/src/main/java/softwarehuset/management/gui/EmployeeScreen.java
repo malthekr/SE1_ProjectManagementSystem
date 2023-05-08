@@ -78,7 +78,7 @@ public class EmployeeScreen implements Observer {
 				employeeField.setText("");
 				lblEnterPasswordStatus.setText("");
 				setVisible(false);
-				ManagementSystem.employeeLogout();
+				ManagementSystem.getLoginSystem().employeeLogOut();
 				parentWindow.setVisible(true);
 			}
 		});
@@ -95,7 +95,8 @@ public class EmployeeScreen implements Observer {
 			public void actionPerformed(ActionEvent e) {
 				boolean LogIn;
 				try {
-					LogIn = ManagementSystem.employeeLogin(employeeField.getText());
+					ManagementSystem.getLoginSystem().employeeLogin(employeeField.getText());
+					LogIn = ManagementSystem.getLoginSystem().employeeLoggedIn();
 				} catch (Exception ignore) {
 					LogIn = false;
 				}
@@ -116,7 +117,7 @@ public class EmployeeScreen implements Observer {
 		btnLogout = new JButton("Logout");
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ManagementSystem.employeeLogout();
+				ManagementSystem.getLoginSystem().employeeLogOut();
 				employeeField.setText("");
 			}
 		});
@@ -176,7 +177,7 @@ public class EmployeeScreen implements Observer {
 	
 		disableButtons();
 		displayLoginStatus();
-		ManagementSystem.addObserver(this);
+		ManagementSystem.getLoginSystem().addObserver(this);
 		CreateActivity = new CreateActivityScreen(ManagementSystem, this, parentWindow);
 		findActivity = new FindActivityScreen(ManagementSystem, this, parentWindow, editActivity);
 		findProject = new FindProjectScreen(ManagementSystem, this, parentWindow, editProject, getStatus);
@@ -189,7 +190,9 @@ public class EmployeeScreen implements Observer {
 	}
 		
 	public boolean Login(String id) throws OperationNotAllowedException {
-		return ManagementSystem.employeeLogin(id);
+		ManagementSystem.getLoginSystem().employeeLogin(id);
+		return ManagementSystem.getLoginSystem().employeeLoggedIn();
+		
 	}
 	
 	private void enableButtons() {
@@ -225,7 +228,7 @@ public class EmployeeScreen implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		boolean loggedIn = ManagementSystem.employeeLogged();
+		boolean loggedIn = ManagementSystem.getLoginSystem().employeeLoggedIn();
 		if (loggedIn) {
 			enableButtons();
 			employeeField.setEnabled(false);
@@ -238,7 +241,7 @@ public class EmployeeScreen implements Observer {
 	}
 
 	protected void displayLoginStatus() {
-		boolean loggedIn = ManagementSystem.employeeLogged();
+		boolean loggedIn = ManagementSystem.getLoginSystem().employeeLoggedIn();
 		if (loggedIn) {
 			lblLoginStatus.setText("Employee logged in");
 		} else {

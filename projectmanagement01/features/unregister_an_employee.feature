@@ -24,10 +24,9 @@ Scenario: Unregister an employee that is part of a project and activity
     Given admin is already logged in
    	And there is an employee with ID "mkr"
     And there is a project
-    And employee "mkr" is part of project
+    And "mkr" is the project manager
   	And add employee with ID "mkr" to activity in project
     When unregister the employee with ID "mkr"
     Then the employee is unregistered from the system
     Then employee "mkr" is not part of the project
     And employee "mkr" is not part of the activity "NewActivity20"
-   

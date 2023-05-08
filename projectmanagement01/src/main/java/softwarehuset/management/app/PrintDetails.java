@@ -3,17 +3,23 @@ package softwarehuset.management.app;
 import java.util.Calendar;
 import java.util.List;
 
+// [NIKLAS]
 public class PrintDetails {
 	
+	public PrintDetails(){	
+	}
+	
 	// Print project details on GUI
-	public static String projectDetails(Project project) {
+	public String projectDetails(Project project) {
 		String name = project.getProjectName().isBlank() ? "No project name yet" : project.getProjectName();
 		String pmid = !project.hasProjectManager() ? "No PM assigned yet" : project.getProjectManager().getId();
 		String id = project.getEmployeesAssignedToProject() == null ? "No employees assigned yet" : getProjectEmployeesAsString(project);
+		
 		//Format start date as: Week/Year.
 		int week = project.getStartDate().get(Calendar.WEEK_OF_YEAR);
 		int year =  project.getStartDate().get(Calendar.YEAR);
 		String start = week + "/" + year;
+		
 		//Format end date as: Week/Year
 		int week1 = project.getEndDate().get(Calendar.WEEK_OF_YEAR);
 		int year1 =  project.getEndDate().get(Calendar.YEAR);
@@ -35,7 +41,7 @@ public class PrintDetails {
 		}
 	
 	//Print activity details on GUI
-	static String activityDetail(Activity activity) {
+	public String activityDetail(Activity activity) {
 		String name = activity.getDescription().isBlank() ? "No description on activity" : activity.getDescription();
 		String id = activity.getEmployees() == null ? "No employees assigned yet" : getActivityEmployeesAsString(activity);
 		
@@ -61,7 +67,7 @@ public class PrintDetails {
 	}
 	
 	// Print status of employee on GUI
-	static String getStatusOfEmployee(Employee employee, boolean showActiveProjects){
+	public String getStatusOfEmployee(Employee employee, boolean showActiveProjects){
 		List<Project> projects = employee.getProjects();
 		
 		StringBuffer b = new StringBuffer();
@@ -101,7 +107,7 @@ public class PrintDetails {
 	}
 	
 	// Print status report of project on GUI
-	static String getStatusReport(Project project) {		
+	public String getStatusReport(Project project) {		
 		StringBuffer b = new StringBuffer();
 		b.append("<html>");
 		for(Activity a : project.getActivites()) {
@@ -143,7 +149,7 @@ public class PrintDetails {
 	
 	
 	// Print employees working on activity
-	private static String getActivityEmployeesAsString(Activity activity){
+	private String getActivityEmployeesAsString(Activity activity){
         String name = "";
         int i = 0;
         
@@ -155,12 +161,10 @@ public class PrintDetails {
             name += ", ";
         }
         return name;
-    }
-	
-	
+    } 
 	
 	// Print employees working on project
-	private static String getProjectEmployeesAsString(Project project){
+	private String getProjectEmployeesAsString(Project project){
 	    String name = "";
 	    int i = 0;
 	        
@@ -168,7 +172,7 @@ public class PrintDetails {
 	        name += e.getId();
 	        if (i++ == project.getEmployeesAssignedToProject().size() - 1){ break;} 
 	        name += ", ";
-	        }
-	        return name;
-	    }
+        }
+        return name;
+	   }
 }

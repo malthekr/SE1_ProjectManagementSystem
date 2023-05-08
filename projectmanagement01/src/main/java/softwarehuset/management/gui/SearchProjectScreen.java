@@ -78,7 +78,9 @@ public class SearchProjectScreen {
 		            	lblSearchResultDetail.setText("");
 
 		            } else {
+						
 		            	lblSearchResultDetail.setText(ManagementSystem.getPrintDetails().projectDetails(listSearchResult.getSelectedValue()));
+		            	//lblSearchResultDetail.setText(listSearchResult.getSelectedValue().printDetail());
 		            }
 		        }
 			}
@@ -118,10 +120,18 @@ public class SearchProjectScreen {
 	
 	protected void searchProject() {
 		searchResults.clear();
-		ManagementSystem.searchProject(searchField.getText())
+		ManagementSystem.getProjectRepository().searchProject(searchField.getText())
 			.forEach((m) -> {searchResults.addElement(m);});
 	}
 	
+	private int check(String str) {
+		try {
+			int v = Integer.parseInt(str);
+			return v;
+		} catch (Exception e) {
+			return 23;
+		}
+	}
 	public void setVisible(boolean aFlag) {
 		panelsearchProject.setVisible(aFlag);
 	}
