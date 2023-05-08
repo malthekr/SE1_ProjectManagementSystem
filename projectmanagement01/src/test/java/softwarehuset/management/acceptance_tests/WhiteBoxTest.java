@@ -17,10 +17,6 @@ import softwarehuset.management.app.EmployeeRepository;
 import softwarehuset.management.app.OperationNotAllowedException;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-
 
 public class WhiteBoxTest {
 	private ManagementSystemApp managementSystem = new ManagementSystemApp();
@@ -123,7 +119,6 @@ public class WhiteBoxTest {
 		
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		
-		managementSystem.checkAuth(p1);
 		p1.promoteEmployee(e1.getId());
 
 		loginSystem.adminLogout();		
@@ -175,7 +170,6 @@ public class WhiteBoxTest {
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e2.getId());
 		
-		managementSystem.checkAuth(p1);
 		p1.promoteEmployee(e2.getId());										// "thr" is project manager
 		
 		loginSystem.adminLogout();
@@ -323,18 +317,12 @@ public class WhiteBoxTest {
 	public void testCheckAuthInputDataSetA() throws OperationNotAllowedException {
 		// Input Data
 		loginSystem.adminLogin("admi");
-		
-		Employee e1 = new Employee("thr");
-		employeeRepository.addEmployee(e1);
-		Employee e2 = new Employee("nik");
-		employeeRepository.addEmployee(e2);
-		
-		Project p1 = projectHelper.getProject("proj1");
+		Project p1 = projectHelper.getProject("pr1");
 		managementSystem.createProject(p1);
-		
 		loginSystem.adminLogout();
 		
-		loginSystem.employeeLogin(e2.getId());
+		assertFalse(loginSystem.employeeLoggedIn());
+		assertFalse(loginSystem.adminLoggedIn());
 		
 		// Expected Result
 		try {
@@ -350,20 +338,10 @@ public class WhiteBoxTest {
 		// Input Data
 		loginSystem.adminLogin("admi");
 		
-		Employee e1 = new Employee("nik");
-		employeeRepository.addEmployee(e1);
-		
-		Project p1 = projectHelper.getProject("proj1");
+		Project p1 = projectHelper.getProject("pr1");
 		managementSystem.createProject(p1);
 		
-		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
-		
-		managementSystem.checkAuth(p1);
-		p1.promoteEmployee(e1.getId());	
-		
-		loginSystem.adminLogout();
-		
-		loginSystem.employeeLogin(e1.getId());
+		assertTrue(loginSystem.adminLoggedIn());
 		
 		// Expected Result
 		assertTrue(managementSystem.checkAuth(p1));
@@ -374,19 +352,24 @@ public class WhiteBoxTest {
 		// Input Data
 		loginSystem.adminLogin("admi");
 		
-		Employee e1 = new Employee("nik");
+		Employee e1 = new Employee("mkr");
 		employeeRepository.addEmployee(e1);
 		
-		Project p1 = projectHelper.getProject("proj1");
+		Project p1 = projectHelper.getProject("pr1");
 		managementSystem.createProject(p1);
+		
 		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		
 		loginSystem.adminLogout();
-		
 		loginSystem.employeeLogin(e1.getId());
 		
-		// Expected Result
 		assertFalse(p1.hasProjectManager());
+		assertFalse(loginSystem.adminLoggedIn());
+		assertTrue(loginSystem.employeeLoggedIn());
+		assertEquals(loginSystem.getCurrentLoggedID(), e1.getId());
+		assertTrue(p1.getEmployeesAssignedToProject().contains(e1));
+		
+		// Expected Result
 		assertTrue(managementSystem.checkAuth(p1));
 	}
 	
@@ -395,15 +378,20 @@ public class WhiteBoxTest {
 		// Input Data
 		loginSystem.adminLogin("admi");
 		
-		Employee e1 = new Employee("nik");
+		Employee e1 = new Employee("mkr");
 		employeeRepository.addEmployee(e1);
 		
-		Project p1 = projectHelper.getProject("proj1");
+		Project p1 = projectHelper.getProject("pr1");
 		managementSystem.createProject(p1);
 		
+		loginSystem.adminLoggedIn();
+		loginSystem.employeeLogin(e1.getId());
+		
+		assertFalse(p1.hasProjectManager());
+		assertFalse(p1.getProjectManager() == e1);
+		assertFalse(p1.getEmployeesAssignedToProject().contains(e1));
+		
 		// Expected Result
-		assertTrue(loginSystem.adminLoggedIn());
-
 		assertTrue(managementSystem.checkAuth(p1));
 	}
 	
@@ -412,21 +400,47 @@ public class WhiteBoxTest {
 		// Input Data
 		loginSystem.adminLogin("admi");
 		
-		Employee e1 = new Employee("thr");
+		Employee e1 = new Employee("mkr");
 		employeeRepository.addEmployee(e1);
-		Employee e2 = new Employee("nik");
-		employeeRepository.addEmployee(e2);
 		
-		Project p1 = projectHelper.getProject("proj1");
+		Project p1 = projectHelper.getProject("pr1");
 		managementSystem.createProject(p1);
-		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		
-		managementSystem.checkAuth(p1);
+		managementSystem.addEmployeeToProject(p1.getProjectID(), e1.getId());
 		p1.promoteEmployee(e1.getId());
 		
 		loginSystem.adminLogout();
+		loginSystem.employeeLogin(e1.getId());
 		
-		loginSystem.employeeLogin(e2.getId());
+		assertTrue(p1.hasProjectManager());
+		assertTrue(p1.getProjectManager().equals(e1));
+		assertTrue(p1.getEmployeesAssignedToProject().contains(e1));
+		
+		// Expected Result
+		assertTrue(managementSystem.checkAuth(p1));
+	}
+	
+	@Test
+	public void testCheckAuthInputDataSetF() throws OperationNotAllowedException {
+		// Input Data
+		loginSystem.adminLogin("admi");
+		
+		Employee e1 = new Employee("mkr");
+		employeeRepository.addEmployee(e1);
+		Employee e2 = new Employee("thr");
+		employeeRepository.addEmployee(e2);
+		
+		Project p1 = projectHelper.getProject("pr1");
+		managementSystem.createProject(p1);
+		
+		managementSystem.addEmployeeToProject(p1.getProjectID(), e2.getId());
+		p1.promoteEmployee(e2.getId());
+		
+		loginSystem.adminLogout();
+		loginSystem.employeeLogin(e1.getId());
+		
+		assertTrue(p1.getProjectManager().equals(e2));
+		assertFalse(p1.getEmployeesAssignedToProject().contains(e1));
 		
 		// Expected Result
 		try {

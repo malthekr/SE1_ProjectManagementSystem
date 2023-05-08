@@ -110,7 +110,8 @@ public class Activity {
     }
     
     // When searching with a key word these activities appear:
-    public boolean match(String searchText) {
+    public boolean match(String SearchText) {
+        String searchText = SearchText.toLowerCase();
 		if(this.getEmployees() != null) {
 			boolean b = false;
 			
@@ -122,9 +123,9 @@ public class Activity {
                 }
 			}
 			
-			return String.valueOf(getProjectId()).contains(searchText) || description.contains(searchText) || b;
+			return String.valueOf(getProjectId()).contains(searchText) || description.toLowerCase().contains(searchText) || b;
 		} else {
-			return description.contains(searchText);
+			return description.toLowerCase().contains(searchText);
 		}
 	}
    
