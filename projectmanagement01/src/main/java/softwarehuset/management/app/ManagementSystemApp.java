@@ -19,24 +19,28 @@ public class ManagementSystemApp {
 		loginSystem.setEmployeeRepository(employeeRepository);		
 	}
 	
+	// [MALTHE]
 	public LoginSystem getLoginSystem(){
 		return loginSystem;
 	}
 	
+	// [MALTHE]
 	public ProjectRepository getProjectRepository(){
 		return projectRepository;
 	}
 	
+	// [MALTHE]
 	public EmployeeRepository getEmployeeRepository() {
 		return employeeRepository;
 	}
 	
+	// [MALTHE]
 	public PrintDetails getPrintDetails() {
 		PrintDetails printDetails = new PrintDetails();
 		return printDetails;
 	}
 	
-	// Remove employee from system [Design by contract]
+	// [HANS] Remove employee from system [Design by contract]
 	public void removeEmployee(Employee employee) throws OperationNotAllowedException{
 		assert (employee != null) && (employee.getId() != null) : "Precondition";
 		if(!getLoginSystem().adminLoggedIn()){
@@ -53,7 +57,7 @@ public class ManagementSystemApp {
 		assert !getEmployeeRepository().checkIfEmployeeExists(employee.getId()) : "Postcondition";
 	}
 	
-	// Add project to project repository
+	// [MALTHE] Add project to project repository
 	public void createProject(Project project) throws OperationNotAllowedException {
 		if(!loginSystem.adminLoggedIn()) {
 			throw new OperationNotAllowedException("Admin login required");
@@ -61,7 +65,7 @@ public class ManagementSystemApp {
 		projectRepository.addProject(project);
 	}
 	
-	// Remove project from project repository
+	// [MALTHE] Remove project from project repository
 	public void removeProject(Project project) throws OperationNotAllowedException {
 		Employee employee = employeeRepository.findEmployeeByID(loginSystem.getCurrentLoggedID());
 		
@@ -80,7 +84,7 @@ public class ManagementSystemApp {
 		projectRepository.removeProject(project);
 	}
 	
-	// Add employee to project [Design by contract]
+	// [HANS] Add employee to project [Design by contract]
 	public void addEmployeeToProject(int projectId, String employeeId) throws OperationNotAllowedException {
 		assert (employeeId != null) && ((String.valueOf(projectId).length() <= 5) == true) && (projectId > 0 == true) : "Precondition";
 		Employee employee = employeeRepository.findEmployeeByID(employeeId);
@@ -105,7 +109,7 @@ public class ManagementSystemApp {
 		throw new OperationNotAllowedException("Project Manager login required");
 	}
 	
-	// Remove employee from project 
+	// [HANS] Remove employee from project 
 	public void removeEmployeeWithIdFromProject(int ProjectId, String EmployeeId) throws OperationNotAllowedException {
 		Employee employee = employeeRepository.findEmployeeByID(EmployeeId);
 		Project project = projectRepository.findProjectByID(ProjectId);
@@ -115,7 +119,7 @@ public class ManagementSystemApp {
 		}
 	}
 	
-	// Add worked hour to activity
+	// [THOR] Add worked hour to activity
 	public void addHourToActivity(Activity activity, double hours) throws OperationNotAllowedException {
 		loginSystem.checkEmployeeLoggedIn();
 		
@@ -126,7 +130,7 @@ public class ManagementSystemApp {
 		project.addHoursToActivity(activity, currentEmployee, hours);		
 	}
 	
-	// Add employee to activity in project
+	// [HANS] Add employee to activity in project
 	public void addEmployeeToActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{		
 		if(checkAuth(project)) {
 			if(project.findEmployee(employee)) {
@@ -143,7 +147,7 @@ public class ManagementSystemApp {
 		}
 	}
 	
-	// Remove employee from activity in project
+	// [HANS] Remove employee from activity in project
 	public void removeEmployeeFromActivity(Employee employee, Project project, String description) throws OperationNotAllowedException{
 		if(checkAuth(project)) {
 			if(project.findEmployee(employee)) {
@@ -158,7 +162,7 @@ public class ManagementSystemApp {
 		}
 	}
 	
-	// Toggle the project status - ON/OFF
+	// [MALTHE] Toggle the project status - ON/OFF
 	public void toggleProjectOngoing(Project project) throws OperationNotAllowedException {		
 		if(checkAuth(project)){							
 			if (project.getOngoingProject()){			
@@ -169,7 +173,7 @@ public class ManagementSystemApp {
 		}
 	}
 	
-	// Claim/unclaim project manager status [Design by contract]
+	// [MALTHE] Claim/unclaim project manager status [Design by contract]
 	public boolean togglePMClaim(Project project, String id) throws OperationNotAllowedException {
 		assert (loginSystem.employeeLoggedIn() == true) && (project != null) && (id != null) && (id.length() <= 4) && (id.length() > 0): "Precondition";
 		Employee employee = employeeRepository.findEmployeeByID(id);							
@@ -192,7 +196,7 @@ public class ManagementSystemApp {
 		throw new OperationNotAllowedException("Project already has PM");	
 	}
 	
-	// Search for all activities in system by key word
+	// [THOR] Search for all activities in system by key word
 	public List<Activity> searchActivity(String searchText) {
 		List<Activity> activites =  new ArrayList<>();
 	
@@ -207,7 +211,7 @@ public class ManagementSystemApp {
 		return activites;
 	}
 	
-	// Check authentication of the current employee logged in
+	// [NIKLAS] Check authentication of the current employee logged in
 	public boolean checkAuth(Project project) throws OperationNotAllowedException {
 		assert (project != null): "Precondition";
 		Employee currentEmployee = null;
@@ -280,7 +284,7 @@ public class ManagementSystemApp {
 		project4.beginProject();
 		project5.beginProject();
 		
-		/*
+		
 		for(int i = 1; i < 500; i++){
 			String name = "Project" + " " + i;
 			double j = i + 0.4;
@@ -410,6 +414,7 @@ public class ManagementSystemApp {
 		addEmployeeToActivity(employee1, project5, "implement wellness activities");
 		
 		loginSystem.adminLogout();
+	
 	*/
 	}
 }

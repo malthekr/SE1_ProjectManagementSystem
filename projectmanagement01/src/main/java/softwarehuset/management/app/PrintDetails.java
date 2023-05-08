@@ -3,6 +3,7 @@ package softwarehuset.management.app;
 import java.util.Calendar;
 import java.util.List;
 
+// [NIKLAS]
 public class PrintDetails {
 	
 	public PrintDetails(){	

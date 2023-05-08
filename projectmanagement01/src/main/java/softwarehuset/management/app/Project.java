@@ -29,7 +29,7 @@ public class Project {
 		this.projectID = idServer.generateID(startDate);
 		addBaseActivities();
 	} 
-	
+	// [HANS] 
 	private void addBaseActivities() {
 		Calendar dates = new GregorianCalendar();
 		
@@ -41,57 +41,57 @@ public class Project {
 		activities.add(courses);
 	}
 	
-	// Get project name
+	// [HANS] Get project name
 	public String getProjectName() {
 		return projectName;
 	}
 	
-	// Check if project manager assigned
+	// [HANS] Check if project manager assigned
 	public boolean hasProjectManager() {
 		return hasProjectManager;
 	}
 	
-	// Get project manager
+	// [HANS] Get project manager
 	public Employee getProjectManager() {
 		return projectManager;
 	}
 	
-	// Get project id
+	// [HANS] Get project id
 	public int getProjectID() {
 		return projectID;
 	}
 	
-	// Get start date
+	// [HANS] Get start date
 	public Calendar getStartDate() {
 		return startDate;
 	}
 	
-	// Get end date
+	// [HANS] Get end date
 	public Calendar getEndDate() {
 		return endDate;
 	}
 	
-	// See if the project is active or closed
+	// [HANS] See if the project is active or closed
 	public boolean getOngoingProject() {
 		return ongoingProject;
 	}
 	
-	// Get employees working on this project
+	// [HANS] Get employees working on this project
 	public List<Employee> getEmployeesAssignedToProject(){
 		return employees;
 	}
 	
-	// Get activities in this project
+	// [HANS] Get activities in this project
 	public List<Activity> getActivites(){
 		return activities;
 	}
 	
-	// Get expected hour of project
+	// [HANS] Get expected hour of project
 	public double getExpectedHours() {
 		return expectedHours;
 	}
 	
-	// Get worked hours on this project
+	// [HANS] Get worked hours on this project
 	public double getWorkedHours(){
 		double sumWorkedHours = 0;
 		for(Activity a : activities){
@@ -100,12 +100,12 @@ public class Project {
 		return sumWorkedHours;
 	}		
 	
-	// Get time tables associated with this project
+	// [THOR] Get time tables associated with this project
 	public List<TimeTable> getTimeTables(){
 		return this.timeTables;
 	}
 	
-	// Get time tables of all employees working on this project
+	// [THOR] Get time tables of all employees working on this project
 	public List<Employee> getEmployeesFromTimeTable(Activity a){
 		List<Employee> es = new ArrayList<>(a.getEmployees());
 		for(TimeTable t : this.timeTables) {
@@ -116,13 +116,13 @@ public class Project {
 		return es;
 	}
 
-	// Get time tables associated with an employee working on this project
+	// [THOR] Get time tables associated with an employee working on this project
 	public List<TimeTable> getTimeTablesByEmployee(Employee employee) {
 		List<TimeTable> employeeTimeTables = timeTables.stream().filter(u -> u.getEmployee().equals(employee)).collect(Collectors.toList());
 		return employeeTimeTables;
 	}
 		
-	// 
+	// [THOR] 
 	public List<TimeTable> getNumberOfTimeTablesByDateAndEmployee(Employee employee, Calendar date) {
 		List<TimeTable> employeeTimeTables = timeTables.stream().filter(u -> u.getEmployee().equals(employee)).collect(Collectors.toList());
 		List<TimeTable> finalTimeTable = employeeTimeTables.stream().filter(u -> u.getDate().get(Calendar.WEEK_OF_YEAR) == date.get(Calendar.WEEK_OF_YEAR)).collect(Collectors.toList());
@@ -130,6 +130,7 @@ public class Project {
 		return finalTimeTable;
 	}
 	
+	// [THOR] 
 	// Get time tables for a specific employees and a specific activity
 	public List<TimeTable> getTimeTableForEmployeeAndActivity(Employee employee, Activity activity, List<TimeTable> timeTableInput){
 		List<TimeTable> list = new ArrayList<>();
@@ -138,49 +139,49 @@ public class Project {
 		return list;
 	}
 	
-	// Edit project name
+	// [NIIKAS] Edit project name
 	public void editProjectName(String projectName){
 		this.projectName = projectName;
 	}
 	
-	// Edit expected hours on project
+	// [NIIKAS] Edit expected hours on project
 	public void editExpectedHours(Double expectedHours) {
 		this.expectedHours = 0 > expectedHours ? 0 : expectedHours - expectedHours % 0.5 ;
 	}
 	
-	// Edit start date of project
+	// [NIIKAS] Edit start date of project
 	public void editStartDate(Calendar newStartDate) {
 		this.startDate = newStartDate;
 	}
 	
-	// Edit end date of project
+	// [NIIKAS] Edit end date of project
 	public void editEndDate(Calendar newEndDate) {
 		this.endDate = newEndDate;
 	}
 	
-	// Set project as active (true)
+	// [NIIKAS] Set project as active (true)
 	public void beginProject() {
 		ongoingProject = true;
 	}
 	
-	// set project as inactive (false)
+	// [NIIKAS] set project as inactive (false)
 	public void closeProject()  {
 		ongoingProject = false;
 	}
 	
-	// Override and assign the project manager for this project, even if already assigned
+	// [MALTHE] Override and assign the project manager for this project, even if already assigned
 	public void setProjectManager(Employee employee) { 
 		this.projectManager = employee;
 		this.hasProjectManager = true;
 	}
 	
-	// Remove current project manager
+	// [MALTHE] Remove current project manager
 	public void removeProjectManager(){
 		this.projectManager = null;
 		this.hasProjectManager = false;
 	}
 	
-	// Promote an employee part of this project to project manager
+	// [MALTHE] Promote an employee part of this project to project manager
 	// Throws Exception if project manager is already assigned or employee is not part of project
 	public void promoteEmployee(String id) throws OperationNotAllowedException{
 		if(this.hasProjectManager) {
@@ -197,7 +198,7 @@ public class Project {
 		throw new OperationNotAllowedException("Employee is not part of the project");
 	}
 	
-	// Add employee - Throws Exception if employee is already part of project
+	// [MALTHE] Add employee - Throws Exception if employee is already part of project
 	public void addEmployee(Employee employee) throws OperationNotAllowedException { 
 		if(!employees.contains(employee)){
 			employees.add(employee);
@@ -206,7 +207,7 @@ public class Project {
 		}
 	}
 	
-	// Remove employee - Throws Exception if employee is not part of project
+	// [MALTHE] Remove employee - Throws Exception if employee is not part of project
 	public void removeEmployee(Employee employee) throws OperationNotAllowedException {
 		if(employees.contains(employee)){
 			employees.remove(employee);
@@ -226,7 +227,7 @@ public class Project {
 		
 	}
 	
-	// Create an activity for project 
+	// [MALTHE] Create an activity for project 
 	// Throws exception if activity is unnamed or if another activity in this project is named the same
 	public void createActivity(String description) throws OperationNotAllowedException {
 		
@@ -245,7 +246,7 @@ public class Project {
 		addActivity(activity);
 	}
 	
-	// Add activity - Throws Exception if activity is already part of project
+	// [MALTHE] Add activity - Throws Exception if activity is already part of project
 	public void addActivity(Activity activity) throws OperationNotAllowedException { 
 		
 		if(!activities.contains(activity)){
@@ -255,7 +256,7 @@ public class Project {
 		}
 	}
 	
-	// Remove activity - Throws Exception if activity is not part of project
+	// [MALTHE] Remove activity - Throws Exception if activity is not part of project
 	public void removeActivity(String employeeId, Activity activity) throws OperationNotAllowedException {
 		Employee e = findEmployeeById(employeeId);
 		
@@ -267,6 +268,7 @@ public class Project {
 		activities.remove(activity);
 	}
 	
+	// [NIKLAS]
 	public boolean findEmployee(Employee employee) throws OperationNotAllowedException {
 		for(Employee e : employees){
 			if(e.equals(employee) == true){
@@ -276,7 +278,7 @@ public class Project {
 		return false;
 	}
 	
-	// Find a specific activity associated with this project by it's description
+	// [NIIKAS] Find a specific activity associated with this project by it's description
 	public Activity findActivityByDescription(String description) throws OperationNotAllowedException {
 		Activity activity = activities.stream().filter(u -> u.getDescription().equals(description)).findAny().orElse(null);
 	
@@ -286,7 +288,7 @@ public class Project {
 		return activity;
 	}
 	
-	// Add an employee to specific activity associated wit this project
+	// [NIIKAS] Add an employee to specific activity associated wit this project
 	public void addEmployeeToActivity(Employee employee, String description) throws OperationNotAllowedException{
 		Activity a = findActivityByDescription(description);
 		if(findEmployee(employee)){
@@ -294,7 +296,7 @@ public class Project {
 		}
 	}
 	
-	// Remove an employee from specific activity associated with this project
+	// [NIIKAS] Remove an employee from specific activity associated with this project
 	public void removeEmployeeFromActivity(Employee employee, String description) throws OperationNotAllowedException{
 		Activity a = findActivityByDescription(description);
 		if(findEmployee(employee)){
@@ -302,14 +304,14 @@ public class Project {
 		}
 	}
 	
-	// Add worked hours to an activity
+	// [THOR] Add worked hours to an activity
 	public void addHoursToActivity(Activity activity, Employee employee, double hours){
 		activity.addWorkedHours(hours);
 		TimeTable timeTable = new TimeTable(activity, employee, hours);
 		timeTables.add(timeTable);
 	}
 	
-	// Removes all activities from project
+	// [NIKLAS] Removes all activities from project
 	public void clean() throws OperationNotAllowedException {
 		for(Activity activity : activities){
 			for(Employee employee : employees){
@@ -321,7 +323,7 @@ public class Project {
 	}
 	
 	
-	//When searching with a key word these projects appear:
+	// [NIKLAS] When searching with a key word these projects appear:
 	public boolean match(String searchText) {
 		String SearchText = searchText.toLowerCase();
 		
@@ -334,7 +336,7 @@ public class Project {
 		}
 	}
 	
-	// Display on GUI what comes up when we search for a key word
+	// [NIKLAS] Display on GUI what comes up when we search for a key word
 	public String toString() {
 		String name = this.getProjectName().isBlank() ? "No project name yet" : this.getProjectName();
 		return "Project ID: " + String.valueOf(getProjectID()) + " - " + name;
@@ -354,7 +356,7 @@ public class Project {
 		return employees.stream().filter(u -> u.getId().equals(id)).findAny().orElse(null);
 	}
 	
-	// Private method to get time tables for a certain employee
+	// [THOR] Private method to get time tables for a certain employee
 	private List<TimeTable> getTimeTableForEmployee(Employee employee, List<TimeTable> timeTableInput){
 		List<TimeTable> timeTablesWithEmployee = new ArrayList<>();
 		
@@ -366,7 +368,7 @@ public class Project {
 		return timeTablesWithEmployee;
 	}
 	
-	// Private method to get time tables for a certain activity
+	// [THOR] Private method to get time tables for a certain activity
 	private List<TimeTable> getTimeTableForActivity(Activity activity, List<TimeTable> timeTableInput){
 		List<TimeTable> timeTablesWithEmployee = new ArrayList<>();
 		
