@@ -150,12 +150,18 @@ public class Project {
 	}
 	
 	// [NIIKAS] Edit start date of project
-	public void editStartDate(Calendar newStartDate) {
+	public void editStartDate(Calendar newStartDate) throws OperationNotAllowedException {
+		if(newStartDate.compareTo(this.endDate) > 0) {
+			throw new OperationNotAllowedException("Start date is after end date");
+		}
 		this.startDate = newStartDate;
 	}
 	
 	// [NIIKAS] Edit end date of project
-	public void editEndDate(Calendar newEndDate) {
+	public void editEndDate(Calendar newEndDate) throws OperationNotAllowedException {
+		if(newEndDate.compareTo(this.startDate) < 0) {
+			throw new OperationNotAllowedException("End date is before start date");
+		}
 		this.endDate = newEndDate;
 	}
 	

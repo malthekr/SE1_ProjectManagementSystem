@@ -266,9 +266,12 @@ public class EditProjectScreen {
 				//ManagementSystem.UpdateStartDateProject(dd, mm, yyyy,project.getProjectID());
 				
 				Calendar cal = createDate(dd,mm,yyyy);
-				project.editStartDate(cal);
-				
-				EnterErrorMessage.setText("Successfully changed start date for project");
+				try {
+					project.editStartDate(cal);
+					EnterErrorMessage.setText("Successfully changed start date for project");
+				} catch (OperationNotAllowedException e1) {
+					EnterErrorMessage.setText(e1.getMessage());
+				}
 			}
 		});
 		
@@ -288,11 +291,15 @@ public class EditProjectScreen {
 				
 //					Project project = ManagementSystem.getProjectRepository().findProjectByID(project.getProjectID());
 				Calendar cal = createDate(dd,mm,yyyy);
-				project.editEndDate(cal);
+				try {
+					project.editEndDate(cal);
+					EnterErrorMessage.setText("Successfully changed end date for project");
+				} catch (OperationNotAllowedException e1) {
+					EnterErrorMessage.setText(e1.getMessage());
+				}
 				
 				//ManagementSystem.updateEndDateProject(dd, mm, yyyy,project.getProjectID());
 				
-				EnterErrorMessage.setText("Successfully changed end date for project");
 			}
 		});
 		

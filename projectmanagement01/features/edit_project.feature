@@ -54,8 +54,8 @@ Scenario: PM edits start date of project
     Given there is a project
     And employee with ID "mkr" is logged in
     And "mkr" is the project manager
-    When set start date to 10-05-2023 for project
-    Then start date project is set to 10-05-2023
+    When set start date to 10-05-2022 for project
+    Then start date project is set to 10-05-2022
 
 Scenario: PM edits end date of project
     Given there is a project
