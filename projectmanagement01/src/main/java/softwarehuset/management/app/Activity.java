@@ -93,9 +93,6 @@ public class Activity {
  			throw new OperationNotAllowedException("Employee already part of activity");      	
     	} 
     	
-    	if (employee.isBusy()){
-            throw new OperationNotAllowedException("Employee too busy");      	
-        }
     		employees.add(employee);
         	return;
     }

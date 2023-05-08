@@ -163,12 +163,17 @@ public class EditActivityScreen {
 		leaveActivity.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-						ManagementSystem.removeEmployeeFromActivity(
-						ManagementSystem.currentEmployee(), 
-						ManagementSystem.findProjectById(activity.getProjectId()), 
+					String input = userInput.getText();
+					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
+					String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
+					
+					ManagementSystem.removeEmployeeFromActivity(
+						ManagementSystem.getEmployeeRepository().findEmployeeByID(id),
+						project,
 						activity.getDescription());
-						userInput.setText("");
-						EnterErrorMessage.setText("Successfully left activity");
+					
+					userInput.setText("");
+					EnterErrorMessage.setText("Successfully left activity");
 				} catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
 				}

@@ -24,15 +24,19 @@ public class ProjectSteps {
 	private ErrorMessageHolder errorMessageHolder;
 	private Project project;
 	private ProjectHelper projectHelper;
-	private EmployeeHelper employeeHelper;
 	
-	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, ProjectHelper projectHelper, EmployeeHelper employeeHelper) {
-		this.managementSystem = managementSystem;
+	public ProjectSteps(ManagementSystemApp managementSystem, ErrorMessageHolder errorMessageHolder, ProjectHelper projectHelper) {
+		this.managementSystem =  managementSystem;
 		this.errorMessageHolder = errorMessageHolder;
 		this.projectHelper = projectHelper;
-		this.employeeHelper = employeeHelper;
-		
-	} 
+		connect();
+	}
+	
+	private void connect(){
+		this.projectRepository = managementSystem.getProjectRepository();
+		this.employeeRepository = managementSystem.getEmployeeRepository();	
+		this.loginSystem = managementSystem.getLoginSystem();
+	}
 	
 	@Given("there is a project with name {string}")
 	public void createProjectWithName(String projectName) throws OperationNotAllowedException {
@@ -79,7 +83,6 @@ public class ProjectSteps {
 			}
 		}
 		assertFalse(flag);
-		//assertTrue(managementSystem.checkIfUniqueProjectId(project.getProjectID()));
 	}
 	
 	@Given("there is a project")
@@ -135,7 +138,8 @@ public class ProjectSteps {
 
 	@Then("employee {string} is added to project")
 	public void employeeIsAddedToProject(String EmployeeId) throws OperationNotAllowedException {
-		assertTrue(managementSystem.checkIfEmployeeIsPartOfProject(project.getProjectID(), EmployeeId));
+		Employee e = employeeRepository.findEmployeeByID(EmployeeId);
+		assertTrue(project.findEmployee(e));
 	}
 	
 	@Given("there is also an employee with ID {string} part of project")
@@ -160,7 +164,7 @@ public class ProjectSteps {
 	
 	@Given("project has no project manager")
 	public void projectHasNoProjectManager() throws OperationNotAllowedException {
-	    assertFalse(managementSystem.checkIfProjectHasPM(project.getProjectID()));
+		assertFalse(project.hasProjectManager());
 	}
 	
 	@Given("project has project manager")
@@ -175,7 +179,7 @@ public class ProjectSteps {
 	@When("admin promotes {string} to project manager")
 	public void adminPromotesToProjectManager(String employeeId) {
 		try {
-			managementSystem.promoteToPm(project.getProjectID(), employeeId);
+			project.promoteEmployee(employeeId);
 	    } catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 		}
@@ -192,7 +196,10 @@ public class ProjectSteps {
 	
 	@When("set start date to {int}-{int}-{int} for project")
 	public void setStartDateToForProject(int dd, int mm, int yyyy) throws OperationNotAllowedException {
-		managementSystem.UpdateStartDateProject(dd, mm, yyyy, project.getProjectID());
+		Calendar startDate = project.getStartDate();
+		startDate = setDate(startDate, dd, mm, yyyy);
+		managementSystem.checkAuth(project);
+		project.editStartDate(startDate);
 	}
 
 	@Then("start date project is set to {int}-{int}-{int}")
@@ -246,8 +253,6 @@ public class ProjectSteps {
 			}
 		}
 		assertFalse(flag);
-		//Employee employee = managementSystem.FindEmployeeById(id);
-		//assertFalse(a.getEmployees().contains(employee));
 	}
 	
 	@Then("the project name is {string}")
@@ -354,7 +359,6 @@ public class ProjectSteps {
 	@When("remove {string} from activity")
 	public void removeFromActivity(String id) {
 	    try {
-	    	//Employee employee = managementSystem.FindEmployeeById(id);
 			String description = "NewActivity20";
 	    	managementSystem.removeEmployeeFromActivity(managementSystem.FindEmployeeById(id), project, description);
 	    } catch (OperationNotAllowedException e) {
@@ -367,8 +371,6 @@ public class ProjectSteps {
 			String description = "NewActivity20";
 			Employee employee = managementSystem.FindEmployeeById(id);
 			Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
-			//employee.addActivity(project, activity);
-			//employee.isPartOfActivity(project, activity);
 			assertEquals(activity.getEmployees().contains(employee), employee.getActivities().contains(activity));
 	}
 	
@@ -432,7 +434,9 @@ public class ProjectSteps {
 	@When("edits description of activity {string} to {string}")
 	public void editsDescriptionOfActivityTo(String description1, String description2) {
 	   try {
-		   managementSystem.setActivityDescrption(project, description1, description2);
+		   managementSystem.checkAuth(project);
+		   Activity activity = project.findActivityByDescription(description1);
+		   activity.setDescrption(description2);
 	   } catch (OperationNotAllowedException e) {
 			errorMessageHolder.setErrorMessage(e.getMessage());
 	   }
@@ -479,30 +483,6 @@ public class ProjectSteps {
 	    assertEquals(workedHours, hour, 0);
 	}
 	
-	@When("edit hour to {double} hours is added as worked hour to activity {string} in project")
-	public void editHourToHoursIsAddedAsWorkedHourToActivityInProject(double hour, String description) {
-		try {
-	    Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
-	    List<TimeTable> timeTables = managementSystem.getActivityTimeTableCurrentEmployee(activity);
-	    
-	    for(TimeTable t : timeTables) {
-		    managementSystem.editActivityTimeTable(activity, t.getDate(), hour);
-	    }
-	    } catch (OperationNotAllowedException e) {
-			errorMessageHolder.setErrorMessage(e.getMessage());
-		}
-	}
-
-	@Then("{double} hours is added as worked hour to activity {string} in project")
-	public void hoursIsAddedOfEmployeeToActivityInProject(double hour, String description) throws OperationNotAllowedException {
-		Activity activity = managementSystem.findActivityByDescription(project.getProjectID(), description);
-	    List<TimeTable> timeTables = managementSystem.getActivityTimeTableCurrentEmployee(activity);
-	    
-	    double hoursWorked = hoursInTimeTable(timeTables);
-	    assertEquals(hoursWorked, hour, 0);
-	}
-	
-	
 	@When("request employee activity of {string}")
 	public List<Activity> requestEmployeeActivityOfAnotherEmployee(String id) {	
 		try {
@@ -524,8 +504,9 @@ public class ProjectSteps {
 	
 	@When("request active status of employee {string}")
 	public void requestActiveStatusOfEmployee(String id) throws OperationNotAllowedException {
-		Employee employee = managementSystem.FindEmployeeById(id);
-		String s = managementSystem.getStatusOfEmployee(employee, false);
+		Employee employee = employeeRepository.findEmployeeByID(id);
+		
+		String s = managementSystem.getPrintDetails().getStatusOfEmployee(employee, false);
 		assertTrue(s != null);
 	}
 	
@@ -533,8 +514,8 @@ public class ProjectSteps {
 	public void statusOfEmployeeFromIsPrinted(String id) throws OperationNotAllowedException {
 		Employee employee = managementSystem.FindEmployeeById(id);
 	
-		
-		assertTrue(managementSystem.getStatusOfEmployee(employee, true) != null);
+		String s = managementSystem.getPrintDetails().getStatusOfEmployee(employee, true);
+		assertTrue(s != null);
 	}
 	
 	@When("add registered hours to {double} hours to activity")

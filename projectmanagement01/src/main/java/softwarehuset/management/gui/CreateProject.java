@@ -50,7 +50,6 @@ public class CreateProject implements Observer {
 	private JLabel pm;
 	private JTextField pmField;
 	
-	//private JLabel lblEnterPasswordStatus = new JLabel("");
 	private JButton btnBack;
 	private JButton btnCreateProject;
 	
@@ -174,8 +173,6 @@ public class CreateProject implements Observer {
 		});
 		btnBack.setBounds(21, 28, 74, 29);
 		panelCreateFunctions.add(btnBack);
-		
-		ManagementSystem.addObserver(this);
 	}
 	
 	public void setVisible(boolean visible) {

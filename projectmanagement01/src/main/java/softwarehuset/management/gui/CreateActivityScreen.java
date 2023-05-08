@@ -23,6 +23,7 @@ import javax.swing.event.ListSelectionListener;
 
 import softwarehuset.management.app.Activity;
 import softwarehuset.management.app.Employee;
+import softwarehuset.management.app.LoginSystem;
 import softwarehuset.management.app.ManagementSystemApp;
 import softwarehuset.management.app.OperationNotAllowedException;
 import softwarehuset.management.app.Project;
@@ -31,7 +32,7 @@ import softwarehuset.management.app.Project;
 //import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
 
-public class CreateActivityScreen implements Observer {
+public class CreateActivityScreen {
 	private MainScreen parentparentWindow; 
 	private EmployeeScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
@@ -158,7 +159,13 @@ public class CreateActivityScreen implements Observer {
 				}
 				
 				try {
-					ManagementSystem.createActivity(pjId, descriptionField.getText());
+					Project project = ManagementSystem.getProjectRepository().findProjectByID(pjId);
+					Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(ManagementSystem.getLoginSystem().getCurrentLoggedID());
+					
+					ManagementSystem.checkAuth(project);
+					
+					project.createActivity(descriptionField.getText());
+					
 				} catch (OperationNotAllowedException l) {
 					EnterEmployeeStatus.setText(l.getMessage());
 					return;
@@ -203,11 +210,6 @@ public class CreateActivityScreen implements Observer {
 		panelCreateActivityFunctions.setVisible(visible);
 	}
 	
-	
-	@Override
-	public void update(Observable o, Object arg) {
-	
-	}
 	private void clear() {
 		EnterEmployeeStatus.setText("");
 		projectIdField.setText("");

@@ -38,26 +38,6 @@ public class TimeTable {
 		return this.workHours;
 	}
 	
-	// Edit which activity the time table is associated with
-	public void editActivity(Activity newActivity) {
-		this.activity = newActivity;
-	}
-	
-	// Edit which employee the time table is associated with
-	public void editEmployee(Employee newEmployee) {
-		this.employee = newEmployee;
-	}
-	
-	// Edit date of time table
-	public void editDate(Calendar newDate) {
-		this.date = newDate;
-	}
-	
-	// Edit hours on time table
-	public void editHours(double newHours) {
-		this.workHours = newHours - newHours % 0.5;
-	}
-	
 	// When creating the time table generate the date today
 	public Calendar generateDate(){
 		Calendar dateToday = new GregorianCalendar();

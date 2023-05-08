@@ -81,8 +81,6 @@ public class Employee {
     		activities.add(activity);
     		return;
     	}
-    	
-    	//throw new OperationNotAllowedException("Employee is not part of the project");
     }
     
     // Add project/activity for employee (is not synced with project employee list or activity employee list)

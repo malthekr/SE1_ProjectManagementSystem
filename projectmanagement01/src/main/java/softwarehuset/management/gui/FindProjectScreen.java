@@ -31,7 +31,7 @@ import softwarehuset.management.app.Project;
 //import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
 
-public class FindProjectScreen implements Observer {
+public class FindProjectScreen {
 	private MainScreen parentparentWindow; 
 	private EmployeeScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
@@ -221,25 +221,11 @@ public class FindProjectScreen implements Observer {
 		panelFindProject.setVisible(visible);
 	}
 	
-	
-	@Override
-	public void update(Observable o, Object arg) {
-		
-	}
 	protected void searchProject() {
 		searchResults.clear();
 		
 		ManagementSystem.searchProject(searchField.getText())
 		.forEach((m) -> {searchResults.addElement(m);});
-	}
-	
-	private int check(String str) {
-		try {
-			int v = Integer.parseInt(str);
-			return v;
-		} catch (Exception e) {
-			return 23;
-		}
 	}
 	
 	public void clear() {

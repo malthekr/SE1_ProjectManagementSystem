@@ -15,7 +15,6 @@ public class ProjectHelper {
 		if (project == null) {
 			project = exampleProject();
 		} 
-//		project = exampleProject();
 		return project;
 	}
 	
@@ -38,9 +37,4 @@ public class ProjectHelper {
 		Project project= new Project("Example project", workHours, startDate, endDate);
 		return project;
 	}
-/*
-	public void setUser(Project projectInfo) {
-		project = projectInfo;
-	}
-*/
 }

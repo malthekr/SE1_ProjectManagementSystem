@@ -33,7 +33,6 @@ public class EditProjectScreen {
 	private JButton removeEmployeeFromActivity;
 	private JButton joinProject;
 	private JButton leaveProject;
-	private JButton setProjectToActiv;
 	private JButton editExpectedHours;
 	private JButton editNameOfProject;
 	private JButton editStartDate;
@@ -93,7 +92,6 @@ public class EditProjectScreen {
 		panelEditProject.add(removeEmployeeFromActivity);
 		panelEditProject.add(joinProject);
 		panelEditProject.add(leaveProject);
-		//panelEditProject.add(setProjectToActiv);
 		panelEditProject.add(editExpectedHours);
 		panelEditProject.add(editNameOfProject);
 		panelEditProject.add(editStartDate);
@@ -109,7 +107,6 @@ public class EditProjectScreen {
 		removeEmployeeFromActivity = addButton("Remove employee from project");
 		joinProject = addButton("Join project");
 		leaveProject = addButton("Leave project");
-		//setProjectToActiv = addButton("toggle ongoing");
 		editExpectedHours = addButton("Edit expected hours");
 		editNameOfProject = addButton("Edit project name");
 		editStartDate = addButton("Edit start date");
@@ -148,10 +145,6 @@ public class EditProjectScreen {
 						claimPM.setText("Claim project manager");
 						EnterErrorMessage.setText("Successfully unclaimed project manager");
 					}
-					
-					//ManagementSystem.promoteToPm(activity.getProjectId(), input);
-					
-					//userInput.setText("");
 					
 				} catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
@@ -225,14 +218,10 @@ public class EditProjectScreen {
 					EnterErrorMessage.setText("Please enter a number");
 					return;
 				}
-				try {
-					ManagementSystem.UpdateExpectedHours(project.getProjectID(), stringToDouble(input));
-					userInput.setText("");
-					EnterErrorMessage.setText("Successfully changed expected hours"); 
-				} catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
-					return;
-				}
+				
+				project.editExpectedHours(stringToDouble(input));
+				userInput.setText("");
+				EnterErrorMessage.setText("Successfully changed expected hours");
 			}
 		});
 		
@@ -251,6 +240,9 @@ public class EditProjectScreen {
 					EnterErrorMessage.setText(p.getMessage());
 					return;
 				}
+	
+				project.editProjectName(input);
+				EnterErrorMessage.setText("Successfully changed project name");
 			}
 		});
 		
@@ -301,51 +293,23 @@ public class EditProjectScreen {
 					EnterErrorMessage.setText(p.getMessage());
 					return;
 				}
-			}
-		});
-		
-		
-		
-/*		// View hours report (USE LATER)
-		editStartDate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+				String[] date = input.split("-");
+				
+				int dd = Integer.parseInt(date[0]);
+				int mm = Integer.parseInt(date[1]) - 1;
+				int yyyy = Integer.parseInt(date[2]);
+			
+				Calendar cal = createDate(dd,mm,yyyy);
 				try {
-					String input = userInput.getText();
-					ManagementSystem.getStatus(activity);
-					
-					EnterErrorMessage.setText("Successfully changed description for activity"); 
-				}  catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
-					return;
+					project.editEndDate(cal);
+					EnterErrorMessage.setText("Successfully changed end date for project");
+				} catch (OperationNotAllowedException e1) {
+					EnterErrorMessage.setText(e1.getMessage());
 				}
 			}
-		});*/
-	}
-	/*
-	private void setEnableButtons(boolean enabled) {
-		claimPM.enable(false);
-		//btnFindActivity.setEnabled(enabled);
-		//btnLogout.setEnabled(enabled);
-		//btnCreateActivity.setEnabled(enabled);
-		//btnFindActivity.setEnabled(enabled);
-		//btnJoinProject.setEnabled(enabled);
-		//btnFindEmployee.setEnabled(enabled);
-		//btnUnregisterEmployee.setEnabled(enabled);
-		//btnPayFine.setEnabled(enabled);
+		});
 	}
 		
-	@Override
-	public void update(Observable o, Object arg) {
-		boolean loggedIn = ManagementSystem.currentEmployee().equals(project.getProjectManager());
-		
-		if (loggedIn) {
-			setEnableButtons(loggedIn);
-			
-		} else {
-			setEnableButtons(loggedIn);
-		}
-	}
-	*/
 	public void setVisible(boolean visible) {
 		panelEditProject.setVisible(visible);
 	}

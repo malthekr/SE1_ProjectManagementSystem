@@ -349,9 +349,6 @@ public class ManagementSystemApp extends Observable {
 			if(project.findEmployee(employee)) {
 				// Removes employee to project employee list
 				project.removeEmployeeFromActivity(employee, description);
-				
-				// Remove activity from employee project-activity list
-				employee.removeActivity(project, project.findActivityByDescription(description));
 				return;
 			}
 			throw new OperationNotAllowedException("Employee not part of project");
