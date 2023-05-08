@@ -123,9 +123,7 @@ public class FindProjectScreen implements Observer {
 		            	lblFindResultDetail.setText("");
 
 		            } else {
-		            	//lblFindResultDetail.setText(listSearchResult.getSelectedValue().printDetail());
 		            	lblFindResultDetail.setText(ManagementSystem.getPrintDetails().projectDetails(listSearchResult.getSelectedValue()));
-		            			//listSearchResult.getSelectedValue().printDetail());
 		            }
 		        }
 			}

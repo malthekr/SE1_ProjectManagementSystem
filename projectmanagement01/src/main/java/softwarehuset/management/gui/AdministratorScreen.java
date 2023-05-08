@@ -40,9 +40,9 @@ public class AdministratorScreen implements Observer {
 	private JLabel lblEnterPasswordStatus = new JLabel("");
 	private JLabel lblLoginStatus;
 	private JButton btnLogout;
-	//private JButton btnPayFine;
+	
 	private JButton btnRegisterEmployee;
-	//private JButton btnUnregisterEmployee;
+	
 
 	public AdministratorScreen(ManagementSystemApp ManagementSystem, MainScreen parentWindow, CreateProject createProject, RegisterEmployeeScreen RegisterEmployeeScreen) {
 		this.ManagementSystem = ManagementSystem;
@@ -73,6 +73,7 @@ public class AdministratorScreen implements Observer {
 		btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				lblEnterPasswordStatus.setText("");
 				setVisible(false);
 				ManagementSystem.getLoginSystem().adminLogout();
 				parentWindow.setVisible(true);
@@ -90,7 +91,6 @@ public class AdministratorScreen implements Observer {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					ManagementSystem.getLoginSystem().adminLogin(passwordField.getText());
-					//boolean loginOk = ManagementSystem.getLoginSystem().adminLoggedIn();
 					passwordField.setText("");
 				} catch (OperationNotAllowedException p) {
 				lblEnterPasswordStatus.setText("login failed");	
@@ -108,6 +108,7 @@ public class AdministratorScreen implements Observer {
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ManagementSystem.getLoginSystem().adminLogout();
+				lblEnterPasswordStatus.setText("");
 			}
 		});
 		btnLogout.setEnabled(false);
@@ -150,8 +151,6 @@ public class AdministratorScreen implements Observer {
 		btnAddProject.setEnabled(enabled);
 		btnLogout.setEnabled(enabled);
 		btnRegisterEmployee.setEnabled(enabled);
-		//btnUnregisterEmployee.setEnabled(enabled);
-		//btnPayFine.setEnabled(enabled);
 	}
 
 	public void setVisible(boolean visible) {
@@ -187,6 +186,7 @@ public class AdministratorScreen implements Observer {
 		boolean loggedIn = ManagementSystem.getLoginSystem().adminLoggedIn();
 		if (loggedIn) {
 			lblLoginStatus.setText("Admin logged in");
+			lblEnterPasswordStatus.setText("");
 		} else {
 			lblLoginStatus.setText("Admin logged off");
 		}

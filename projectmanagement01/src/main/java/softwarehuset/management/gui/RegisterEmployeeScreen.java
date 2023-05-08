@@ -41,16 +41,11 @@ public class RegisterEmployeeScreen implements Observer {
 	private JLabel nameOfEmployee;
 	private JTextField employeeField;
 	
+	private JLabel importantText;
+	
 	private JLabel employeeId;
 	private JTextField idField;
-	/*
-	private JLabel emp;
-	private JTextField empField;
 	
-	private JLabel pm;
-	private JTextField pmField;
-	*/
-	//private JLabel lblEnterPasswordStatus = new JLabel("");
 	private JButton btnBack;
 	private JButton btnRegisterEmployee;
 	private JButton btnUnRegisterEmployee;
@@ -82,7 +77,7 @@ public class RegisterEmployeeScreen implements Observer {
 		panelRegisterEmployeeFunctions.add(employeeField);
 		
 		//Employee id:
-		employeeId = new JLabel("Employee id:");
+		employeeId = new JLabel("*Employee id:");
 		employeeId.setBounds(10, 100, 140, 16);
 		
 		idField = new JTextField();
@@ -127,7 +122,7 @@ public class RegisterEmployeeScreen implements Observer {
 				parentWindow.setVisibleInside(true);
 			}
 		});
-		
+		 
 		btnRegisterEmployee.setBounds(40, 400, 160, 29);
 		panelRegisterEmployeeFunctions.add(btnRegisterEmployee);
 		
@@ -213,6 +208,6 @@ public class RegisterEmployeeScreen implements Observer {
 	
 	private void removeEmployee(String id) throws OperationNotAllowedException {
 		Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
-		ManagementSystem.getEmployeeRepository().removeEmployee(employee);
+		ManagementSystem.removeEmployee(employee);
 	}
 }

@@ -30,7 +30,7 @@ import softwarehuset.management.app.Project;
 //import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
 
-public class CreateProject implements Observer {
+public class CreateProject {
 	private MainScreen parentparentWindow; 
 	private AdministratorScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
@@ -143,13 +143,13 @@ public class CreateProject implements Observer {
 					Project project = createProject();
 					
 					if(employee != null) {
-						project.addEmployee(employee);
-						//addEmployee(project.getProjectID(), employee.getId());
+						addEmployee(project.getProjectID(), employee.getId());
+						//project.addEmployee(employee);
 					}
 					
 					if(PM != null) {
-						project.promoteEmployee(PM.getId());
-						//addPM(project.getProjectID(), PM.getId());
+						addPM(project.getProjectID(), PM.getId());
+						//project.promoteEmployee(PM.getId());
 					}
 					
 				} catch (OperationNotAllowedException p) {
@@ -185,23 +185,6 @@ public class CreateProject implements Observer {
 		panelCreateFunctions.setVisible(visible);
 	}
 	
-	
-	@Override
-	public void update(Observable o, Object arg) {
-		//boolean loggedIn = ManagementSystem.adminLoggedIn();
-		//enableButtons();
-		/*
-		if (loggedIn) {
-			enableButtons();
-			passwordField.setEnabled(false);
-			
-		} else {
-			disableButtons();
-			passwordField.setEnabled(true);
-		}
-		*/
-		//displayLoginStatus();
-	}
 	private void clear() {
 		EnterEmployeeStatus.setText("");
 		nameField.setText("");

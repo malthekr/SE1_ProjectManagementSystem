@@ -3,6 +3,7 @@ package softwarehuset.management.app;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+// [THOR]
 public class TimeTable {
 	private Activity activity;
 	private Employee employee;

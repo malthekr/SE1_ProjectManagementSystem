@@ -77,7 +77,7 @@ public class CreateActivityScreen implements Observer {
 		panelCreateActivityFunctions.add(EnterEmployeeStatus);
 		
 		//Project id:
-		projectId = new JLabel("Project id:");
+		projectId = new JLabel("*Project id:");
 		projectId.setBounds(10, 75, 140, 16);
 				
 		projectIdField = new JTextField();
@@ -203,8 +203,6 @@ public class CreateActivityScreen implements Observer {
 		});
 		btnBack.setBounds(21, 28, 74, 29);
 		panelCreateActivityFunctions.add(btnBack);
-		
-		//ManagementSystem.addObserver(this);
 	}
 	
 	public void setVisible(boolean visible) {
