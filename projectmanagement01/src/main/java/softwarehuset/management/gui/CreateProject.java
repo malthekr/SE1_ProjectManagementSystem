@@ -30,7 +30,7 @@ import softwarehuset.management.app.Project;
 //import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
 
-public class CreateProject implements Observer {
+public class CreateProject {
 	private MainScreen parentparentWindow; 
 	private AdministratorScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
@@ -185,23 +185,6 @@ public class CreateProject implements Observer {
 		panelCreateFunctions.setVisible(visible);
 	}
 	
-	
-	@Override
-	public void update(Observable o, Object arg) {
-		//boolean loggedIn = ManagementSystem.adminLoggedIn();
-		//enableButtons();
-		/*
-		if (loggedIn) {
-			enableButtons();
-			passwordField.setEnabled(false);
-			
-		} else {
-			disableButtons();
-			passwordField.setEnabled(true);
-		}
-		*/
-		//displayLoginStatus();
-	}
 	private void clear() {
 		EnterEmployeeStatus.setText("");
 		nameField.setText("");
