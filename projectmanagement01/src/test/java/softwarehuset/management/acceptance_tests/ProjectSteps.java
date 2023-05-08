@@ -489,7 +489,7 @@ public class ProjectSteps {
 		
 		activity.setEndDate(newDate);
 	}
-
+	
 	@Then("end date for activity {string} is set to {int}-{int}-{int}")
 	public void endDateForActivityIsSetTo(String description, int dd, int mm, int yyyy) throws OperationNotAllowedException {
 		Activity activity = project.findActivityByDescription(description);
