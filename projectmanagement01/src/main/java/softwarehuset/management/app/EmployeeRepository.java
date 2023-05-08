@@ -19,7 +19,7 @@ public class EmployeeRepository {
 	// Add an employee to repository
 	public void addEmployee(Employee employee) throws OperationNotAllowedException {
 		
-		//Check if ID alreadt exists
+		//Check if ID already exists
 		if(checkIfEmployeeExists(employee.getId())) {
 			throw new OperationNotAllowedException("Employee ID already taken");
 		} 

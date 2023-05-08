@@ -31,7 +31,7 @@ import softwarehuset.management.app.Project;
 //import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
 
-public class FindActivityScreen implements Observer {
+public class FindActivityScreen {
 	private MainScreen parentparentWindow; 
 	private EmployeeScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
@@ -104,7 +104,6 @@ public class FindActivityScreen implements Observer {
 		            	lblFindResultDetail.setText("");
 
 		            } else {
-		            	//lblFindResultDetail.setText(listSearchResult.getSelectedValue().printDetail());
 		            	lblFindResultDetail.setText(ManagementSystem.getPrintDetails().activityDetail(listSearchResult.getSelectedValue())); 
 		            }
 		        }
@@ -152,8 +151,6 @@ public class FindActivityScreen implements Observer {
 						Project project = ManagementSystem.getProjectRepository().findProjectByID(projectId);
 						String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
 						project.removeActivity(id, listSearchResult.getSelectedValue());
-						
-						//ManagementSystem.removeActivity(listSearchResult.getSelectedValue());
 						searchActivity();
 						EnterEmployeeStatus.setText("");
 					} else {
@@ -187,24 +184,10 @@ public class FindActivityScreen implements Observer {
 		panelFindActivity.setVisible(visible);
 	}
 	
-	
-	@Override
-	public void update(Observable o, Object arg) {
-		
-	}
 	protected void searchActivity() {
 		searchResults.clear();
 		ManagementSystem.searchActivity(searchField.getText())
 		.forEach((m) -> {searchResults.addElement(m);});
-	}
-	
-	private int check(String str) {
-		try {
-			int v = Integer.parseInt(str);
-			return v;
-		} catch (Exception e) {
-			return 23;
-		}
 	}
 	
 	public void clear() {

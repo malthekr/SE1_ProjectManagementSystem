@@ -50,7 +50,6 @@ public class CreateProject {
 	private JLabel pm;
 	private JTextField pmField;
 	
-	//private JLabel lblEnterPasswordStatus = new JLabel("");
 	private JButton btnBack;
 	private JButton btnCreateProject;
 	
@@ -144,12 +143,10 @@ public class CreateProject {
 					
 					if(employee != null) {
 						addEmployee(project.getProjectID(), employee.getId());
-						//project.addEmployee(employee);
 					}
 					
 					if(PM != null) {
 						addPM(project.getProjectID(), PM.getId());
-						//project.promoteEmployee(PM.getId());
 					}
 					
 				} catch (OperationNotAllowedException p) {
@@ -177,8 +174,6 @@ public class CreateProject {
 		});
 		btnBack.setBounds(21, 28, 74, 29);
 		panelCreateFunctions.add(btnBack);
-		
-		//ManagementSystem.addObserver(this);
 	}
 	
 	public void setVisible(boolean visible) {

@@ -155,7 +155,6 @@ public class ManagementSystemApp {
 				project.removeEmployeeFromActivity(employee, description);
 				
 				// Remove activity from employee project-activity list
-				//employee.removeActivity(project, project.findActivityByDescription(description));
 				return;
 			}
 			throw new OperationNotAllowedException("Employee not part of project");

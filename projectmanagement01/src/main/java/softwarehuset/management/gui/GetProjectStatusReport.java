@@ -28,7 +28,7 @@ import softwarehuset.management.app.ManagementSystemApp;
 import softwarehuset.management.app.OperationNotAllowedException;
 import softwarehuset.management.app.Project;
 
-public class GetProjectStatusReport implements Observer {
+public class GetProjectStatusReport {
 	private MainScreen parentparentWindow; 
 	private FindProjectScreen parentWindow;
 	private ManagementSystemApp managementSystem;
@@ -102,10 +102,6 @@ public class GetProjectStatusReport implements Observer {
 		});
 		btnBack.setBounds(21, 28, 59, 29);
 		panelGetStatusReport.add(btnBack);
-	}
-	
-	@Override
-	public void update(Observable o, Object arg) {
 	}
 	
 	public void setVisible(boolean visible) {

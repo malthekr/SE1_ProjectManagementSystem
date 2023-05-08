@@ -190,15 +190,10 @@ public class EditActivityScreen<Employee> {
 					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
 					String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
 					
-					//ManagementSystem.checkAuth(project);
-					
 					ManagementSystem.removeEmployeeFromActivity(
 						ManagementSystem.getEmployeeRepository().findEmployeeByID(id),
 						project,
 						activity.getDescription());
-					
-					
-					//activity.removeEmployee(ManagementSystem.getEmployeeRepository().findEmployeeByID(id));
 					
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully left activity");

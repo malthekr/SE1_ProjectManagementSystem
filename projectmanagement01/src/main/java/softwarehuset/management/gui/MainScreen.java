@@ -68,8 +68,7 @@ public class MainScreen {
 		frame.getContentPane().setLayout(new CardLayout(0, 0));
 		
 		panelMenu = new JPanel();
-		//name_160236068959176
-		frame.getContentPane().add(panelMenu, "name_69696969696969");
+		frame.getContentPane().add(panelMenu, "name_160236068959176");
 		panelMenu.setLayout(null);
 		panelMenu.setBorder(BorderFactory.createTitledBorder(
                 "Main Menu"));

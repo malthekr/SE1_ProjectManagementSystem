@@ -40,15 +40,11 @@ public class EmployeeScreen implements Observer {
 	
 	private JPanel panelEmployeeFunctions;
 	private JButton btnBack;
-	//private JButton btnFindActivity;
 	private JLabel lblPassword;
 	private JTextField employeeField;
 	private JLabel lblEnterPasswordStatus = new JLabel("");
 	private JLabel lblLoginStatus;
 	private JButton btnLogout;
-	//private JButton btnPayFine;
-	//private JButton btnCreateActivity;
-	//private JButton btnUnregisterEmployee;
 	private JButton btnCreateActivity;
 	private JButton btnFindEmployee;
 	private JButton btnFindActivity;
@@ -206,14 +202,11 @@ public class EmployeeScreen implements Observer {
 	}
 
 	private void setEnableButtons(boolean enabled) {
-		//btnFindActivity.setEnabled(enabled);
 		btnLogout.setEnabled(enabled);
 		btnCreateActivity.setEnabled(enabled);
 		btnFindActivity.setEnabled(enabled);
 		btnJoinProject.setEnabled(enabled);
 		btnFindEmployee.setEnabled(enabled);
-		//btnUnregisterEmployee.setEnabled(enabled);
-		//btnPayFine.setEnabled(enabled);
 	}
 	
 	public void setVisible(boolean visible) {

@@ -33,7 +33,7 @@ import softwarehuset.management.app.Project;
 //import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
 
-public class FindEmployeeScreen implements Observer {
+public class FindEmployeeScreen {
 	private MainScreen parentparentWindow; 
 	private EmployeeScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
@@ -46,8 +46,6 @@ public class FindEmployeeScreen implements Observer {
 	
 	private JLabel EnterErrorStatus = new JLabel("");
 	
-	//private JButton btnShow;
-	//private JButton btnEditActivity;
 	private JButton btnShow;
 	private JButton btnBack;
 	 
@@ -105,7 +103,6 @@ public class FindEmployeeScreen implements Observer {
 		            	lblFindResultDetail.setText("");
 
 		            } else {
-		            	//lblFindResultDetail.setText(listSearchResult.getSelectedValue().getStatusOfEmployee(b));
 		            	lblFindResultDetail.setText(ManagementSystem.getPrintDetails().getStatusOfEmployee(listSearchResult.getSelectedValue(),b));
 		            	
 		            }
@@ -119,7 +116,7 @@ public class FindEmployeeScreen implements Observer {
 		panelFindEmployee.add(listScrollPane);
 		
 		JPanel panelSearchResult = new JPanel();
-		//21, 270, 361, 175
+		
 		panelSearchResult.setBounds(21, 270, 361, 175);
 		panelFindEmployee.add(panelSearchResult);
 		panelSearchResult.setBorder(BorderFactory.createTitledBorder(
@@ -146,14 +143,12 @@ public class FindEmployeeScreen implements Observer {
 				if(b) {
 					btnShow.setText("Show all");
 					if(listSearchResult.getSelectedValue() != null) {
-					//lblFindResultDetail.setText(listSearchResult.getSelectedValue().getStatusOfEmployee(b));
 					  lblFindResultDetail.setText(ManagementSystem.getPrintDetails().getStatusOfEmployee(listSearchResult.getSelectedValue(),b));
 					}
 					
 				} else {
 					btnShow.setText("Show Active");
 					if(listSearchResult.getSelectedValue() != null) {
-					//lblFindResultDetail.setText(listSearchResult.getSelectedValue().getStatusOfEmployee(b));
 					  lblFindResultDetail.setText(ManagementSystem.getPrintDetails().getStatusOfEmployee(listSearchResult.getSelectedValue(),b));
 					}
 				}
@@ -181,23 +176,10 @@ public class FindEmployeeScreen implements Observer {
 	}
 	
 	
-	@Override
-	public void update(Observable o, Object arg) {
-		
-	}
 	protected void searchEmployee() {
 		searchResults.clear();
 		ManagementSystem.getEmployeeRepository().searchEmployee(searchField.getText())
 		.forEach((m) -> {searchResults.addElement(m);});
-	}
-	
-	private int check(String str) {
-		try {
-			int v = Integer.parseInt(str);
-			return v;
-		} catch (Exception e) {
-			return 23;
-		}
 	}
 	
 	public void clear() {

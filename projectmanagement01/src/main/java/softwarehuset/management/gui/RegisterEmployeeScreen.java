@@ -30,7 +30,7 @@ import softwarehuset.management.app.Project;
 //import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
 
-public class RegisterEmployeeScreen implements Observer {
+public class RegisterEmployeeScreen {
 	private MainScreen parentparentWindow; 
 	private AdministratorScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
@@ -40,8 +40,6 @@ public class RegisterEmployeeScreen implements Observer {
 	
 	private JLabel nameOfEmployee;
 	private JTextField employeeField;
-	
-	private JLabel importantText;
 	
 	private JLabel employeeId;
 	private JTextField idField;
@@ -177,19 +175,12 @@ public class RegisterEmployeeScreen implements Observer {
 		});
 		btnBack.setBounds(21, 28, 74, 29);
 		panelRegisterEmployeeFunctions.add(btnBack);
-		
-		//ManagementSystem.addObserver(this);
 	}
 	
 	public void setVisible(boolean visible) {
 		panelRegisterEmployeeFunctions.setVisible(visible);
 	}
 	
-	
-	@Override
-	public void update(Observable o, Object arg) {
-		
-	}
 	private void clear() {
 		EnterEmployeeStatus.setText("");
 		employeeField.setText("");

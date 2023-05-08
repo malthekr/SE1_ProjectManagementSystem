@@ -31,7 +31,7 @@ import softwarehuset.management.app.Project;
 //import dtu.library.domain.Medium;
 import javax.swing.JPasswordField;
 
-public class CreateActivityScreen implements Observer {
+public class CreateActivityScreen {
 	private MainScreen parentparentWindow; 
 	private EmployeeScreen parentWindow;
 	private ManagementSystemApp ManagementSystem;
@@ -209,11 +209,6 @@ public class CreateActivityScreen implements Observer {
 		panelCreateActivityFunctions.setVisible(visible);
 	}
 	
-	
-	@Override
-	public void update(Observable o, Object arg) {
-	
-	}
 	private void clear() {
 		EnterEmployeeStatus.setText("");
 		projectIdField.setText("");
