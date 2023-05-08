@@ -2,6 +2,8 @@ package softwarehuset.management.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -114,10 +116,16 @@ public class EditActivityScreen<Employee> {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String input = userInput.getText();
+					
+					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
+					
+					ManagementSystem.checkAuth(project);
+					
 					ManagementSystem.addEmployeeToActivity(
-						ManagementSystem.getEmployeeRepository().findEmployeeByID(input), 
-						ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId()), 
+						ManagementSystem.getEmployeeRepository().findEmployeeByID(input),
+						project,
 						activity.getDescription());
+					
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully added employee to activity");
 				} catch (OperationNotAllowedException p) {
@@ -133,15 +141,14 @@ public class EditActivityScreen<Employee> {
 				try {
 					String input = userInput.getText();
 					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
-					Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(input);
+					
 					ManagementSystem.checkAuth(project);
-					activity.removeEmployee(employee);
-					/*
+					
 					ManagementSystem.removeEmployeeFromActivity(
-					ManagementSystem.getEmployeeRepository().findEmployeeByID(input),  
-					ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId()), 
-							activity.getDescription());
-					*/
+						ManagementSystem.getEmployeeRepository().findEmployeeByID(input),
+						project,
+						activity.getDescription());
+					
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully removed employee to activity");
 				} catch (OperationNotAllowedException p) {
@@ -156,19 +163,17 @@ public class EditActivityScreen<Employee> {
 				try {
 					String input = userInput.getText();
 					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
-					Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(input);
+					String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
+					
 					ManagementSystem.checkAuth(project);
-					activity.addEmployee(employee);
-					/*
-					//activity.removeEmployee(employee);
-					activity.ad(
-						String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
-						Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
-						//ManagementSystem.currentEmployee(), 
-						ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
-						//ManagementSystem.findProjectByID(activity.getProjectId()), 
-						activity.getDescription());
-						*/
+					
+					ManagementSystem.addEmployeeToActivity(
+						 ManagementSystem.getEmployeeRepository().findEmployeeByID(id),
+						 project,
+						 activity.getDescription()
+					);
+					
+					
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully joined activity");
 				} catch (OperationNotAllowedException p) {
@@ -181,12 +186,22 @@ public class EditActivityScreen<Employee> {
 		leaveActivity.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-						ManagementSystem.removeEmployeeFromActivity(
-						ManagementSystem.currentEmployee(), 
-						ManagementSystem.findProjectByID(activity.getProjectId()), 
+					String input = userInput.getText();
+					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
+					String id = ManagementSystem.getLoginSystem().getCurrentLoggedID();
+					
+					//ManagementSystem.checkAuth(project);
+					
+					ManagementSystem.removeEmployeeFromActivity(
+						ManagementSystem.getEmployeeRepository().findEmployeeByID(id),
+						project,
 						activity.getDescription());
-						userInput.setText("");
-						EnterErrorMessage.setText("Successfully left activity");
+					
+					
+					//activity.removeEmployee(ManagementSystem.getEmployeeRepository().findEmployeeByID(id));
+					
+					userInput.setText("");
+					EnterErrorMessage.setText("Successfully left activity");
 				} catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
 				}
@@ -201,14 +216,19 @@ public class EditActivityScreen<Employee> {
 					EnterErrorMessage.setText("Please enter a number");
 					return;
 				}
-				try {
-					ManagementSystem.addHourToActivity(activity, stringToDouble(input));
-					userInput.setText("");
-					EnterErrorMessage.setText("Successfully changed worked hours");
+				
+				try{
+				
+				ManagementSystem.addHourToActivity(activity, stringToDouble(input));
+				
+				
+				userInput.setText("");
+				EnterErrorMessage.setText("Successfully changed worked hours");
 				} catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
 					return;
 				}
+				
 			}
 		});
 		
@@ -220,14 +240,22 @@ public class EditActivityScreen<Employee> {
 					EnterErrorMessage.setText("Please enter a number");
 					return;
 				}
+				
+				
 				try {
-					ManagementSystem.editExpectedHoursActivity(activity, stringToDouble(input));
+					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
+					
+					ManagementSystem.checkAuth(project);
+					
+					activity.setExpectedHours(stringToDouble(input));
+			
 					userInput.setText("");
 					EnterErrorMessage.setText("Successfully changed expected hours"); 
 				} catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
 					return;
 				}
+				
 			}
 		});
 		
@@ -240,8 +268,12 @@ public class EditActivityScreen<Employee> {
 						EnterErrorMessage.setText("Please enter new description");
 						return;
 					}
+					Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
 					
-					ManagementSystem.editProjectActivityDescription(activity, input);
+					ManagementSystem.checkAuth(project);
+					
+					activity.setDescrption(input);
+					
 					EnterErrorMessage.setText("Successfully changed description for activity"); 
 				}  catch (OperationNotAllowedException p) {
 					EnterErrorMessage.setText(p.getMessage());
@@ -253,26 +285,27 @@ public class EditActivityScreen<Employee> {
 		// Edit start date
 		editStartDate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					String input = userInput.getText();
-					if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
-						EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
-						return;
-					}
-					String[] date = input.split("-");
-					
-					int dd = Integer.parseInt(date[0]);
-					int mm = Integer.parseInt(date[1]) - 1 ;
-					int yyyy = Integer.parseInt(date[2]);
-					
-					ManagementSystem.UpdateStartDate(
-							dd, mm, yyyy, 
-							activity.getProjectId(), 
-							activity.getDescription());
-					
-					EnterErrorMessage.setText("Successfully changed start date"); 
-				}  catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
+				String input = userInput.getText();
+				if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
+					EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
+					return;
+				}
+				
+				try{
+				Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
+				ManagementSystem.checkAuth(project);
+				String[] date = input.split("-");
+				
+				int dd = Integer.parseInt(date[0]);
+				int mm = Integer.parseInt(date[1]) - 1 ;
+				int yyyy = Integer.parseInt(date[2]);
+
+				Calendar cal = createDate(dd,mm,yyyy);
+				activity.setStartDate(cal);
+				
+				EnterErrorMessage.setText("Successfully changed start date");
+				} catch (OperationNotAllowedException l){
+					EnterErrorMessage.setText(l.getMessage());
 					return;
 				}
 			}
@@ -281,47 +314,30 @@ public class EditActivityScreen<Employee> {
 		// Edit end date
 		editEndDate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					String input = userInput.getText();
-					if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
-						EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
-						return;
-					}
-					String[] date = input.split("-");
-					
-					int dd = Integer.parseInt(date[0]);
-					int mm = Integer.parseInt(date[1]) - 1;
-					int yyyy = Integer.parseInt(date[2]);
-					
-					ManagementSystem.UpdateEndDate(
-							dd, mm, yyyy, 
-							activity.getProjectId(), 
-							activity.getDescription());
-					
-					EnterErrorMessage.setText("Successfully changed end date"); 
-				}  catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
+				String input = userInput.getText();
+				if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
+					EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
+					return;
+				}
+				try{
+				Project project = ManagementSystem.getProjectRepository().findProjectByID(activity.getProjectId());
+				ManagementSystem.checkAuth(project);
+				String[] date = input.split("-");
+				
+				int dd = Integer.parseInt(date[0]);
+				int mm = Integer.parseInt(date[1]) - 1;
+				int yyyy = Integer.parseInt(date[2]);
+				
+				Calendar cal = createDate(dd,mm,yyyy);
+				activity.setEndDate(cal);
+				
+				EnterErrorMessage.setText("Successfully changed end date");
+				} catch (OperationNotAllowedException m){
+					EnterErrorMessage.setText(m.getMessage());
 					return;
 				}
 			}
 		});
-		
-		
-		
-/*		// View hours report (USE LATER)
-		editStartDate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					String input = userInput.getText();
-					ManagementSystem.getStatus(activity);
-					
-					EnterErrorMessage.setText("Successfully changed description for activity"); 
-				}  catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
-					return;
-				}
-			}
-		});*/
 	}
 		
 	public void setVisible(boolean visible) {
@@ -368,5 +384,13 @@ public class EditActivityScreen<Employee> {
 		} catch (Exception e) {
 			return 0;
 		}
+	}
+	
+	private Calendar createDate(int dd, int mm, int yyyy) {
+		Calendar calendar = new GregorianCalendar();;
+		calendar.set(Calendar.YEAR, yyyy);
+		calendar.set(Calendar.MONTH, mm);
+		calendar.set(Calendar.DAY_OF_MONTH, dd);
+		return calendar;
 	}
 }

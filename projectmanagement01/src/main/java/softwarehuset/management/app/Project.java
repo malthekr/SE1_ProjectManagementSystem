@@ -2,6 +2,7 @@ package softwarehuset.management.app;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +18,7 @@ public class Project {
 	private List<TimeTable> timeTables = new ArrayList<>();
 	private IDServer idServer = new IDServer();
 	private Employee projectManager;
-	private boolean hasProjectManager;	
+	private boolean hasProjectManager;
 	private int projectID;
 	
 	public Project(String projectName, Double expectedHours, Calendar startDate, Calendar endDate) {
@@ -26,7 +27,19 @@ public class Project {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.projectID = idServer.generateID(startDate);
+		addBaseActivities();
 	} 
+	
+	private void addBaseActivities() {
+		Calendar dates = new GregorianCalendar();
+		
+		Activity vacation = new Activity(this.getProjectID(), "Vacation", dates, dates);
+		Activity sickdays = new Activity(this.getProjectID(), "Sickdays", dates, dates);
+		Activity courses = new Activity(this.getProjectID(), "Courses", dates, dates);
+		activities.add(vacation);
+		activities.add(sickdays);
+		activities.add(courses);
+	}
 	
 	// Get project name
 	public String getProjectName() {
@@ -109,10 +122,11 @@ public class Project {
 		return employeeTimeTables;
 	}
 		
-	// Get time tables at specific date associated with an employee working on this project
-	public TimeTable getTimeTablesByDateAndEmployee(Employee employee, Calendar date) {
+	// 
+	public List<TimeTable> getNumberOfTimeTablesByDateAndEmployee(Employee employee, Calendar date) {
 		List<TimeTable> employeeTimeTables = timeTables.stream().filter(u -> u.getEmployee().equals(employee)).collect(Collectors.toList());
-		TimeTable finalTimeTable = employeeTimeTables.stream().filter(u -> u.getDate().equals(date)).findAny().orElse(null);
+		List<TimeTable> finalTimeTable = employeeTimeTables.stream().filter(u -> u.getDate().get(Calendar.WEEK_OF_YEAR) == date.get(Calendar.WEEK_OF_YEAR)).collect(Collectors.toList());
+		
 		return finalTimeTable;
 	}
 	
@@ -215,9 +229,6 @@ public class Project {
 	// Create an activity for project 
 	// Throws exception if activity is unnamed or if another activity in this project is named the same
 	public void createActivity(String description) throws OperationNotAllowedException {
-		//Employee e = findEmployeeById(employeeId);
-		//String employeeId, 
-		//checkAuth(e);
 		
 		if(description.equals("")) {
 			throw new OperationNotAllowedException("Activities must have a name");
@@ -232,18 +243,10 @@ public class Project {
 
 		Activity activity = new Activity(projectID, description, startDate, endDate);
 		addActivity(activity);
-		//for(Activity a : activities){
-		//	if(a.getDescription().equals(description)) {
-		//		throw new OperationNotAllowedException("Activities must have a unique name");
-		//	}
-		//}
 	}
 	
 	// Add activity - Throws Exception if activity is already part of project
 	public void addActivity(Activity activity) throws OperationNotAllowedException { 
-		//Employee e = findEmployeeById(employeeId);
-		
-		//checkAuth(e);
 		
 		if(!activities.contains(activity)){
 			activities.add(activity);
@@ -299,15 +302,6 @@ public class Project {
 		}
 	}
 	
-	// Edit a specific time table that an employee has made in an activity with this project
-	public void editTimeTable(Activity activity, Employee employee, Calendar date, double workHours) {
-		TimeTable timeTable = getTimeTablesByDateAndEmployee(employee, date);
-		timeTable.editActivity(activity);
-		timeTable.editEmployee(employee);
-		timeTable.editDate(date);
-		timeTable.editHours(workHours);
-	}
-	
 	// Add worked hours to an activity
 	public void addHoursToActivity(Activity activity, Employee employee, double hours){
 		activity.addWorkedHours(hours);
@@ -329,12 +323,14 @@ public class Project {
 	
 	//When searching with a key word these projects appear:
 	public boolean match(String searchText) {
+		String SearchText = searchText.toLowerCase();
+		
 		if(this.hasProjectManager && projectManager.getName() != null) {
-			return projectName.contains(searchText) || projectManager.getName().contains(searchText) || projectManager.getId().contains(searchText.toLowerCase());
+			return projectName.toLowerCase().contains(SearchText) || projectManager.getName().toLowerCase().contains(SearchText) || projectManager.getId().toLowerCase().contains(SearchText);
 		} else if (this.hasProjectManager) {
-			return projectName.contains(searchText) || projectManager.getId().contains(searchText.toLowerCase());
+			return projectName.toLowerCase().contains(SearchText) || projectManager.getId().toLowerCase().contains(SearchText.toLowerCase());
 		} else {
-			return projectName.contains(searchText);
+			return projectName.toLowerCase().contains(SearchText);
 		}
 	}
 	

@@ -2,8 +2,10 @@ package softwarehuset.management.app;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Employee {
@@ -46,16 +48,23 @@ public class Employee {
     public List<Activity> getActivities(){
 		List<Activity> a = new ArrayList<>();
 		for(Project key : map.keySet()){
-			a.addAll(map.get(key));
+			a.addAll(map.get(key)); 
 		}
     	return a;
     }
     
     // Get number of activities employee is working on
     public int getNumOfActivities(){
-    	int numbOfActivites = map.values().stream().flatMapToInt(list -> IntStream.of(list.size())).sum();
+    	Calendar dateToday = new GregorianCalendar();
+    	List<Activity> sum = new ArrayList<>();;
+    	for(Project p : map.keySet()) {
+	  		for(TimeTable t : p.getNumberOfTimeTablesByDateAndEmployee(this, dateToday)) {
+    			sum.add(t.getActivity());
+    		}
+       	}
+    	sum = sum.stream().distinct().collect(Collectors.toList());
     	
-        return numbOfActivites;
+    	return sum.size();
     }
     
     // Get list of activities employee is working on in a specific project
@@ -72,8 +81,8 @@ public class Employee {
     // Add activity to list of activities employee is working on
     // Throws exception - Employee has too many activities he is working on
     public void addActivity(Project project, Activity activity) throws OperationNotAllowedException {
-		if(isBusy()) {
-    		throw new OperationNotAllowedException("Employee too busy");
+    	if(isBusy()) {
+    		throw new OperationNotAllowedException("Employee too busy");  
     	}
     	activities = map.computeIfAbsent(project, y -> new ArrayList<>());
     	

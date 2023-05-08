@@ -5,8 +5,7 @@ import java.util.List;
 
 public class PrintDetails {
 	
-	public PrintDetails(){
-		
+	public PrintDetails(){	
 	}
 	
 	// Print project details on GUI
@@ -14,10 +13,12 @@ public class PrintDetails {
 		String name = project.getProjectName().isBlank() ? "No project name yet" : project.getProjectName();
 		String pmid = !project.hasProjectManager() ? "No PM assigned yet" : project.getProjectManager().getId();
 		String id = project.getEmployeesAssignedToProject() == null ? "No employees assigned yet" : getProjectEmployeesAsString(project);
+		
 		//Format start date as: Week/Year.
 		int week = project.getStartDate().get(Calendar.WEEK_OF_YEAR);
 		int year =  project.getStartDate().get(Calendar.YEAR);
 		String start = week + "/" + year;
+		
 		//Format end date as: Week/Year
 		int week1 = project.getEndDate().get(Calendar.WEEK_OF_YEAR);
 		int year1 =  project.getEndDate().get(Calendar.YEAR);
@@ -159,9 +160,7 @@ public class PrintDetails {
             name += ", ";
         }
         return name;
-    }
-	
-	
+    } 
 	
 	// Print employees working on project
 	private String getProjectEmployeesAsString(Project project){
@@ -172,7 +171,7 @@ public class PrintDetails {
 	        name += e.getId();
 	        if (i++ == project.getEmployeesAssignedToProject().size() - 1){ break;} 
 	        name += ", ";
-	        }
-	        return name;
-	    }
+        }
+        return name;
+	   }
 }

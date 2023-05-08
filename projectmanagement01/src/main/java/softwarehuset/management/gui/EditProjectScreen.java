@@ -228,87 +228,71 @@ public class EditProjectScreen {
 					EnterErrorMessage.setText("Please enter a number");
 					return;
 				}
-				try {
-					Project project = 
-					ManagementSystem.updateExpectedHours(project.getProjectID(), stringToDouble(input));
-					userInput.setText("");
-					EnterErrorMessage.setText("Successfully changed expected hours"); 
-				} catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
-					return;
-				}
+				//ManagementSystem.updateExpectedHours(project.getProjectID(), stringToDouble(input));
+				project.editExpectedHours(stringToDouble(input));
+				userInput.setText("");
+				EnterErrorMessage.setText("Successfully changed expected hours");
 			}
 		});
 		
 		// Edit name of project
 		editNameOfProject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					String input = userInput.getText();
-					if(input.isEmpty()) {
-						EnterErrorMessage.setText("Please enter new project name");
-						return;
-					}
-					ManagementSystem.editProjectName(project.getProjectID(), input);
-					EnterErrorMessage.setText("Successfully changed project name"); 
-				}  catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
+				String input = userInput.getText();
+				if(input.isEmpty()) {
+					EnterErrorMessage.setText("Please enter new project name");
 					return;
 				}
+				//ManagementSystem.editProjectName(project.getProjectID(), input);
+				project.editProjectName(input);
+				EnterErrorMessage.setText("Successfully changed project name");
 			}
 		});
 		
 		// Edit start date
 		editStartDate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					String input = userInput.getText();
-					if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
-						EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
-						return;
-					}
-					String[] date = input.split("-");
-					
-					int dd = Integer.parseInt(date[0]);
-					int mm = Integer.parseInt(date[1]) - 1;
-					int yyyy = Integer.parseInt(date[2]);
-					
-					ManagementSystem.UpdateStartDateProject(dd, mm, yyyy,project.getProjectID());
-					
-					EnterErrorMessage.setText("Successfully changed start date for project"); 
-				}  catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
+				String input = userInput.getText();
+				if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
+					EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
 					return;
 				}
+				String[] date = input.split("-");
+				
+				int dd = Integer.parseInt(date[0]);
+				int mm = Integer.parseInt(date[1]) - 1;
+				int yyyy = Integer.parseInt(date[2]);
+				
+				//ManagementSystem.UpdateStartDateProject(dd, mm, yyyy,project.getProjectID());
+				
+				Calendar cal = createDate(dd,mm,yyyy);
+				project.editStartDate(cal);
+				
+				EnterErrorMessage.setText("Successfully changed start date for project");
 			}
 		});
 		
 		// Edit end date
 		editEndDate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					String input = userInput.getText();
-					if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
-						EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
-						return;
-					}
-					String[] date = input.split("-");
-					
-					int dd = Integer.parseInt(date[0]);
-					int mm = Integer.parseInt(date[1]) - 1;
-					int yyyy = Integer.parseInt(date[2]);
-					
-//					Project project = ManagementSystem.getProjectRepository().findProjectByID(project.getProjectID());
-					Calendar cal = createDate(dd,mm,yyyy);
-					project.editEndDate(cal);
-					
-					//ManagementSystem.updateEndDateProject(dd, mm, yyyy,project.getProjectID());
-					
-					EnterErrorMessage.setText("Successfully changed end date for project"); 
-				}  catch (OperationNotAllowedException p) {
-					EnterErrorMessage.setText(p.getMessage());
+				String input = userInput.getText();
+				if(!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
+					EnterErrorMessage.setText("Please enter date as format \"dd-mm-yyyy\"");
 					return;
 				}
+				String[] date = input.split("-");
+				
+				int dd = Integer.parseInt(date[0]);
+				int mm = Integer.parseInt(date[1]) - 1;
+				int yyyy = Integer.parseInt(date[2]);
+				
+//					Project project = ManagementSystem.getProjectRepository().findProjectByID(project.getProjectID());
+				Calendar cal = createDate(dd,mm,yyyy);
+				project.editEndDate(cal);
+				
+				//ManagementSystem.updateEndDateProject(dd, mm, yyyy,project.getProjectID());
+				
+				EnterErrorMessage.setText("Successfully changed end date for project");
 			}
 		});
 		
