@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 import java.util.ArrayList;
 import java.util.List;
 
+// [MALTHE]
 public class EmployeeRepository {
 	private List<Employee> employeeRepository; // List containing the employees of the system
 	

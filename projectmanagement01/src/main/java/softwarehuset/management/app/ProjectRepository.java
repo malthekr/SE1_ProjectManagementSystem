@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// [HANS]
 public class ProjectRepository{
 	private List<Project> projectRepository;
 	

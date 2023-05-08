@@ -2,6 +2,7 @@ package softwarehuset.management.app;
 
 import java.util.Observable;
 
+// [MALTHE]
 public class LoginSystem extends Observable {
 	private EmployeeRepository employeeRepository;
 	

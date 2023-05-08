@@ -22,62 +22,62 @@ public class Activity {
     	this.expectedHours = 0.0;
     }
     
-    // Get project id activity is associated with
+    // [NIKLAS] Get project id activity is associated with
     public int getProjectId(){
         return projectId;
     }
     
-    // Get description of activity
+    // [NIKLAS] Get description of activity
     public String getDescription() {
     	return description;
     }
     
-    // Get worked hours on activity
+    // [NIKLAS] Get worked hours on activity
     public double getWorkedHours() {
     	return workedHours;
     }
     
-    // Get expected hours on activity
+    // [NIKLAS] Get expected hours on activity
     public double getExpectedHours(){
         return expectedHours;
     }
     
-    // Get list of employees associated with this activity
+    // [THOR] Get list of employees associated with this activity
     public List<Employee> getEmployees(){
         return employees;
     }
     
-    // Get start date of activity
+    // [THOR] Get start date of activity
     public Calendar getStartDate(){
         return startDate;
     }
     
-    // Get end date of activity
+    // [THOR] Get end date of activity
      public Calendar getEndDate(){
         return endDate;
     }
      
-     // Set the description of activity
+     // [THOR] Set the description of activity
      public void setDescrption(String description) {
      	this.description = description;
      }
      
-     // Set the expected hours activity is going to take
+     // [THOR] Set the expected hours activity is going to take
      public void setExpectedHours(double expectedHours) {
  		this.expectedHours = 0 > expectedHours ? 0 : expectedHours - expectedHours % 0.5 ;
      }
      
-     // Set start date of activity
+     // [THOR] Set start date of activity
      public void setStartDate(Calendar startDate) {
      	this.startDate = startDate;
      }
      
-     // Set end date of activity
+     // [THOR] Set end date of activity
      public void setEndDate(Calendar endDate) {
      	this.endDate = endDate;
      }
      
-     // Add worked hours to activity
+     // [THOR] Add worked hours to activity
      public void addWorkedHours(double hoursWorked){
          hoursWorked = hoursWorked - (hoursWorked % 0.5);
          this.workedHours += hoursWorked;
@@ -87,7 +87,7 @@ public class Activity {
          }
      }
     
-    // Adds employee to activity
+    // [HANS] Adds employee to activity
     public void addEmployee(Employee employee) throws OperationNotAllowedException {  
     	if (employees.contains(employee)){
  			throw new OperationNotAllowedException("Employee already part of activity");      	
@@ -100,7 +100,7 @@ public class Activity {
         	return;
     }
     
-    // Removes employee from activity
+    // [HANS] Removes employee from activity
     public void removeEmployee(Employee employee) throws OperationNotAllowedException {  
     	if (!employees.contains(employee)){
  			throw new OperationNotAllowedException("Employee is not part of activity");      	
@@ -109,7 +109,7 @@ public class Activity {
     	// return;
     }
     
-    // When searching with a key word these activities appear:
+    // [NIKLAS] When searching with a key word these activities appear:
     public boolean match(String SearchText) {
         String searchText = SearchText.toLowerCase();
 		if(this.getEmployees() != null) {
@@ -129,7 +129,7 @@ public class Activity {
 		}
 	}
    
-    // Display on GUI what comes up when we search for a key word
+    // [NIKLAS] Display on GUI what comes up when we search for a key word
     public String toString() {
 		String name = this.getDescription().isBlank() ? "" : this.getDescription();
 		return "Project ID: " + String.valueOf(getProjectId()) + " - "+ name;
