@@ -234,6 +234,7 @@ public class ManagementSystemApp {
 	
 	// Example data to test the program with
 	public void exampleData() throws OperationNotAllowedException {	
+		/*
 		loginSystem.adminLogin("admi");
 		
 		Employee employee1 = new Employee("Malthe", "mkr");
@@ -293,7 +294,7 @@ public class ManagementSystemApp {
 				addEmployeeToActivity(employee2, project, "test run");
 			}
 		}
-		*/
+		
 		createProject(project1);
 		createProject(project2);
 		createProject(project3); 
@@ -409,6 +410,7 @@ public class ManagementSystemApp {
 		addEmployeeToActivity(employee1, project5, "implement wellness activities");
 		
 		loginSystem.adminLogout();
+	*/
 	}
 }
 

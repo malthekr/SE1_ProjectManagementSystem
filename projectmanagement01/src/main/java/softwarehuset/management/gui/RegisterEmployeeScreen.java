@@ -127,7 +127,7 @@ public class RegisterEmployeeScreen implements Observer {
 				parentWindow.setVisibleInside(true);
 			}
 		});
-		
+		 
 		btnRegisterEmployee.setBounds(40, 400, 160, 29);
 		panelRegisterEmployeeFunctions.add(btnRegisterEmployee);
 		
@@ -213,6 +213,6 @@ public class RegisterEmployeeScreen implements Observer {
 	
 	private void removeEmployee(String id) throws OperationNotAllowedException {
 		Employee employee = ManagementSystem.getEmployeeRepository().findEmployeeByID(id);
-		ManagementSystem.getEmployeeRepository().removeEmployee(employee);
+		ManagementSystem.removeEmployee(employee);
 	}
 }

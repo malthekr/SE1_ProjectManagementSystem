@@ -11,20 +11,21 @@ Scenario: Remove project as admin
     Then there is no project named "Management System"
     
 Scenario: Remove project as employee
-	Given admin is already logged in
+		Given admin is already logged in
     Given there is a project with name "Management System"
     When add project to system
-	And admin logs out
+		And admin logs out
   	Given employee with ID "mkr" is logged in
     When remove project from system
-	Then the error message "Admin or project manager login required" is given
+		Then the error message "Admin or project manager login required" is given
 	
 Scenario: Remove project as project manager
-	Given admin is already logged in
+		Given admin is already logged in
     Given there is a project with name "Management System"
     When add project to system
-	And admin logs out
+		And admin logs out
   	Given employee with ID "mkr" is logged in
   	And "mkr" is the project manager
+  	And add employee with ID "mkr" to activity in project
     When remove project from system
     Then there is no project named "Management System"
